@@ -1991,18 +1991,19 @@ export default {
             this.isx.tipLg4 = this.isx.tipLg3;
           }
           this.isx.pr_gvs = 1;
-          // this.isx.t3 = 60;
-          // this.isx.t4 = 50;
-          // this.isx.sx_gvs_dep = 0;
-          this.stup = false;
+          this.isx.sx_gvs = 0;
+          this.isx.sx_gvs_dep > 0 ? (this.stup = true) : (this.stup = false);
 
+          this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
+            ? (tip_rascheta = "ot_gvs")
+            : (tip_rascheta = "gvs");
           if (this.isx.tipLg3 == "ml") {
             this.fg = true;
             this.isx.filg = 0;
           } else {
             this.fg = false;
           }
-          tip_rascheta = "gvs";
+
           break;
         case "qgvssr":
           if (this.isx.qgvssr > 100) {
@@ -2015,10 +2016,23 @@ export default {
             this.isx.tipLg4 = this.isx.tipLg3;
           }
           this.isx.pr_gvs = 1;
-          this.isx.t3 = 60;
-          this.isx.t4 = 50;
-          this.isx.sx_gvs_dep = 0;
-          tip_rascheta = "gvs";
+          this.isx.sx_gvs = 0;
+          this.isx.sx_gvs_dep > 0 ? (this.stup = true) : (this.stup = false);
+          this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
+            ? (tip_rascheta = "ot_gvs")
+            : (tip_rascheta = "gvs");
+          if (this.isx.tipLg3 == "ml") {
+            this.fg = true;
+            this.isx.filg = 0;
+          } else {
+            this.fg = false;
+          }
+
+          // if (this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0) {
+          //   tip_rascheta = "ot_gvs";
+          // } else {
+          //   tip_rascheta = "gvs";
+          // }
           break;
         case "itp0":
           this.stup = false;
