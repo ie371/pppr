@@ -65,7 +65,7 @@ function gidr(t, du_im, du_tr, Gm, p, tipL, Gg, tg, pg, otpen, filtr, ok, tipIM)
 	let ki = '_' + du_tr + du_im;
 	let zau = '_' + du_im;
 	let tr = '_' + du_tr;
-
+	console.log('ki===', ki);
 	let alfaAr = {
 		_1515: { alf: 0, li6: '', lk5: 135 },
 		_2015: { alf: 8.4, li6: '', lk5: 411 },
@@ -424,100 +424,347 @@ function ro(t, p) {
 	return ror;
 }
 
-function pr(isx, sk, peres, R, tip_rascheta) {
-	// console.log('isx=', isx);
-	var txvL = +isx.txvL;
-	var txvZ = +isx.txvZ;
-	var koef = 1;
-	var Ktp = +isx.ktp;
-	var Knp = +isx.knp;
-	var beta = +isx.beta;
+// function pr(isx, sk, peres, R, tip_rascheta) {
+// 	// console.log('isx=', isx);
+// 	var txvL = +isx.txvL;
+// 	var txvZ = +isx.txvZ;
+// 	var koef = 1;
+// 	var Ktp = +isx.ktp;
+// 	var Knp = +isx.knp;
+// 	var beta = +isx.beta;
+
+// 	// var [one, two, three] = foo;
+
+// 	if (tip_rascheta != 'gvs') {
+// 		if (isx.qco > 0) {
+// 			var ngr = +isx.qco;
+// 			var t1 = +isx.t1;
+// 			var t2 = +isx.t2;
+// 			if (+isx.p1 === 0 || !isx.p1) {
+// 				var p1 = 5;
+// 			} else {
+// 				var p1 = +isx.p1 / 10;
+// 			}
+// 			if (+isx.p2 === 0 || !isx.p2) {
+// 				var p2 = 4;
+// 			} else {
+// 				var p2 = +isx.p2 / 10;
+// 			}
+// 			var tipIM = isx.tipIMo;
+// 			var tipL = isx.tipLo;
+// 			var G = rash(ngr, t1, t2);
+// 			var Gm1 = +G;
+// 			var GGG = Gm1;
+// 			var Gm2 = +G;
+// 			var PL1 = ro(t1, p1);
+// 			var Gv1 = +(Gm1 * 1000 / PL1).toFixed(3);
+// 			var PL2 = ro(t2, p2);
+// 			var Gv2 = +(Gm2 * 1000 / PL2).toFixed(3);
+// 			var otpen = 0;
+
+// 			if (+isx.sx_otkr > 0) {
+// 				var ngrg = +isx.qmax;
+// 				var t3 = +isx.t3;
+// 				var t4 = +isx.t4;
+// 				if (+isx.p3 === 0 || isx.p3 === '') {
+// 					var p3 = 4.5;
+// 				} else {
+// 					var p3 = +isx.p3 / 10;
+// 				}
+// 				if (+isx.p4 === 0 || isx.p4 === '') {
+// 					var p4 = 3.5;
+// 				} else {
+// 					var p4 = +isx.p4 / 10;
+// 				}
+// 				var kch = isx.Kchn;
+// 				var Gg = rashgvs_cirk(ngrg, t3, t4, kch, txvL, txvZ, koef, '', Ktp, Knp, beta);
+// 				var gg1 = +Gg.Gm3;
+// 				if (isx.sx_gvs > 0) {
+// 					gg2 = 0;
+// 				} else {
+// 					var gg2 = +Gg.Gm4;
+// 				}
+// 				var Gm1sum = +(gg1 + Gm1).toFixed(3);
+// 				var GGG = Gm1sum;
+// 				var Gm2sum = +(gg2 + Gm2).toFixed(3);
+// 				var otpen = 1;
+// 			}
+
+// 			if (+isx.sx_gvs_dep > 0) {
+// 				if (+isx.sx_gvs_dep === 2) {
+// 					koef = 0.55;
+// 				}
+// 				var ngrg = +isx.qmax;
+// 				var t3 = +isx.t3;
+// 				var t4 = +isx.t4;
+// 				if (+isx.p3 === 0 || isx.p3 === '') {
+// 					var p3 = 4.5;
+// 				} else {
+// 					var p3 = +isx.p3 / 10;
+// 				}
+// 				if (+isx.p4 === 0 || isx.p4 === '') {
+// 					var p4 = 3.5;
+// 				} else {
+// 					var p4 = +isx.p4 / 10;
+// 				}
+// 				var kch = isx.Kchn;
+// 				var Gg = rashgvs_cirk(ngrg, t3, 55, kch, t4, t4, koef, t1, Ktp, Knp, beta);
+// 				var gg1 = +Gg.Gm3;
+// 				var gg2 = +Gg.Gm3;
+
+// 				if (!t4) {
+// 					gg2 = 0;
+// 				}
+
+// 				var Gm1sum = +(gg1 + Gm1).toFixed(3);
+// 				var GGG = Gm1sum;
+// 				var Gm2sum = +(gg2 + Gm2).toFixed(3);
+// 				var otpen = 2;
+// 				var PL3 = ro(t3, p3);
+// 				var PL4 = ro(t4, p4);
+// 				var objgvs = {
+// 					gdr3: { Gv: '', V: '', du_im: 0, PL: PL3 },
+// 					gdr4: { Gv: '', V: '', du_im: 0, PL: PL4 },
+// 					Ggvs: Gg
+// 				};
+// 			}
+
+// 			if (+isx.sx_otkr > 1) {
+// 				var PL3 = ro(t3, p3);
+// 				var Gv3 = (Gg.Gm3 / PL3 * 1000).toFixed(3);
+
+// 				if (+isx.sx_otkr < 3) {
+// 					var PL4 = ro(t4, p4);
+// 					var Gv4 = (Gg.Gm4 / PL4 * 1000).toFixed(3);
+// 				} else {
+// 					var PL4 = '';
+// 					var Gv4 = '';
+// 				}
+
+// 				var objgvs = {
+// 					gdr3: { Gv: Gv3, V: '', du_im: 0, PL: PL3 },
+// 					gdr4: { Gv: Gv4, V: '', du_im: 0, PL: PL4 },
+// 					Ggvs: Gg
+// 				};
+// 			}
+
+// 			if (peres === 'peres') {
+// 				var DUim1 = isx.di1;
+// 				var duTr1 = isx.dut1;
+// 			} else {
+// 				var n1 = podbor(GGG, t1, p1, tipL, sk);
+// 				var DUim1 = n1[1];
+// 				var duTr1 = n1[2];
+// 			}
+
+// 			var gdr1 = gidr(t1, DUim1, duTr1, Gm1, p1, tipL, gg1, t3, p3, otpen, isx.filo, 0, tipIM);
+// 			var DUim2 = DUim1;
+// 			var gdr2 = gidr(t2, DUim2, duTr1, Gm2, p2, tipL, gg2, t4, p4, otpen, isx.filo, 0, tipIM);
+
+// 			if (isx.sx_ot > 0) {
+// 				var Gm9 = +(ngr * 3.6).toFixed(4);
+
+// 				if (peres === 'peres') {
+// 					var DUim9 = isx.di9;
+// 					var duTr9 = isx.dut9;
+// 				} else {
+// 					var n9 = podborPodp(Gm9, t2, p2, sk);
+// 					var DUim9 = n9[1];
+// 					var duTr9 = n9[2];
+// 				}
+// 				var gdr9 = gidr(t2, DUim9, duTr9, Gm9, p2, 'kl', null, null, null, 0, 0, 0, 5);
+// 			} else {
+// 				var gdr9 = { Gv: '', V: '', du_im: 0 };
+// 			}
+
+// 			var OT = { Gm1, Gm2, Gv1, Gv2, Gm1sum, Gm2sum, Gm9 };
+// 			var objot = {
+// 				OT: OT,
+// 				gdr1: gdr1,
+// 				gdr2: gdr2,
+// 				gdr9: gdr9
+// 			};
+// 		} else {
+// 			var objot = {
+// 				OT: {},
+// 				gdr1: { Gv: '', V: '', du_im: isx.di1, du_tr: isx.dut1 },
+// 				gdr2: { Gv: '', V: '', du_im: isx.di2, du_tr: isx.dut2 },
+// 				gdr9: { Gv: '', V: '', du_im: isx.di9, du_tr: isx.dut9 },
+// 				not_ot: {}
+// 			};
+// 		}
+// 	}
+
+// 	if (tip_rascheta != 'ot') {
+// 		if (+isx.sx_gvs_dep === 0 && +isx.sx_otkr < 2) {
+// 			if (isx.qmax > 0) {
+// 				var ngr = isx.qmax;
+// 				var t3 = isx.t3;
+// 				var t4 = isx.t4;
+// 				if (+isx.p3 === 0 || isx.p3 === '') {
+// 					var p3 = 4.5;
+// 				} else {
+// 					var p3 = +isx.p3 / 10;
+// 				}
+// 				if (+isx.p4 === 0 || isx.p4 === '') {
+// 					var p4 = 3.5;
+// 				} else {
+// 					var p4 = +isx.p4 / 10;
+// 				}
+// 				var kch = isx.Kchn;
+// 				// var tipL = isx.tipLg;
+// 				var tipL3 = isx.tipLg3;
+// 				var tipL4 = isx.tipLg4;
+// 				var tipIMg = isx.tipIMg3;
+// 				var Ggvs = rashgvs_cirk(ngr, t3, t4, +kch, txvL, txvZ, koef, '', Ktp, Knp, beta);
+// 				var Gm3 = Ggvs.Gm3;
+// 				var Gm4 = Ggvs.Gm4;
+
+// 				if (peres === 'peres') {
+// 					var DUim3 = isx.di3;
+// 					var duTr3 = isx.dut3;
+// 				} else {
+// 					var n1 = podbor(Gm3, t3, p3, tipL, sk);
+// 					var DUim3 = n1[1];
+// 					var duTr3 = n1[2];
+// 				}
+// 				var gdr3 = gidr(t3, DUim3, duTr3, Gm3, p3, tipL3, null, null, null, 0, isx.filg, 0, tipIMg);
+// 				if (isx.sx_gvs < 1) {
+// 					if (peres === 'peres') {
+// 						var DUim4 = isx.di4;
+// 						var duTr4 = isx.dut4;
+// 					} else {
+// 						var n2 = podbor(Gm4, t4, p4, tipL, sk);
+// 						var DUim4 = n2[1];
+// 						var duTr4 = DUim4;
+// 						var duTr4 = n2[2];
+// 					}
+// 				}
+
+// 				if (DUim4 > 0) {
+// 					var gdr4 = gidr(t4, DUim4, duTr4, Gm4, p4, tipL4, null, null, null, 0, isx.filg, 1, tipIMg);
+// 				} else {
+// 					var gdr4 = { du_im: 0 };
+// 				}
+// 				var objgvs = {
+// 					gdr3: gdr3,
+// 					gdr4: gdr4,
+// 					Ggvs: Ggvs
+// 				};
+// 			} else {
+// 				if (R === 0) {
+// 					// console.log('не считаем проект ГВС - qmax = 0')
+// 					var objgvs = {
+// 						gdr3: { Gv: '', V: '', du_im: isx.di3, du_tr: isx.dut3 },
+// 						gdr4: { Gv: '', V: '', du_im: isx.di3, du_tr: isx.dut3 },
+// 						Ggvs: {},
+// 						not_gvs: {}
+// 					};
+// 				} else {
+// 					// console.log('нхуй знает ')
+// 					var objgvs = {
+// 						gdr3: { Gv: R, V: '', du_im: 0 },
+// 						gdr4: { Gv: '', V: '', du_im: 0 },
+// 						Ggvs: {}
+// 					};
+// 				}
+// 			}
+// 		}
+// 	}
+
+// 	// console.log('objgvs ', objgvs)
+// 	var resu = Object.assign({}, objot, objgvs);
+// 	return resu;
+// }
+
+function pr2(isx, sk, peres, R, tip_rascheta) {
+	let koef = 1;
+	let {
+		sx_ot,
+		sx_otkr,
+		sx_gvs,
+		sx_gvs_dep,
+		qco,
+		qmax,
+		Kchn,
+		knp,
+		ktp,
+		beta,
+		t1,
+		t2,
+		t3,
+		t4,
+		p1,
+		p2,
+		p3,
+		p4,
+		di1,
+		di9,
+		di3,
+		di4,
+		dut1,
+		dut9,
+		dut3,
+		dut4,
+		tipLo,
+		tipLg3,
+		tipLg4,
+		tipIMo,
+		tipIMg3,
+		tipIMg4,
+		txvL,
+		txvZ,
+		filo,
+		filg
+	} = isx;
+	p1 = p1 / 10;
+	p2 = p2 / 10;
+	p3 = p3 / 10;
+	p4 = p4 / 10;
 
 	if (tip_rascheta != 'gvs') {
-		if (isx.qco > 0) {
-			var ngr = +isx.qco;
-			var t1 = +isx.t1;
-			var t2 = +isx.t2;
-			if (+isx.p1 === 0 || !isx.p1) {
-				var p1 = 5;
-			} else {
-				var p1 = +isx.p1 / 10;
-			}
-			if (+isx.p2 === 0 || !isx.p2) {
-				var p2 = 4;
-			} else {
-				var p2 = +isx.p2 / 10;
-			}
-			var tipIM = isx.tipIMo;
-			var tipL = isx.tipLo;
-			var G = rash(ngr, t1, t2);
-			var Gm1 = +G;
+		if (qco > 0) {
+			var G = rash(qco, t1, t2);
+			var Gm1 = G;
 			var GGG = Gm1;
-			var Gm2 = +G;
+			var Gm2 = G;
 			var PL1 = ro(t1, p1);
 			var Gv1 = +(Gm1 * 1000 / PL1).toFixed(3);
 			var PL2 = ro(t2, p2);
 			var Gv2 = +(Gm2 * 1000 / PL2).toFixed(3);
 			var otpen = 0;
 
-			if (+isx.sx_otkr > 0) {
-				var ngrg = +isx.qmax;
-				var t3 = +isx.t3;
-				var t4 = +isx.t4;
-				if (+isx.p3 === 0 || isx.p3 === '') {
-					var p3 = 4.5;
-				} else {
-					var p3 = +isx.p3 / 10;
-				}
-				if (+isx.p4 === 0 || isx.p4 === '') {
-					var p4 = 3.5;
-				} else {
-					var p4 = +isx.p4 / 10;
-				}
-				var kch = isx.Kchn;
-				var Gg = rashgvs_cirk(ngrg, t3, t4, kch, txvL, txvZ, koef, '', Ktp, Knp, beta);
-				var gg1 = +Gg.Gm3;
-				if (isx.sx_gvs > 0) {
+			if (sx_otkr > 0) {
+				var gg2 = '';
+				var Gg = rashgvs_cirk(qmax, t3, t4, Kchn, txvL, txvZ, koef, '', ktp, knp, beta);
+				var gg1 = Gg.Gm3;
+				if (sx_gvs > 0) {
 					gg2 = 0;
 				} else {
-					var gg2 = +Gg.Gm4;
+					gg2 = +Gg.Gm4;
 				}
-				var Gm1sum = +(gg1 + Gm1).toFixed(3);
-				var GGG = Gm1sum;
-				var Gm2sum = +(gg2 + Gm2).toFixed(3);
-				var otpen = 1;
+				var Gm1sum = (gg1 + Gm1).toFixed(3);
+				GGG = Gm1sum;
+				var Gm2sum = (gg2 + Gm2).toFixed(3);
+				otpen = 1;
 			}
 
-			if (+isx.sx_gvs_dep > 0) {
-				if (+isx.sx_gvs_dep === 2) {
+			if (sx_gvs_dep > 0) {
+				if (sx_gvs_dep === 2) {
 					koef = 0.55;
 				}
-				var ngrg = +isx.qmax;
-				var t3 = +isx.t3;
-				var t4 = +isx.t4;
-				if (+isx.p3 === 0 || isx.p3 === '') {
-					var p3 = 4.5;
-				} else {
-					var p3 = +isx.p3 / 10;
-				}
-				if (+isx.p4 === 0 || isx.p4 === '') {
-					var p4 = 3.5;
-				} else {
-					var p4 = +isx.p4 / 10;
-				}
-				var kch = isx.Kchn;
-				var Gg = rashgvs_cirk(ngrg, t3, 55, kch, t4, t4, koef, t1, Ktp, Knp, beta);
-				var gg1 = +Gg.Gm3;
-				var gg2 = +Gg.Gm3;
 
+				Gg = rashgvs_cirk(qmax, t3, 55, Kchn, t4, t4, koef, t1, ktp, knp, beta);
+				gg1 = Gg.Gm3;
+				gg2 = Gg.Gm3;
 				if (!t4) {
 					gg2 = 0;
 				}
 
-				var Gm1sum = +(gg1 + Gm1).toFixed(3);
-				var GGG = Gm1sum;
-				var Gm2sum = +(gg2 + Gm2).toFixed(3);
-				var otpen = 2;
+				Gm1sum = (gg1 + Gm1).toFixed(3);
+				GGG = Gm1sum;
+				Gm2sum = (gg2 + Gm2).toFixed(3);
+				otpen = 2;
 				var PL3 = ro(t3, p3);
 				var PL4 = ro(t4, p4);
 				var objgvs = {
@@ -527,52 +774,44 @@ function pr(isx, sk, peres, R, tip_rascheta) {
 				};
 			}
 
-			if (+isx.sx_otkr > 1) {
-				var PL3 = ro(t3, p3);
+			if (sx_otkr > 1) {
+				PL3 = ro(t3, p3);
 				var Gv3 = (Gg.Gm3 / PL3 * 1000).toFixed(3);
 
-				if (+isx.sx_otkr < 3) {
-					var PL4 = ro(t4, p4);
+				if (sx_otkr < 3) {
+					PL4 = ro(t4, p4);
 					var Gv4 = (Gg.Gm4 / PL4 * 1000).toFixed(3);
 				} else {
-					var PL4 = '';
-					var Gv4 = '';
+					PL4 = '';
+					Gv4 = '';
 				}
 
-				var objgvs = {
+				objgvs = {
 					gdr3: { Gv: Gv3, V: '', du_im: 0, PL: PL3 },
 					gdr4: { Gv: Gv4, V: '', du_im: 0, PL: PL4 },
 					Ggvs: Gg
 				};
 			}
 
-			if (peres === 'peres') {
-				var DUim1 = isx.di1;
-				var duTr1 = isx.dut1;
-			} else {
-				var n1 = podbor(GGG, t1, p1, tipL, sk);
-				var DUim1 = n1[1];
-				var duTr1 = n1[2];
+			if (peres != 'peres') {
+				var n1 = podbor(GGG, t1, p1, tipLo, sk);
+				di1 = n1[1];
+				dut1 = n1[2];
 			}
+			var gdr1 = gidr(t1, di1, dut1, Gm1, p1, tipLo, gg1, t3, p3, otpen, filo, 0, tipIMo);
+			var gdr2 = gidr(t2, di1, dut1, Gm2, p2, tipLo, gg2, t4, p4, otpen, filo, 0, tipIMo);
 
-			var gdr1 = gidr(t1, DUim1, duTr1, Gm1, p1, tipL, gg1, t3, p3, otpen, isx.filo, 0, tipIM);
-			var DUim2 = DUim1;
-			var gdr2 = gidr(t2, DUim2, duTr1, Gm2, p2, tipL, gg2, t4, p4, otpen, isx.filo, 0, tipIM);
+			if (sx_ot > 0) {
+				var Gm9 = (qco * 3.6).toFixed(4);
 
-			if (isx.sx_ot > 0) {
-				var Gm9 = +(ngr * 3.6).toFixed(4);
-
-				if (peres === 'peres') {
-					var DUim9 = isx.di9;
-					var duTr9 = isx.dut9;
-				} else {
+				if (peres != 'peres') {
 					var n9 = podborPodp(Gm9, t2, p2, sk);
-					var DUim9 = n9[1];
-					var duTr9 = n9[2];
+					di9 = n9[1];
+					dut9 = n9[2];
 				}
-				var gdr9 = gidr(t2, DUim9, duTr9, Gm9, p2, 'kl', null, null, null, 0, 0, 0, 5);
+				var gdr9 = gidr(t2, di9, dut9, Gm9, p2, 'kl', null, null, null, 0, 0, 0, 5);
 			} else {
-				var gdr9 = { Gv: '', V: '', du_im: 0 };
+				gdr9 = { Gv: '', V: '', du_im: 0 };
 			}
 
 			var OT = { Gm1, Gm2, Gv1, Gv2, Gm1sum, Gm2sum, Gm9 };
@@ -583,7 +822,7 @@ function pr(isx, sk, peres, R, tip_rascheta) {
 				gdr9: gdr9
 			};
 		} else {
-			var objot = {
+			objot = {
 				OT: {},
 				gdr1: { Gv: '', V: '', du_im: isx.di1, du_tr: isx.dut1 },
 				gdr2: { Gv: '', V: '', du_im: isx.di2, du_tr: isx.dut2 },
@@ -594,57 +833,33 @@ function pr(isx, sk, peres, R, tip_rascheta) {
 	}
 
 	if (tip_rascheta != 'ot') {
-		if (+isx.sx_gvs_dep === 0 && +isx.sx_otkr < 2) {
+		if (sx_gvs_dep === 0 && sx_otkr < 2) {
 			if (isx.qmax > 0) {
-				var ngr = isx.qmax;
-				var t3 = isx.t3;
-				var t4 = isx.t4;
-				if (+isx.p3 === 0 || isx.p3 === '') {
-					var p3 = 4.5;
-				} else {
-					var p3 = +isx.p3 / 10;
-				}
-				if (+isx.p4 === 0 || isx.p4 === '') {
-					var p4 = 3.5;
-				} else {
-					var p4 = +isx.p4 / 10;
-				}
-				var kch = isx.Kchn;
-				// var tipL = isx.tipLg;
-				var tipL3 = isx.tipLg3;
-				var tipL4 = isx.tipLg4;
-				var tipIMg = isx.tipIMg3;
-				var Ggvs = rashgvs_cirk(ngr, t3, t4, +kch, txvL, txvZ, koef, '', Ktp, Knp, beta);
+				var Ggvs = rashgvs_cirk(qmax, t3, t4, Kchn, txvL, txvZ, koef, '', ktp, knp, beta);
 				var Gm3 = Ggvs.Gm3;
 				var Gm4 = Ggvs.Gm4;
 
-				if (peres === 'peres') {
-					var DUim3 = isx.di3;
-					var duTr3 = isx.dut3;
-				} else {
-					var n1 = podbor(Gm3, t3, p3, tipL, sk);
-					var DUim3 = n1[1];
-					var duTr3 = n1[2];
+				if (peres != 'peres') {
+					n1 = podbor(Gm3, t3, p3, tipLg3, sk);
+					di3 = n1[1];
+					dut3 = n1[2];
 				}
-				var gdr3 = gidr(t3, DUim3, duTr3, Gm3, p3, tipL3, null, null, null, 0, isx.filg, 0, tipIMg);
-				if (isx.sx_gvs < 1) {
-					if (peres === 'peres') {
-						var DUim4 = isx.di4;
-						var duTr4 = isx.dut4;
-					} else {
-						var n2 = podbor(Gm4, t4, p4, tipL, sk);
-						var DUim4 = n2[1];
-						var duTr4 = DUim4;
-						var duTr4 = n2[2];
+				var gdr3 = gidr(t3, di3, dut3, Gm3, p3, tipLg3, null, null, null, 0, filg, 0, tipIMg3);
+
+				if (sx_gvs < 1) {
+					if (peres != 'peres') {
+						var n2 = podbor(Gm4, t4, p4, tipLg4, sk);
+						di4 = n2[1];
+						dut4 = n2[2];
 					}
 				}
 
-				if (DUim4 > 0) {
-					var gdr4 = gidr(t4, DUim4, duTr4, Gm4, p4, tipL4, null, null, null, 0, isx.filg, 1, tipIMg);
+				if (di4 > 0) {
+					var gdr4 = gidr(t4, di4, dut4, Gm4, p4, tipLg4, null, null, null, 0, filg, 1, tipIMg4);
 				} else {
-					var gdr4 = { du_im: 0 };
+					gdr4 = { du_im: 0 };
 				}
-				var objgvs = {
+				objgvs = {
 					gdr3: gdr3,
 					gdr4: gdr4,
 					Ggvs: Ggvs
@@ -652,7 +867,7 @@ function pr(isx, sk, peres, R, tip_rascheta) {
 			} else {
 				if (R === 0) {
 					// console.log('не считаем проект ГВС - qmax = 0')
-					var objgvs = {
+					objgvs = {
 						gdr3: { Gv: '', V: '', du_im: isx.di3, du_tr: isx.dut3 },
 						gdr4: { Gv: '', V: '', du_im: isx.di3, du_tr: isx.dut3 },
 						Ggvs: {},
@@ -660,7 +875,7 @@ function pr(isx, sk, peres, R, tip_rascheta) {
 					};
 				} else {
 					// console.log('нхуй знает ')
-					var objgvs = {
+					objgvs = {
 						gdr3: { Gv: R, V: '', du_im: 0 },
 						gdr4: { Gv: '', V: '', du_im: 0 },
 						Ggvs: {}
@@ -676,7 +891,7 @@ function pr(isx, sk, peres, R, tip_rascheta) {
 }
 
 function calc(isx, sk, peres, R, tip_rascheta) {
-	var result = pr(isx, sk, peres, R, tip_rascheta);
+	var result = pr2(isx, sk, peres, R, tip_rascheta);
 	return result;
 }
 
