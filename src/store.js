@@ -1,16 +1,18 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import rekv from '@/store/rekv';
+import calcModule from '@/store/calc';
+import hvs from '@/store/hvs';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  }
-})
+	modules: {
+		rekv,
+		calcModule,
+		hvs
+	},
+	state: {},
+	mutations: {},
+	actions: {}
+});
