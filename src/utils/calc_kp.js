@@ -1,7 +1,8 @@
 function zeroc(d) {
+	var objo = {};
 	switch (d) {
 		case 't1':
-			var objot = {
+			objo = {
 				OT: {},
 				gdr1: { Gv: '', V: '', du_im: 0 },
 				gdr2: { Gv: '', V: '', du_im: 0 },
@@ -9,15 +10,14 @@ function zeroc(d) {
 			};
 			break;
 		case 't3':
-			var objot = {
+			objo = {
 				Ggvs: {},
 				gdr3: { Gv: '', V: '', du_im: 0 },
 				gdr4: { Gv: '', V: '', du_im: 0 }
 			};
 			break;
 	}
-
-	return objot;
+	return objo;
 }
 
 function podborR(Gv, sk) {
@@ -51,16 +51,21 @@ function podborR(Gv, sk) {
 	};
 }
 function speed(R, d, dd) {
+	var objot = {};
+	var a1 = Math.pow(dd * 0.001, 2) / 4;
+	var V = (R * 1 / (3.14 * a1) / 3600).toFixed(2);
+	var R4 = (R * 0.4).toFixed(3);
+	var V4 = (R4 * 1 / (3.14 * a1) / 3600).toFixed(2);
 	switch (d) {
 		case 't1':
-			var a1 = Math.pow(dd * 0.001, 2) / 4;
-			var V = (R * 1 / (3.14 * a1) / 3600).toFixed(2);
+			// var a1 = Math.pow(dd * 0.001, 2) / 4;
+			// var V = (R * 1 / (3.14 * a1) / 3600).toFixed(2);
 			var OT = {};
 			var gdr1 = { Gv: R, V: V, du_im: dd, du_tr: dd };
 			var gdr2 = gdr1;
 			var gdr9 = gdr1;
 
-			var objot = {
+			objot = {
 				OT: OT,
 				gdr1: gdr1,
 				gdr2: gdr2,
@@ -68,30 +73,26 @@ function speed(R, d, dd) {
 			};
 			break;
 		case 't3':
-			var R4 = (R * 0.4).toFixed(3);
-			var a1 = Math.pow(dd * 0.001, 2) / 4;
-			var V = (R * 1 / (3.14 * a1) / 3600).toFixed(2);
-			var V4 = (R4 * 1 / (3.14 * a1) / 3600).toFixed(2);
+			// var R4 = (R * 0.4).toFixed(3);
+			// var a1 = Math.pow(dd * 0.001, 2) / 4;
+			// var V = (R * 1 / (3.14 * a1) / 3600).toFixed(2);
+			// var V4 = (R4 * 1 / (3.14 * a1) / 3600).toFixed(2);
 			var Ggvs = {};
 			var gdr3 = { Gv: R, V: V, du_im: dd };
 			var gdr4 = { Gv: R4, V: V4, du_im: dd };
 
-			var objot = {
+			objot = {
 				gdr3: gdr3,
 				gdr4: gdr4,
 				Ggvs: Ggvs
 			};
 			break;
 		case 't4':
-			// var R4 = (R*0.4).toFixed(3)
-			var a1 = Math.pow(dd * 0.001, 2) / 4;
-			var V = (R * 1 / (3.14 * a1) / 3600).toFixed(2);
-			// var V4 = (R4*1/((3.14*a1))/3600).toFixed(2);
-			var Ggvs = {};
-			// var gdr3 = { Gv: R,  V:V,  du_im:dd };
-			var gdr4 = { Gv: R4, V: V4, du_im: dd };
+			// var V = (R * 1 / (3.14 * a1) / 3600).toFixed(2);
+			Ggvs = {};
+			gdr4 = { Gv: R4, V: V4, du_im: dd };
 
-			var objot = {
+			objot = {
 				gdr3: gdr3,
 				gdr4: gdr4,
 				Ggvs: Ggvs
@@ -137,9 +138,9 @@ function calc(R, sk, d, m, dd, zero) {
 		var result = zeroc(d);
 	} else {
 		if (m === 'peres') {
-			var result = speed(R, d, dd);
+			result = speed(R, d, dd);
 		} else {
-			var result = kp(R, sk, d);
+			result = kp(R, sk, d);
 		}
 	}
 	return result;

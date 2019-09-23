@@ -10,6 +10,15 @@
 
       <div class="form-group">
         <!-- <div class='form-row'> -->
+
+        <div class="col">
+          <b-form-checkbox switch size="sm" v-model.number="isx.IL" value="1" unchecked-value="0">
+            <h6>
+              <span class="badge">Измерительные линии</span>
+            </h6>
+          </b-form-checkbox>
+        </div>
+
         <div class="col">
           <h6>
             <span class="badge">Системный блок</span>
@@ -28,7 +37,7 @@
           </h6>
           <multiselect
             v-model="plats"
-            :options="options"
+            :options="Plats_r"
             :multiple="true"
             track-by="lib"
             :custom-label="customLabel"
@@ -75,7 +84,7 @@
                 name="region"
               >
                 <option
-                  v-for="region in regions"
+                  v-for="region in Regions"
                   v-bind:value="region.value"
                   :key="region.key"
                 >{{ region.text }}</option>
@@ -354,7 +363,7 @@
               v-on:change="change_du('t1','peres')"
             >
               <option
-                v-for="(option, index) in opt"
+                v-for="(option, index) in DU"
                 v-bind:value="option.value"
                 :key="index"
               >{{ option.text }}</option>
@@ -487,7 +496,7 @@
                 v-on:change="change_du('t9','peres')"
               >
                 <option
-                  v-for="(option, index) in opt"
+                  v-for="(option, index) in DU"
                   v-bind:value="option.value"
                   :key="index"
                 >{{ option.text }}</option>
@@ -578,7 +587,6 @@
           </div>
         </div>
 
-        <!-- <div class="form-group"> -->
         <div class="form-row">
           <div class="col">
             <label class="col-form-label">Тип изм. линии</label>
@@ -613,6 +621,7 @@
           <div class="col-md-3 text-center">
             <label class="col-form-label md-3">Обр. клапан</label>
             <b-form-checkbox
+              switch
               size="sm"
               v-model.number="isx.ok"
               :disabled="fg"
@@ -621,7 +630,6 @@
             ></b-form-checkbox>
           </div>
         </div>
-        <!-- </div> -->
 
         <div class="form-row">
           <div class="col">
@@ -812,7 +820,7 @@
               :disabled="stup"
             >
               <option
-                v-for="(option, index) in opt"
+                v-for="(option, index) in DU"
                 v-bind:value="option.value"
                 :key="index"
               >{{ option.text }}</option>
@@ -826,7 +834,7 @@
               :disabled="im4||stup"
             >
               <option
-                v-for="(option, index) in opt"
+                v-for="(option, index) in DU"
                 v-bind:value="option.value"
                 :key="index"
               >{{ option.text }}</option>
@@ -955,14 +963,14 @@
           <div class="col-md-12">
             <img
               id="sximageog"
-              v-bind:src="imgsx.sx"
+              v-bind:src="img.sx"
               width="100%"
               @click="showModal"
               style="cursor: pointer;"
             />
             <b-modal ref="myModalRef" hide-footer title="Принципиальная схема узла учета" size="lg">
               <div class="d-block text-center">
-                <img id="sximageog" v-bind:src="imgsx.sx" width="100%" />
+                <img id="sximageog" v-bind:src="img.sx" width="100%" />
               </div>
               <b-btn class="mt-3" variant="outline-danger" block @click="hideModal">Закрыть</b-btn>
             </b-modal>
@@ -982,58 +990,8 @@
             <b-badge variant="light">{{imgsx.zz}}</b-badge>
           </b-btn>
 
-          <b-btn class="btn btn-sm btn-block mb-3" @click="test">test JSON</b-btn>
+          <!-- <b-btn class="btn btn-sm btn-block mb-3" @click="test">test JSON</b-btn> -->
 
-          <!-- <div class='form-group'>
-                            <b-row>
-          <div class='col-md-6' style="font-size:.7em;">-->
-          <!-- <ul id="example-1">
-                                    <li v-for="(item, index) in rescalc.OT" :key="index">
-                                        {{ item }} - {{index}} 
-                                    
-                                    </li>
-          </ul>-->
-          <!-- <ul id="example-2">
-                                    <li v-for="(item, index) in rescalc.Ggvs" :key="index">
-                                        {{index}}: {{ item }}
-                                    
-                                    </li>
-          </ul>-->
-
-          <!-- <div class="form-group" style="font-size:.7em;">
-            Основное оборудование - {{plats.length+1}}
-            <br />Узел учета ЦО NPOZ:
-            <ul id="example-1">
-              <li v-for="(item, index) in pozOt.arNPOZot" :key="index">поз. - {{ item }} - {{index}}</li>
-            </ul>Узел учета CO NPOZ:
-            <ul id="example-1">
-              <li v-for="(item, index) in pozOt.arNPOZot" :key="index">{{index}} - {{ item }}</li>
-            </ul>Узел учета ГВС:
-            <ul id="example-1">
-              <li
-                v-for="(item, index) in pozOt.arNPOZgvs"
-                :key="index"
-              >поз. - {{ item }} - {{index}}</li>
-            </ul>
-          </div>-->
-
-          <!--                                     
-                                </div>
-
-                                <div class='col-md-6' style="font-size:.7em;">
-
-                                Узел учета GVS  NPOZ:
-                                <ul id="example-1">
-                                    <li v-for="(item, index) in pozOt.arNPOZgvs" :key="index">
-                                        {{index}} - {{ item }}
-                                        
-                                    </li>
-                                    </ul>
-    
-                                    
-                                </div>
-                            </b-row>
-          </div>-->
           <input type="hidden" name="A" v-model="php" />
         </div>
       </div>
@@ -1047,6 +1005,9 @@ import Axios from "axios";
 import clc_pr from "@/utils/calc_pr.js";
 import clc_kp from "@/utils/calc_kp.js";
 import Multiselect from "vue-multiselect";
+import DU from "@/utils/du";
+import Regions from "@/utils/regions";
+import Plats_r from "@/utils/plats_R";
 export default {
   components: {
     Multiselect
@@ -1054,6 +1015,9 @@ export default {
 
   data() {
     return {
+      DU,
+      Plats_r,
+      Regions,
       plats: [
         {
           plt: "GSM-модем",
@@ -1062,396 +1026,6 @@ export default {
         {
           plt: "USBA",
           lib: "usba"
-        }
-      ],
-      options: [
-        {
-          plt: "GSM-модем",
-          lib: "gsm"
-        },
-        {
-          plt: "USBA",
-          lib: "usba"
-        },
-        {
-          plt: "Ethernet ПРС-802",
-          lib: "prs802"
-        },
-        {
-          plt: "RS485E",
-          lib: "rs485"
-        },
-        {
-          plt: "УПП",
-          lib: "lpt"
-        }
-      ],
-      regions: [
-        {
-          text: "Без климатологии",
-          value: "0"
-        },
-        {
-          text: "Алтайский край",
-          value: "1"
-        },
-        {
-          text: "Амурская область",
-          value: "2"
-        },
-        {
-          text: "Архангельская область",
-          value: "3"
-        },
-        {
-          text: "Астраханская область",
-          value: "4"
-        },
-        {
-          text: "Белгородская область",
-          value: "5"
-        },
-        {
-          text: "Брянская область",
-          value: "6"
-        },
-        {
-          text: "Владимирская область",
-          value: "7"
-        },
-        {
-          text: "Волгоградская область",
-          value: "8"
-        },
-        {
-          text: "Вологодская область",
-          value: "9"
-        },
-        {
-          text: "Воронежская область",
-          value: "10"
-        },
-        {
-          text: "Ивановская область",
-          value: "11"
-        },
-        {
-          text: "Иркутская область",
-          value: "12"
-        },
-        {
-          text: "Кабардино- Балкарская Республика",
-          value: "13"
-        },
-        {
-          text: "Калининградская область",
-          value: "14"
-        },
-        {
-          text: "Калужская область",
-          value: "15"
-        },
-        {
-          text: "Камчатская область",
-          value: "16"
-        },
-        {
-          text: "Карачаево-Черкесская Республика",
-          value: "17"
-        },
-        {
-          text: "Кемеровская область",
-          value: "18"
-        },
-        {
-          text: "Кировская область",
-          value: "19"
-        },
-        {
-          text: "Костромская область",
-          value: "20"
-        },
-        {
-          text: "Краснодарский край",
-          value: "21"
-        },
-        {
-          text: "Красноярский край",
-          value: "22"
-        },
-        {
-          text: "Курганская область",
-          value: "23"
-        },
-        {
-          text: "Курская область",
-          value: "24"
-        },
-        {
-          text: "Ленинградская область",
-          value: "25"
-        },
-        {
-          text: "Липецкая область",
-          value: "26"
-        },
-        {
-          text: "Магаданская область",
-          value: "27"
-        },
-        {
-          text: "Московская область",
-          value: "28"
-        },
-        {
-          text: "Мурманская область",
-          value: "29"
-        },
-        {
-          text: "Ненецкий АО  (Архангельская область)",
-          value: "30"
-        },
-        {
-          text: "Нижегородская область",
-          value: "31"
-        },
-        {
-          text: "Новгородская область",
-          value: "32"
-        },
-        {
-          text: "Новосибирская область",
-          value: "33"
-        },
-        {
-          text: "Омская область",
-          value: "34"
-        },
-        {
-          text: "Оренбургская область",
-          value: "35"
-        },
-        {
-          text: "Орловская область",
-          value: "36"
-        },
-        {
-          text: "Пензенская область",
-          value: "37"
-        },
-        {
-          text: "Пермская область",
-          value: "38"
-        },
-        {
-          text: "Приморский край",
-          value: "39"
-        },
-        {
-          text: "Псковская область",
-          value: "40"
-        },
-        {
-          text: "Республика Адыгея",
-          value: "41"
-        },
-        {
-          text: "Республика Алтай",
-          value: "42"
-        },
-        {
-          text: "Республика Башкортостан",
-          value: "43"
-        },
-        {
-          text: "Республика Бурятия",
-          value: "44"
-        },
-        {
-          text: "Республика Дагестан",
-          value: "45"
-        },
-        {
-          text: "Республика Калмыкия",
-          value: "46"
-        },
-        {
-          text: "Республика Карелия",
-          value: "47"
-        },
-        {
-          text: "Республика Коми",
-          value: "48"
-        },
-        {
-          text: "Республика Марий Эл",
-          value: "49"
-        },
-        {
-          text: "Республика Мордовия",
-          value: "50"
-        },
-        {
-          text: "Республика Саха (Якутия)",
-          value: "51"
-        },
-        {
-          text: "Республика Северная Осетия - Алания",
-          value: "52"
-        },
-        {
-          text: "Республика Татарстан",
-          value: "53"
-        },
-        {
-          text: "Республика Тыва",
-          value: "54"
-        },
-        {
-          text: "Республика Хакассия",
-          value: "55"
-        },
-        {
-          text: "Ростовская область",
-          value: "56"
-        },
-        {
-          text: "Рязанская область",
-          value: "57"
-        },
-        {
-          text: "Самарская область",
-          value: "58"
-        },
-        {
-          text: "Саратовская область",
-          value: "59"
-        },
-        {
-          text: "Сахалинская область",
-          value: "60"
-        },
-        {
-          text: "Свердловская область",
-          value: "61"
-        },
-        {
-          text: "Смоленская область",
-          value: "62"
-        },
-        {
-          text: "Ставропольский край",
-          value: "63"
-        },
-        {
-          text: "Тамбовская область",
-          value: "64"
-        },
-        {
-          text: "Тверская область",
-          value: "65"
-        },
-        {
-          text: "Томская область",
-          value: "66"
-        },
-        {
-          text: "Тульская область",
-          value: "67"
-        },
-        {
-          text: "Тюменская область",
-          value: "68"
-        },
-        {
-          text: "Удмуртская Республика",
-          value: "69"
-        },
-        {
-          text: "Ульяновская область",
-          value: "70"
-        },
-        {
-          text: "Хабаровский край",
-          value: "71"
-        },
-        {
-          text: "Челябинская область",
-          value: "72"
-        },
-        {
-          text: "Чеченская Республика",
-          value: "73"
-        },
-        {
-          text: "Читинская область",
-          value: "74"
-        },
-        {
-          text: "Чувашская Республика",
-          value: "75"
-        },
-        {
-          text: "Чукотский АО (Магаданская область)",
-          value: "76"
-        },
-        {
-          text: "Ярославская область",
-          value: "77"
-        },
-        {
-          text: "Республика Крым",
-          value: "78"
-        }
-      ],
-      opt: [
-        {
-          text: "нет",
-          value: "0"
-        },
-        {
-          text: "15",
-          value: "15"
-        },
-        {
-          text: "25",
-          value: "25"
-        },
-        {
-          text: "32",
-          value: "32"
-        },
-        {
-          text: "40",
-          value: "40"
-        },
-        {
-          text: "50",
-          value: "50"
-        },
-        {
-          text: "65",
-          value: "65"
-        },
-        {
-          text: "80",
-          value: "80"
-        },
-        {
-          text: "100",
-          value: "100"
-        },
-        {
-          text: "150",
-          value: "150"
-        },
-        {
-          text: "200",
-          value: "200"
-        },
-        {
-          text: "300",
-          value: "300"
         }
       ],
       isx: {
@@ -1501,10 +1075,10 @@ export default {
         filo: 0,
         filg: 0,
         filp: 0,
+        IL: 0,
         selReg: 0,
         mess: [],
         indexnas: "",
-        onlineKP: true,
         imagePlane: ""
       },
       sb: {
@@ -1514,10 +1088,8 @@ export default {
         lsbg: 15
       },
       info: "Параметры ЦО",
-      ro: true,
-      fo: false,
       infg: "Параметры ГВС",
-      rg: true,
+      fo: false,
       fg: false,
       im4: true,
       show: false,
@@ -1539,25 +1111,37 @@ export default {
       );
       return ppp;
     },
-    disButKP() {
-      let empt = "";
-      let c6 = "";
-      if (this.isx.di1 == "0" && this.isx.di3 == "0") {
-        empt = 1;
-      } else {
-        empt = 0;
+    img() {
+      let tipu = this.tipProject;
+      let z = 10;
+      let z1 = 0;
+      let z2 = this.isx.sx_ot;
+      let z3 = this.isx.sx_otkr;
+      let z4 = this.isx.sx_gvs;
+
+      switch (tipu) {
+        case "o":
+          z1 = 10;
+          z = z1 + z2;
+          break;
+        case "g":
+          z1 = 20;
+          z = z1 + z4;
+          break;
+        case "og":
+          if (this.isx.sx_gvs_dep > 1) {
+            z4 = +this.isx.sx_gvs_dep + 3;
+          }
+          z1 = 3;
+          z = z1 + z2 + z3 + z4;
+          break;
+        default:
+          break;
       }
-      if (this.check6.y1 || this.check6.y3 || this.check6.y4) {
-        c6 = 1;
-      } else {
-        c6 = 0;
-      }
-      let f = empt + c6;
-      if (f > 0) {
-        return true;
-      } else {
-        return false;
-      }
+      let sx = "./img/" + z + ".svg";
+      return {
+        sx
+      };
     },
     select_T2() {
       let im = "И6";
@@ -1627,7 +1211,6 @@ export default {
         y: y
       };
     },
-
     grz() {
       let o = false;
       let g = false;
@@ -1778,8 +1361,8 @@ export default {
       };
     },
     imgsx() {
-      let z = "10";
-      let z1 = "";
+      let z = 10;
+      let z1 = 9;
       let zz = "";
       let bf7 = 1;
       let bf8 = 0;
@@ -1856,6 +1439,7 @@ export default {
 
           z1 = 3;
           z = z1 + z2 + z3 + z4;
+
           if (this.ml.y) {
             v1 = 0;
           }
@@ -2128,7 +1712,6 @@ export default {
 
     rash(d) {
       let R = 0;
-      let R4 = 0;
       switch (d) {
         case "t1":
           R = this.rescalc.gdr1.Gv;
@@ -2148,7 +1731,7 @@ export default {
               d: d
             });
             //проверяю Ду трубы
-            let ch1 = this.dipTR(this.isx.di1, this.isx.dut1);
+            let ch1 = this.checkdiapTR(this.isx.di1, this.isx.dut1);
             if (ch1) {
               this.isx.dut1 = this.isx.di1;
               this.isx.dut2 = this.isx.di1;
@@ -2200,7 +1783,7 @@ export default {
             });
 
             //проверяю Ду трубы
-            let ch3 = this.dipTR(this.isx.di3, this.isx.dut3);
+            let ch3 = this.checkdiapTR(this.isx.di3, this.isx.dut3);
             if (ch3) {
               this.isx.dut3 = this.isx.di3;
               this.isx.dut4 = this.isx.di4;
@@ -2218,7 +1801,6 @@ export default {
     },
 
     change_du(d, h) {
-      // console.log("d==", d);
       let R = "";
       let result = "";
       switch (d) {
@@ -2318,8 +1900,6 @@ export default {
               result: result
             });
             // смешанный уу гвс
-            // this.isx.tipLg4 = this.ml4_kl4;
-            // console.log("смешанный уу гвс", this.ml4_kl4());
             this.isx.tipLg4 = this.ml4_kl4;
           } else {
             // переключаем на тупик
@@ -2364,7 +1944,6 @@ export default {
       }
       this.isx.tipuu = this.tipProject;
       let kp = this.tipKP;
-      // this.$store.dispatch("tipkp", kp);
     },
 
     checkdiapTR(du_im, du_tr) {
@@ -2442,9 +2021,7 @@ export default {
             console.log(error);
           });
       } else {
-        let asd = [];
         this.isx.indexnas = "";
-        // this.$store.dispatch("actnas", asd);
       }
     },
     test() {
