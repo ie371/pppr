@@ -984,10 +984,10 @@
             type="submit"
             class="btn btn-sm btn-block mb-3"
             formaction="./pdf/project/pr.php"
-            :disabled="imgsx.bf7 ===1 ? true : false"
+            :disabled="disable_dutton.bf7 ===1 ? true : false"
           >
             Создать проект
-            <b-badge variant="light">{{imgsx.zz}}</b-badge>
+            <b-badge variant="light">{{img.zz}}</b-badge>
           </b-btn>
 
           <!-- <b-btn class="btn btn-sm btn-block mb-3" @click="test">test JSON</b-btn> -->
@@ -1032,7 +1032,6 @@ export default {
         pr_ot: 0,
         pr_gvs: 0,
         tipuu: "",
-        tipkp: "",
         sx_ot: 0,
         sx_otkr: 0,
         sx_gvs: 0,
@@ -1092,9 +1091,9 @@ export default {
       fo: false,
       fg: false,
       im4: true,
-      show: false,
+      // show: false,
       stup: false,
-      stup4: false,
+      // stup4: false,
       otklFormatSPL: true,
       otklFormatPrSx: true,
       file: null
@@ -1118,29 +1117,36 @@ export default {
       let z2 = this.isx.sx_ot;
       let z3 = this.isx.sx_otkr;
       let z4 = this.isx.sx_gvs;
-
+      let zz = "";
       switch (tipu) {
         case "o":
           z1 = 10;
           z = z1 + z2;
+          zz = "ЦО";
           break;
         case "g":
           z1 = 20;
           z = z1 + z4;
+          zz = "ГВС";
           break;
         case "og":
-          if (this.isx.sx_gvs_dep > 1) {
-            z4 = +this.isx.sx_gvs_dep + 3;
-          }
+          this.isx.sx_otkr < 2 ? (zz = "ЦО + ГВС") : (zz = "TC");
+
           z1 = 3;
-          z = z1 + z2 + z3 + z4;
+          this.isx.sx_otkr == 3 ? (z4 = 1) : (z4 = 0);
+          if (this.isx.sx_gvs_dep > 0) {
+            z4 = this.isx.sx_gvs_dep + 3;
+            zz = "ИТП";
+          }
+          z = "" + z1 + z2 + z3 + z4;
           break;
         default:
           break;
       }
       let sx = "./img/" + z + ".svg";
       return {
-        sx
+        sx,
+        zz
       };
     },
     select_T2() {
@@ -1360,136 +1366,51 @@ export default {
         y4
       };
     },
-    imgsx() {
-      let z = 10;
-      let z1 = 9;
-      let zz = "";
+    disable_dutton() {
       let bf7 = 1;
-      let bf8 = 0;
-      let v1 = 0;
-      let v2 = 0;
+      let bf8 = 1;
+      let v1 = 1;
+      let v2 = 1;
       let v3 = 0;
-      let tipu = this.tipProject;
-      let z2 = this.isx.sx_ot;
-      let z3 = this.isx.sx_otkr;
-      let z4 = this.isx.sx_gvs;
-
-      switch (tipu) {
+      switch (this.tipProject) {
         case "o":
-          z1 = 1;
-          z = z1 + z2;
-          zz = "ЦО";
-          if (this.check6.y1 || this.ml.o) {
-            v1 = 1;
-          } else {
-            v1 = 0;
-          }
-          if (this.isx.dut1 < 33 && this.isx.filo == "2") {
-            v2 = 1;
-          } else {
-            v2 = 0;
-          }
-          bf8 = v1 + v2;
-          if (bf8 > 0) {
-            bf7 = 1;
-          } else {
-            bf7 = 0;
-          }
+          this.check6.y1 || this.ml.o ? (v1 = 1) : (v1 = 0);
+          this.isx.dut1 < 33 && this.isx.filo == "2" ? (v2 = 1) : (v2 = 0);
           break;
         case "g":
-          z1 = 2;
-          z = z1 + z4;
-          zz = "ГВС";
-          if (this.check6.y3 || this.check6.y4 || this.ml.g) {
-            v1 = 1;
-          } else {
-            v1 = 0;
-          }
-          if (
-            (this.isx.dut3 < 33 && this.isx.di3 > 0 && this.isx.filg == 2) ||
-            (this.isx.dut4 < 33 && this.isx.di4 > 0 && this.isx.filg == 2)
-          ) {
-            v2 = 1;
-          } else {
-            v2 = 0;
-          }
-          // if (this.isx.di4 > 0 && this.isx.tipIMg3 !== this.isx.tipIMg4) {
-          //   v3 = 1;
-          // } else {
-          //   v3 = 0;
-          // }
-          bf8 = v1 + v2 + v3;
-          if (bf8 > 0) {
-            bf7 = 1;
-          } else {
-            bf7 = 0;
-          }
+          this.check6.y3 || this.check6.y4 || this.ml.g ? (v1 = 1) : (v1 = 0);
+          (this.isx.dut3 < 33 && this.isx.di3 > 0 && this.isx.filg == 2) ||
+          (this.isx.dut4 < 33 && this.isx.di4 > 0 && this.isx.filg == 2)
+            ? (v2 = 1)
+            : (v2 = 0);
+          this.isx.di4 > 0 && this.isx.tipIMg3 !== this.isx.tipIMg4
+            ? (v3 = 1)
+            : (v3 = 0);
           break;
         case "og":
-          if (this.isx.sx_gvs_dep < 1) {
-            if (this.isx.sx_otkr < 2) {
-              zz = "ЦО + ГВС";
-            } else {
-              zz = "TC";
-            }
-          } else {
-            zz = "ИТП";
-            z4 = +this.isx.sx_gvs_dep + 3;
-          }
-
-          z1 = 3;
-          z = z1 + z2 + z3 + z4;
-
           if (this.ml.y) {
             v1 = 0;
           }
-          if (
-            this.check6.y1 ||
-            this.check6.y3 ||
-            this.check6.y4 ||
-            this.ml.o ||
-            this.ml.g
-          ) {
-            v1 = 1;
-          } else {
-            v1 = 0;
-          }
-
-          if (
-            (this.isx.dut1 < 33 && this.isx.filo == 2) ||
-            (this.isx.dut3 < 33 && this.isx.di3 > 0 && this.isx.filg == 2) ||
-            (this.isx.dut4 < 33 && this.isx.di4 > 0 && this.isx.filg == 2)
-          ) {
-            v2 = 1;
-          } else {
-            v2 = 0;
-          }
-
-          // if (this.isx.di4 > 0 && this.isx.tipIMg3 !== this.isx.tipIMg4) {
-          //   v3 = 1;
-          // } else {
-          //   v3 = 0;
-          // }
-          // console.log("v1=", v1);
-          // console.log("v2=", v2);
-          // console.log("v3=", v3);
-          bf8 = v1 + v2 + v3;
-          if (bf8 > 0) {
-            bf7 = 1;
-          } else {
-            bf7 = 0;
-          }
-
+          this.check6.y1 ||
+          this.check6.y3 ||
+          this.check6.y4 ||
+          this.ml.o ||
+          this.ml.g
+            ? (v1 = 1)
+            : (v1 = 0);
+          (this.isx.dut1 < 33 && this.isx.filo == 2) ||
+          (this.isx.dut3 < 33 && this.isx.di3 > 0 && this.isx.filg == 2) ||
+          (this.isx.dut4 < 33 && this.isx.di4 > 0 && this.isx.filg == 2)
+            ? (v2 = 1)
+            : (v2 = 0);
           break;
         default:
-          zz = "";
           bf7 = 1;
           break;
       }
-      let sx = "./img/" + z + ".svg";
+      bf8 = v1 + v2 + v3;
+      bf8 > 0 ? (bf7 = 1) : (bf7 = 0);
       return {
-        sx,
-        zz,
         bf7
       };
     },
@@ -1505,19 +1426,6 @@ export default {
         tipu = "";
       }
       return tipu;
-    },
-    tipKP() {
-      let tipk = "";
-      if (this.isx.di1 > 0 && this.isx.di3 > 0) {
-        tipk = "og";
-      } else if (this.isx.di1 > 0) {
-        tipk = "o";
-      } else if (this.isx.di3 > 0) {
-        tipk = "g";
-      } else {
-        tipk = "";
-      }
-      return tipk;
     },
     fu_Co() {
       if (this.isx.sx_otkr < 1) {
@@ -1611,12 +1519,6 @@ export default {
           } else {
             this.fg = false;
           }
-
-          // if (this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0) {
-          //   tip_rascheta = "ot_gvs";
-          // } else {
-          //   tip_rascheta = "gvs";
-          // }
           break;
         case "itp0":
           this.stup = false;
@@ -1680,7 +1582,6 @@ export default {
       if (this.disablOtkr.diso) {
         this.isx.sx_otkr = 0;
       }
-
       let result = clc_pr(this.isx, 1.5, m, 0, tip_rascheta);
 
       if (result.gdr1) {
@@ -1943,7 +1844,6 @@ export default {
           break;
       }
       this.isx.tipuu = this.tipProject;
-      let kp = this.tipKP;
     },
 
     checkdiapTR(du_im, du_tr) {
@@ -1956,7 +1856,6 @@ export default {
         return false;
       }
     },
-
     ImageSPL() {
       let fileSPL = document.getElementById("fileImageSPL").files.length;
       let filePrSx = document.getElementById("fileImagePrSx").files.length;
@@ -1971,21 +1870,9 @@ export default {
         this.otklFormatPrSx = false;
       }
     },
-    onOk() {
-      let ee = "";
-      if (this.top || this.bottom) {
-        ee = false;
-      } else {
-        ee = true;
-      }
-      this.$store.dispatch("actOKP", ee);
-      this.show = false;
-    },
-
     customLabel(option) {
       return ` ${option.plt}`;
     },
-
     showModal() {
       this.$refs.myModalRef.show();
     },
