@@ -45,7 +45,7 @@
               <div class="tab-pane" :class="{active : currentTab === 3}">
                 <div class="form-row">
                   <div class="col-md-12">
-                    <!-- <paramHVS></paramHVS> -->
+                    <paramHVS></paramHVS>
                   </div>
                 </div>
               </div>
@@ -60,17 +60,17 @@
 <script>
 import rekvizit from "@/components/rekvizit.vue";
 import paramCN from "@/components/paramCN.vue";
-// import paramHVS from "@/components/paramHVS.vue";
+import paramHVS from "@/components/paramHVS.vue";
 
 export default {
   components: {
     rekvizit: rekvizit,
-    paramCN: paramCN
-    // paramHVS: paramHVS
+    paramCN: paramCN,
+    paramHVS: paramHVS
   },
   data() {
     return {
-      currentTab: 2
+      currentTab: 3
     };
   }
 };

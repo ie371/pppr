@@ -19,15 +19,21 @@
           </b-form-checkbox>
         </div>
 
-        <div class="col">
-          <h6>
-            <span class="badge">Системный блок</span>
-          </h6>
-          <select class="form-control form-control-sm" v-model.number="sb.tipSB">
-            <option value="0">СБ-04 с блоком бесперебойного питания</option>
-            <option value="1">СБ-04 с сетевым питанием</option>
-            <option value="1">СБ-04 из проекта ТС</option>
-          </select>
+        <div class="form-row">
+          <div class="col">
+            <h6>
+              <span class="badge">Системный блок</span>
+            </h6>
+            <select class="form-control form-control-sm" v-model.number="sb.tipSB">
+              <option value="0">СБ-04 с блоком бесперебойного питания</option>
+              <option value="1">СБ-04 с сетевым питанием</option>
+              <option value="2">СБ-04 из проекта ТС</option>
+            </select>
+          </div>
+          <div class="col" v-if="sb_to">
+            <label class="col-form-label">шифр</label>
+            <input type="text" class="form-control form-control-sm" v-model="sb.shifr_to" />
+          </div>
         </div>
       </div>
 
@@ -60,7 +66,7 @@
             </div>
             <div class="col">
               <label class="col-form-label">СБ => ИМ ХВС</label>
-              <input type="text" class="form-control form-control-sm" v-model="sb.lsbo" />
+              <input type="text" class="form-control form-control-sm" v-model="sb.lsbh" />
             </div>
           </div>
         </div>
@@ -123,7 +129,7 @@
       </div>
     </div>
 
-    <div class="col-md-3 px-3 border-left border-warning">
+    <div class="col-md-4 px-3 border-left border-warning">
       <div class="text-center">
         <h5>
           <span class="badge">{{infh}}</span>
@@ -132,12 +138,12 @@
 
       <div class="form-group">
         <div class="form-row">
-          <div class="col-md-3">
-            <label class="col-form-label">Qmax, Гкал/ч</label>
+          <div class="col">
+            <label class="col-form-label">Расход суточный, м³/сут</label>
             <input
               type="number"
               class="form-control form-control-sm"
-              placeholder="Qmax"
+              placeholder="Qсут"
               step="0.0000001"
               v-model.number="isx.qmax"
               v-on:input="proj('qmax')"
@@ -146,128 +152,70 @@
               v-b-popover.hover.bottomright.html="popup.qm"
             />
           </div>
-
-          <div class="col-md-3">
-            <label class="col-form-label">Qсред, Гкал/ч</label>
+          <div class="col">
+            <label class="col-form-label">Период, ч</label>
             <input
               type="number"
               class="form-control form-control-sm"
-              placeholder="Qср"
-              step="0.0000001"
-              v-model.number="isx.qgvssr"
-              v-on:input="proj('qgvssr')"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="8"
-              v-b-popover.hover.bottomright.html="popup.qs"
-            />
-          </div>
-
-          <div class="col">
-            <label class="col-form-label">Схема теплоснабжения</label>
-            <select
-              class="form-control form-control-sm"
-              v-model.number="isx.sx_gvs_dep"
-              @change="proj('itp'+$event.target.value)"
-              :disabled="disablOtkr.disg"
-            >
-              <option value="0">открытая</option>
-              <option value="1">закрытая 1 ступ</option>
-              <option value="2">закрытая 2-х ступ</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="col">
-            <label class="col-form-label">Тип изм. линии</label>
-            <select
-              class="form-control form-control-sm"
-              v-model="isx.tipLg3"
-              :class="{ 'yellow-error': ml.y, 'red-error': ml.g }"
-              @change="proj('qmax')"
-              id="mlg"
-              :disabled="stup"
-            >
-              <option value="kl">Классическая</option>
-              <option value="ml">Модифицированная</option>
-            </select>
-            <b-popover :disabled="!ml.g" :show="ml.g" triggers="hover" target="mlg">{{popup.m}}</b-popover>
-          </div>
-          <div class="col">
-            <label class="col-form-label">Фильтр</label>
-            <select
-              class="form-control form-control-sm"
-              id="fig"
-              v-model.number="isx.filg"
-              :disabled="fg||stup"
-              :class="{'red-error' : grz.g }"
-              @change="proj('qmax')"
-            >
-              <option value="0">без фильтра</option>
-              <option value="1">сетчатый фильтр</option>
-              <option value="2">грязевик</option>
-            </select>
-          </div>
-          <div class="col-md-3 text-center">
-            <label class="col-form-label md-3">Обр. клапан</label>
-            <b-form-checkbox
-              switch
-              size="sm"
-              v-model.number="isx.ok"
-              :disabled="fg"
-              value="1"
-              unchecked-value="0"
-            ></b-form-checkbox>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="col">
-            <label class="col-form-label">Кчн</label>
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="Кчн"
+              placeholder="T"
               step="0.1"
-              v-model.number="isx.Kchn"
-              v-on:input="proj('Kchn')"
+              v-model.number="isx.T"
+              v-on:input="proj('T')"
               v-b-popover.hover.bottomright.html="popup.kc"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               maxlength="4"
             />
           </div>
-
           <div class="col">
-            <label class="col-form-label">Тхвл</label>
+            <label class="col-form-label">Расход часовой, м³/ч</label>
             <input
               type="number"
               step="0.1"
               class="form-control form-control-sm"
-              v-model.number="isx.txvL"
+              placeholder="qt"
+              v-model.number="isx.qt"
               value="15"
               v-on:input="proj('')"
               v-b-popover.hover.bottomright="'Температура хол. воды (лето - 15 °С)'"
             />
           </div>
+        </div>
 
-          <div class="col">
-            <label class="col-form-label">Тхвз</label>
+        <div class="form-row">
+          <!-- <div class="col">
+            <label class="col-form-label">Расход часовой, м³/ч</label>
             <input
               type="number"
               step="0.1"
               class="form-control form-control-sm"
-              v-model.number="isx.txvZ"
+              placeholder="qt"
+              v-model.number="isx.qt"
+              value="15"
+              v-on:input="proj('')"
+              v-b-popover.hover.bottomright="'Температура хол. воды (лето - 15 °С)'"
+            />
+          </div>-->
+
+          <div class="col text-center">
+            <label class="col-form-label">qhr</label>
+            <input
+              type="number"
+              step="0.1"
+              class="form-control form-control-sm"
+              placeholder="qhr"
+              v-model.number="isx.qhr"
               value="5"
               v-on:input="proj('')"
               v-b-popover.hover.bottomright="'Температура хол. воды (зима - 5 °С)'"
             />
           </div>
 
-          <div class="col">
-            <label class="col-form-label">Кнп</label>
+          <div class="col text-center">
+            <label class="col-form-label">qm</label>
             <input
               type="number"
               class="form-control form-control-sm"
+              placeholder="qm"
               step="0.01"
               v-model.number="isx.knp"
               v-on:input="proj('')"
@@ -277,26 +225,28 @@
             />
           </div>
 
-          <div class="col">
-            <label class="col-form-label">Ктп</label>
+          <div class="col text-center">
+            <label class="col-form-label">Kmax</label>
             <input
               type="number"
               class="form-control form-control-sm"
+              placeholder="Kmax"
               step="0.01"
-              v-model.number="isx.ktp"
+              v-model.number="isx.Kmax"
               v-on:input="proj('')"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               maxlength="4"
               v-b-popover.hover.bottomright="'коэффициент, учитывающий потери тепла в трубопроводах '"
             />
           </div>
-          <div class="col">
-            <label class="col-form-label">&beta;</label>
+          <div class="col text-center">
+            <label class="col-form-label">Kmin</label>
             <input
               type="number"
               class="form-control form-control-sm"
+              placeholder="Kmin"
               step="0.01"
-              v-model.number="isx.beta"
+              v-model.number="isx.Kmin"
               v-on:input="proj('')"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               maxlength="4"
@@ -304,52 +254,57 @@
             />
           </div>
         </div>
+
+        <div class="form-row">
+          <div class="col">
+            <label class="col-form-label">Тип изм. линии</label>
+            <select
+              class="form-control form-control-sm"
+              v-model="isx.tipLh"
+              :class="{ 'red-error': ml.h }"
+              @change="proj()"
+              id="mlh"
+              :disabled="stup"
+            >
+              <option value="kl">Классическая</option>
+              <option value="ml">Модифицированная</option>
+            </select>
+            <b-popover :disabled="!ml.h" :show="ml.h" triggers="hover" target="mlh">{{popup.m}}</b-popover>
+          </div>
+          <div class="col">
+            <label class="col-form-label">Фильтр</label>
+            <select
+              class="form-control form-control-sm"
+              id="fig"
+              v-model.number="isx.filh"
+              :disabled="fh||stup"
+              :class="{'red-error' : grz.h }"
+              @change="proj('qmax')"
+            >
+              <option value="0">без фильтра</option>
+              <option value="1">сетчатый фильтр</option>
+              <option value="2">грязевик</option>
+            </select>
+          </div>
+          <div class="col-md-3 text-center">
+            <label class="col-form-label md-3">Байпас</label>
+            <b-form-checkbox
+              switch
+              size="sm"
+              v-model.number="isx.baypass"
+              value="1"
+              unchecked-value="0"
+            ></b-form-checkbox>
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
         <div class="form-row mb-2">
-          <div class="col">
-            <label class="col-form-label"></label>
-          </div>
-
-          <div class="col text-maroon text-s">Подача Т3</div>
-          <div class="col text-blue text-s">Обратка Т4</div>
-        </div>
-
-        <div class="form-row mb-2">
-          <div class="col">
-            <label class="col-form-label">Tемп график, °C</label>
-          </div>
-          <div class="col">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="T3"
-              v-model.number="isx.t3"
-              v-on:input="proj('')"
-              step="0.1"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="5"
-            />
-          </div>
-          <div class="col">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="T4"
-              v-model.number="isx.t4"
-              v-on:input="proj('')"
-              step="0.1"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="5"
-            />
-          </div>
-        </div>
-        <div class="form-row mb-2">
-          <div class="col">
+          <div class="col-md-3">
             <label class="col-form-label">Давление, мвст</label>
           </div>
-          <div class="col">
+          <div class="col-md-3">
             <input
               type="number"
               class="form-control form-control-sm"
@@ -359,69 +314,18 @@
               :disabled="stup"
             />
           </div>
-          <div class="col">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="40"
-              v-model.number="isx.p4"
-              v-on:input="proj('')"
-              :disabled="stup"
-            />
-          </div>
         </div>
 
         <div class="form-row mb-2">
-          <div class="col">
-            <label class="col-form-label">Расход, м³/ч</label>
-          </div>
-          <div class="col">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              v-model="rescalc.gdr3.Gv"
-              v-on:input="rash('t3')"
-              step="0.001"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="5"
-              :disabled="stup"
-            />
-          </div>
-          <div class="col">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              v-model="rescalc.gdr4.Gv"
-              disabled
-            />
-          </div>
-        </div>
-
-        <div class="form-row mb-2">
-          <div class="col">
+          <div class="col-md-3">
             <label class="col-form-label">Ду прибора</label>
           </div>
 
-          <div class="col">
+          <div class="col-md-3">
             <select
               class="form-control form-control-sm"
-              v-model.number="isx.di3"
-              v-on:change="change_du('t3','peres')"
-              :disabled="stup"
-            >
-              <option
-                v-for="(option, index) in DU"
-                v-bind:value="option.value"
-                :key="index"
-              >{{ option.text }}</option>
-            </select>
-          </div>
-          <div class="col">
-            <select
-              class="form-control form-control-sm"
-              v-model.number="isx.di4"
-              v-on:change="change_du('t4','peres')"
-              :disabled="im4||stup"
+              v-model.number="isx.di"
+              v-on:change="change_du()"
             >
               <option
                 v-for="(option, index) in DU"
@@ -433,104 +337,41 @@
         </div>
 
         <div class="form-row mb-2">
-          <div class="col">
+          <div class="col-md-3">
             <label class="col-form-label">Скорость, м/с</label>
           </div>
-          <div class="col">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              v-model.number="rescalc.gdr3.V"
-              :class="{'red-error' : !speed.v2 }"
-              id="V3"
-              readonly
-            />
+          <div class="col-md-3">
+            <input type="number" class="form-control form-control-sm" id="V3" readonly />
           </div>
           <b-popover :disabled="speed.v2" :show="!speed.v2" triggers="hover" target="V3">{{popup.s}}</b-popover>
-          <div class="col">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              v-model.number="rescalc.gdr4.V"
-              :class="{'red-error' : !speed.v3 }"
-              id="V4"
-              readonly
-            />
-          </div>
-          <b-popover :disabled="speed.v3" :show="!speed.v3" triggers="hover" target="V4">{{popup.s}}</b-popover>
         </div>
 
         <div class="form-row mb-2">
-          <div class="col">
-            <label class="col-form-label">ИМ ГВС</label>
+          <div class="col-md-3">
+            <label class="col-form-label">ИМ ХВС</label>
           </div>
-          <div class="col">
-            <select
-              class="form-control form-control-sm"
-              v-model.number="isx.tipIMg3"
-              :class="{'red-error' : check6.y3 }"
-              @change="proj('qmax',1)"
-              id="im3"
-              :disabled="stup"
-            >
+          <div class="col-md-3">
+            <select class="form-control form-control-sm" v-model.number="isx.tipIMh" id="im3">
               <option value="6">И6</option>
               <option value="5">К5</option>
             </select>
             <b-popover
               :disabled="!check6.y3"
-              :show="check6.y3"
+              :show="check6.y1"
               triggers="hover"
               target="im3"
             >{{popup.d}}</b-popover>
           </div>
-          <div class="col">
-            <select
-              class="form-control form-control-sm"
-              v-model.number="isx.tipIMg4"
-              :class="{'red-error' : check6.y4 }"
-              id="im4"
-              :disabled="stup"
-            >
-              <option value="6">И6</option>
-              <option value="5">К5</option>
-            </select>
-            <b-popover
-              :disabled="!check6.y4"
-              :show="check6.y4"
-              triggers="hover"
-              target="im4"
-            >{{popup.d}}</b-popover>
-          </div>
         </div>
         <div class="form-row mb-2">
-          <div class="col">
-            <label class="col-form-label">Ду тр-дов Т3/Т4</label>
+          <div class="col-md-3">
+            <label class="col-form-label">Ду тр-да В1</label>
           </div>
 
-          <div class="col">
-            <select
-              class="form-control form-control-sm"
-              v-model.number="isx.dut3"
-              v-on:change="change_du('t3','peres')"
-              :disabled="stup"
-            >
+          <div class="col-md-3">
+            <select class="form-control form-control-sm" v-model.number="isx.dut">
               <option
-                v-for="(option,index) in diptr.duu3"
-                v-bind:value="option.value"
-                :key="index"
-              >{{ option.value }}</option>
-            </select>
-          </div>
-
-          <div class="col">
-            <select
-              class="form-control form-control-sm"
-              v-model.number="isx.dut4"
-              v-on:change="change_du('t4','peres')"
-              :disabled="stup"
-            >
-              <option
-                v-for="(option,index) in diptr.duu4"
+                v-for="(option,index) in diptr.duu1"
                 v-bind:value="option.value"
                 :key="index"
               >{{ option.value }}</option>
@@ -548,7 +389,7 @@
         </h5>
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <b-row>
           <div class="col-md-12">
             <img
@@ -566,7 +407,7 @@
             </b-modal>
           </div>
         </b-row>
-      </div>
+      </div>-->
 
       <div class="d-flex justify-content-center">
         <div class="col-md-9">
@@ -617,63 +458,31 @@ export default {
         }
       ],
       isx: {
-        pr_ot: 0,
-        pr_gvs: 0,
-        tipuu: "",
-        tipkp: "",
-        sx_ot: 0,
-        sx_otkr: 0,
-        sx_gvs: 0,
-        sx_gvs_dep: 0,
-        fuCo: 0,
-        qco: null,
-        qmax: null,
-        qgvssr: null,
-        Kchn: 2.2,
-        knp: 0.8,
-        ktp: 0.25,
-        beta: 1.3,
-        t1: 95,
-        t2: 70,
-        t3: 60,
-        t4: 50,
+        pr_hvs: 0,
+        baypass: 0,
+        Qsut: null,
+        T: 24,
+        qt: null,
+        qhr: null,
+        Kmax: null,
+        Kmin: null,
+        t1: 5,
         p1: 50,
-        p2: 40,
-        p3: 50,
-        p4: 40,
-        di1: 0,
-        di2: 0,
-        di9: 0,
-        di3: 0,
-        di4: 0,
-        dut1: null,
-        dut2: null,
-        dut9: null,
-        dut3: null,
-        dut4: null,
-        tipLo: "kl",
-        tipLg3: "kl",
-        tipLg4: "kl",
-        tipIMo: 6,
-        tipIMg3: 6,
-        tipIMg4: 6,
-        ok: 1,
+        di: 0,
+        dut: null,
+        tipLh: "kl",
+        tipIMh: 6,
         txvL: 15,
         txvZ: 5,
-        filo: 0,
-        filg: 0,
-        filp: 0,
+        filh: 0,
         IL: 0,
-        selReg: 0,
-        mess: [],
-        indexnas: "",
         imagePlane: ""
       },
       sb: {
         tipSB: 0,
+        shifr_to: "",
         lvru: 30,
-        lsbo: 15,
-        lsbg: 15
+        lsbh: 15
       },
       infh: "Параметры ХВС",
       fh: false,
@@ -697,111 +506,30 @@ export default {
       );
       return ppp;
     },
-    disButKP() {
-      let empt = "";
-      let c6 = "";
-      if (this.isx.di1 == "0" && this.isx.di3 == "0") {
-        empt = 1;
-      } else {
-        empt = 0;
-      }
-      if (this.check6.y1 || this.check6.y3 || this.check6.y4) {
-        c6 = 1;
-      } else {
-        c6 = 0;
-      }
-      let f = empt + c6;
-      if (f > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    select_T2() {
-      let im = "И6";
-      let dim = this.isx.di1;
-      let dtr = this.isx.dut2;
-      if (this.isx.tipIMo == 5) {
-        im = "К5";
-      }
-      if (+this.isx.di1 === 0) {
-        dim = "нет";
-      }
-      if (+this.isx.dut2 === 0) {
-        dtr = "";
-      }
-      return {
-        im: im,
-        dim: dim,
-        dtr: dtr
-      };
-    },
-    disablOtkr() {
-      let diso = true;
-      let disg = true;
-      if (this.isx.qco > 0 && this.isx.qmax > 0) {
-        if (this.isx.sx_gvs_dep > 0) {
-          this.isx.sx_otkr = 0;
-          diso = true;
-        } else {
-          diso = false;
-        }
-        if (this.isx.sx_otkr < 2) {
-          disg = false;
-        } else {
-          disg = true;
-        }
-      }
-      return {
-        diso: diso,
-        disg: disg
-      };
+    sb_to() {
+      let a = 0;
+      this.sb.tipSB == 2 ? (a = 1) : (a = 0);
+      return a;
     },
     ml() {
-      let o = false;
-      let g = false;
-      let y = false;
-      if (this.isx.tipLo == "ml" && this.isx.di1) {
-        if (this.isx.di1 > 80 || this.isx.di1 < 32) {
-          o = true;
-        }
-      }
-      if (this.isx.tipLg3 == "ml" && (this.isx.di3 > 0 || this.isx.di4 > 0)) {
-        if ((this.isx.di4 > 80 || this.isx.di4 < 32) && this.isx.di4 > 0) {
-          g = false;
-          y = true;
-        }
-        if (this.isx.tipLg3 == "ml") {
-          this.isx.ok = 0;
-        }
-        if ((this.isx.di3 > 80 || this.isx.di3 < 32) && this.isx.di3 > 0) {
-          g = true;
-          y = false;
+      let h = false;
+      if (this.isx.tipLh == "ml" && this.isx.di) {
+        if (this.isx.di > 80 || this.isx.di < 32) {
+          h = true;
         }
       }
       return {
-        o: o,
-        g: g,
-        y: y
+        h: h
       };
     },
-
     grz() {
-      let o = false;
-      let g = false;
-      if (this.isx.dut1 < 33 && this.isx.di1 > 0 && this.isx.filo == 2) {
-        o = true;
-      }
-      if (
-        ((this.isx.dut3 < 33 && this.isx.di3 > 0) ||
-          (this.isx.dut4 < 33 && this.isx.di4 > 0)) &&
-        this.isx.filg == 2
-      ) {
-        g = true;
-      }
+      let h = false;
+      this.isx.dut < 33 && this.isx.di > 0 && this.isx.filh == 2
+        ? (h = true)
+        : (h = false);
+
       return {
-        o: o,
-        g: g
+        h: h
       };
     },
     speed() {
@@ -836,103 +564,33 @@ export default {
     diptr() {
       let du = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300];
       let duu1 = [];
-      let dd1 = [];
-      let duu9 = [];
-      let duu3 = [];
-      let duu4 = [];
-      let d1 = +this.isx.di1;
-      let d9 = +this.isx.di9;
-      let d3 = +this.isx.di3;
-      let d4 = +this.isx.di4;
+      let d1 = +this.isx.di;
       let A1 = du.indexOf(d1);
-      let A9 = du.indexOf(d9);
-      let A3 = du.indexOf(d3);
-      let A4 = du.indexOf(d4);
       let duk1 = du.slice(A1, A1 + 4);
-      let duk9 = du.slice(A9, A9 + 4);
-      let duk3 = du.slice(A3, A3 + 4);
-      let duk4 = du.slice(A4, A4 + 4);
       duk1.forEach(function(el) {
         let h = {
           text: el,
           value: el
         };
         duu1.push(h);
-        dd1.push(el);
-      });
-      duk9.forEach(function(el) {
-        let h = {
-          text: el,
-          value: el
-        };
-        duu9.push(h);
-      });
-      duk3.forEach(function(el) {
-        let h = {
-          text: el,
-          value: el
-        };
-        duu3.push(h);
-      });
-      duk4.forEach(function(el) {
-        let h = {
-          text: el,
-          value: el
-        };
-        duu4.push(h);
       });
       return {
-        duu1,
-        duu9,
-        duu3,
-        duu4,
-        dd1
+        duu1
       };
     },
     check6() {
       let du = [25, 32, 40, 50, 65, 80];
-      let d1 = +this.isx.di1;
-      let d9 = +this.isx.di9;
-      let d3 = +this.isx.di3;
-      let d4 = +this.isx.di4;
+      let d1 = +this.isx.di;
       let A1 = du.indexOf(d1);
-      let A9 = du.indexOf(d9);
-      let A3 = du.indexOf(d3);
-      let A4 = du.indexOf(d4);
       let y1 = "";
-      let y3 = "";
-      let y4 = "";
-      if (+this.isx.tipIMo == 6) {
-        if (A1 >= 0 || !d1) {
-          y1 = false;
-        } else {
-          y1 = true;
-        }
+      if (+this.isx.tipIMh == 6) {
+        A1 >= 0 || !d1 ? (y1 = false) : (y1 = true);
       } else {
         y1 = false;
       }
-      if (this.isx.tipIMg3 == 6) {
-        if (A3 >= 0 || !d3) {
-          y3 = false;
-        } else {
-          y3 = true;
-        }
-      } else {
-        y3 = false;
-      }
-      if (this.isx.tipIMg4 == 6) {
-        if (A4 >= 0 || !d4) {
-          y4 = false;
-        } else {
-          y4 = true;
-        }
-      } else {
-        y4 = false;
-      }
+
       return {
-        y1,
-        y3,
-        y4
+        y1
       };
     },
     imgsx() {
@@ -945,21 +603,15 @@ export default {
       let v2 = 0;
       let v3 = 0;
       let tipu = this.tipProject;
-      let z2 = this.isx.sx_ot;
-      let z3 = this.isx.sx_otkr;
-      let z4 = this.isx.sx_gvs;
 
       switch (tipu) {
-        case "o":
-          z1 = 1;
-          z = z1 + z2;
-          zz = "ЦО";
-          if (this.check6.y1 || this.ml.o) {
+        case "h":
+          if (this.check6.y1 || this.ml.h) {
             v1 = 1;
           } else {
             v1 = 0;
           }
-          if (this.isx.dut1 < 33 && this.isx.filo == "2") {
+          if (this.isx.dut < 33 && this.isx.filh == "2") {
             v2 = 1;
           } else {
             v2 = 0;
@@ -971,93 +623,7 @@ export default {
             bf7 = 0;
           }
           break;
-        case "g":
-          z1 = 2;
-          z = z1 + z4;
-          zz = "ГВС";
-          if (this.check6.y3 || this.check6.y4 || this.ml.g) {
-            v1 = 1;
-          } else {
-            v1 = 0;
-          }
-          if (
-            (this.isx.dut3 < 33 && this.isx.di3 > 0 && this.isx.filg == 2) ||
-            (this.isx.dut4 < 33 && this.isx.di4 > 0 && this.isx.filg == 2)
-          ) {
-            v2 = 1;
-          } else {
-            v2 = 0;
-          }
-          // if (this.isx.di4 > 0 && this.isx.tipIMg3 !== this.isx.tipIMg4) {
-          //   v3 = 1;
-          // } else {
-          //   v3 = 0;
-          // }
-          bf8 = v1 + v2 + v3;
-          if (bf8 > 0) {
-            bf7 = 1;
-          } else {
-            bf7 = 0;
-          }
-          break;
-        case "og":
-          if (this.isx.sx_gvs_dep < 1) {
-            if (this.isx.sx_otkr < 2) {
-              zz = "ЦО + ГВС";
-            } else {
-              zz = "TC";
-            }
-          } else {
-            zz = "ИТП";
-            z4 = +this.isx.sx_gvs_dep + 3;
-          }
-
-          z1 = 3;
-          z = z1 + z2 + z3 + z4;
-          if (this.ml.y) {
-            v1 = 0;
-          }
-          if (
-            this.check6.y1 ||
-            this.check6.y3 ||
-            this.check6.y4 ||
-            this.ml.o ||
-            this.ml.g
-          ) {
-            v1 = 1;
-          } else {
-            v1 = 0;
-          }
-
-          if (
-            (this.isx.dut1 < 33 && this.isx.filo == 2) ||
-            (this.isx.dut3 < 33 && this.isx.di3 > 0 && this.isx.filg == 2) ||
-            (this.isx.dut4 < 33 && this.isx.di4 > 0 && this.isx.filg == 2)
-          ) {
-            v2 = 1;
-          } else {
-            v2 = 0;
-          }
-
-          // if (this.isx.di4 > 0 && this.isx.tipIMg3 !== this.isx.tipIMg4) {
-          //   v3 = 1;
-          // } else {
-          //   v3 = 0;
-          // }
-          // console.log("v1=", v1);
-          // console.log("v2=", v2);
-          // console.log("v3=", v3);
-          bf8 = v1 + v2 + v3;
-          if (bf8 > 0) {
-            bf7 = 1;
-          } else {
-            bf7 = 0;
-          }
-
-          break;
         default:
-          zz = "";
-          bf7 = 1;
           break;
       }
       let sx = "./img/" + z + ".svg";
@@ -1079,40 +645,6 @@ export default {
         tipu = "";
       }
       return tipu;
-    },
-    tipKP() {
-      let tipk = "";
-      if (this.isx.di1 > 0 && this.isx.di3 > 0) {
-        tipk = "og";
-      } else if (this.isx.di1 > 0) {
-        tipk = "o";
-      } else if (this.isx.di3 > 0) {
-        tipk = "g";
-      } else {
-        tipk = "";
-      }
-      return tipk;
-    },
-    fu_Co() {
-      if (this.isx.sx_otkr < 1) {
-        return false;
-      } else {
-        this.isx.fuCo = 1;
-        return true;
-      }
-    },
-    ml4_kl4() {
-      let s = "";
-      if (this.isx.tipLg3 == "ml" && (this.isx.di3 > 0 || this.isx.di4 > 0)) {
-        if ((this.isx.di4 > 80 || this.isx.di4 < 32) && this.isx.di4 > 0) {
-          s = "kl";
-        } else {
-          s = this.isx.tipLg3;
-        }
-      } else {
-        s = this.isx.tipLg3;
-      }
-      return s;
     }
   },
   watch: {},
@@ -1250,7 +782,7 @@ export default {
         this.isx.sx_otkr = 0;
       }
 
-      let result = clc_pr(this.isx, 1.5, m, 0, tip_rascheta);
+      // let result = clc_pr(this.isx, 1.5, m, 0, tip_rascheta);
 
       if (result.gdr1) {
         this.isx.di1 = result.gdr1.du_im;
@@ -1278,7 +810,6 @@ export default {
       });
       this.im4 = false;
     },
-
     rash(d) {
       let R = 0;
       switch (d) {
@@ -1368,153 +899,11 @@ export default {
       }
       this.isx.tipuu = this.tipProject;
     },
-
-    change_du(d, h) {
-      let R = "";
-      let result = "";
-      switch (d) {
-        case "t1":
-          if (this.isx.di1 > 0) {
-            this.isx.di2 = this.isx.di1;
-            // проверка отличия 3-х ду
-            let ch = this.checkdiapTR(this.isx.di1, this.isx.dut1);
-            if (ch) {
-              this.isx.dut1 = this.isx.di1;
-              this.isx.dut2 = this.isx.di1;
-            }
-            if (this.isx.pr_ot === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "ot");
-              this.im4 = false;
-            } else {
-              R = this.rescalc.gdr1.Gv;
-              if (R > 0) {
-                result = clc_kp(R, 1.5, d, "peres", this.isx.di1, "");
-              }
-            }
-            this.isx.dut2 = result.gdr2.du_tr;
-            this.$store.dispatch({
-              type: "RESULT",
-              result: result
-            });
-          } else {
-            this.isx.pr_ot = 0;
-            this.isx.qco = null;
-            this.isx.di1 = 0;
-            this.isx.di2 = 0;
-            this.isx.di9 = 0;
-            this.isx.dut1 = null;
-            this.isx.dut2 = null;
-            this.isx.dut9 = null;
-            this.$store.dispatch("OT_NULL");
-          }
-          break;
-        case "t3":
-          if (this.isx.di3 > 0) {
-            let ch = this.checkdiapTR(this.isx.di3, this.isx.dut3);
-            if (ch) {
-              this.isx.dut3 = this.isx.di3;
-            }
-            if (this.isx.pr_gvs === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "gvs");
-            } else {
-              R = this.rescalc.gdr3.Gv;
-              if (R > 0) {
-                result = clc_kp(R, 1.5, d, "peres", this.isx.di3, "");
-              }
-            }
-            this.$store.dispatch({
-              type: "RESULT",
-              result: result
-            });
-            this.im4 = false;
-          } else {
-            this.isx.pr_gvs = 0;
-            this.isx.qmax = null;
-            this.isx.qgvssr = null;
-            this.isx.sx_otkr = 0;
-            this.isx.di3 = 0;
-            this.isx.di4 = 0;
-            this.isx.dut3 = null;
-            this.isx.dut4 = null;
-            this.$store.dispatch("GVS_NULL");
-            this.im4 = true;
-            if (this.isx.sx_otkr) {
-              result = clc_pr(this.isx, 1.5, "t1", R, "ot");
-              this.$store.dispatch({
-                type: "RESULT",
-                result: result
-              });
-            }
-          }
-
-          break;
-        case "t4":
-          if (this.isx.di4 > 0) {
-            let ch = this.checkdiapTR(this.isx.di4, this.isx.dut4);
-            if (ch) {
-              this.isx.dut4 = this.isx.di4;
-            }
-            this.isx.sx_gvs = 0;
-            if (this.isx.pr_gvs === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "gvs");
-              this.im4 = false;
-            } else {
-              R = this.rescalc.gdr4.Gv;
-              if (R > 0) {
-                result = clc_kp(R, 1.5, d, "peres", this.isx.di4, "");
-              }
-            }
-            this.$store.dispatch({
-              type: "RESULT",
-              result: result
-            });
-            // смешанный уу гвс
-            this.isx.tipLg4 = this.ml4_kl4;
-          } else {
-            // переключаем на тупик
-            this.isx.sx_gvs = 1;
-            this.isx.dut4 = null;
-            this.$store.dispatch("TUPIC");
-            if (this.isx.pr_gvs === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "gvs");
-              this.im4 = false;
-            }
-            this.$store.dispatch({
-              type: "RESULT",
-              result: result
-            });
-          }
-
-          break;
-        case "t9":
-          if (+this.isx.di9 > 0) {
-            let ch = this.checkdiapTR(this.isx.di9, this.isx.dut9);
-            if (ch) {
-              this.isx.dut9 = this.isx.di9;
-            }
-            if (this.isx.pr_ot === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "ot");
-              this.im4 = false;
-            } else {
-              R = this.rescalc.gdr9.Gv;
-              if (R > 0) {
-                result = clc_kp(R, 1.5, d, "peres", this.isx.di9, "");
-              }
-            }
-            this.$store.dispatch({
-              type: "RESULT",
-              result: result
-            });
-          } else {
-            this.isx.sx_ot = 0;
-            this.isx.filp = 0;
-          }
-          break;
-      }
-      this.isx.tipuu = this.tipProject;
-      let kp = this.tipKP;
+    change_du() {
+      this.diptr.duu1[1]
+        ? (this.isx.dut = this.diptr.duu1[1].value)
+        : (this.isx.dut = this.diptr.duu1[0].value);
     },
-
     checkdiapTR(du_im, du_tr) {
       let du = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300];
       let k1 = du.indexOf(+du_im);
@@ -1525,7 +914,6 @@ export default {
         return false;
       }
     },
-
     ImageSPL() {
       let fileSPL = document.getElementById("fileImageSPL").files.length;
       let filePrSx = document.getElementById("fileImagePrSx").files.length;
@@ -1540,70 +928,14 @@ export default {
         this.otklFormatPrSx = false;
       }
     },
-    onOk() {
-      let ee = "";
-      if (this.top || this.bottom) {
-        ee = false;
-      } else {
-        ee = true;
-      }
-      this.$store.dispatch("actOKP", ee);
-      this.show = false;
-    },
-
     customLabel(option) {
       return ` ${option.plt}`;
     },
-
     showModal() {
       this.$refs.myModalRef.show();
     },
     hideModal() {
       this.$refs.myModalRef.hide();
-    },
-    nasp() {
-      if (this.isx.selReg != 0) {
-        this.mess = [];
-        let asd = [];
-
-        Axios.post("./pdf/project/regions.php", {
-          sReg: this.isx.selReg
-        })
-          .then(response => {
-            response.data.forEach(item => {
-              asd.push({
-                item
-              });
-            });
-
-            this.isx.mess = asd;
-            // if (this.isx.mess == "") {
-            //   this.isx.indexnas = "";
-            // } else {
-            this.isx.indexnas = this.isx.mess[0].item;
-            // }
-
-            // this.$store.dispatch("actnas", asd);
-          })
-
-          .catch(function(error) {
-            console.log(error);
-          });
-      } else {
-        this.isx.indexnas = "";
-      }
-    },
-    test() {
-      window.open("./pdf/project/test.php");
-
-      Axios.post("./pdf/project/test.php", {
-        sReg: this.isx
-      })
-        .then(response => {})
-
-        .catch(function(error) {
-          console.log(error);
-        });
     }
   }
 };

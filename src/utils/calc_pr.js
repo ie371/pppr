@@ -362,6 +362,7 @@ function ro(t, p) {
 	return ror;
 }
 function pr2(isx, sk, peres, R, tip_rascheta) {
+	// console.log('tip_rascheta===', tip_rascheta);
 	let koef = 1;
 	let {
 		sx_ot,
