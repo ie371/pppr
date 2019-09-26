@@ -1,33 +1,33 @@
 export default {
 	state: {
-		// hide3:true,
-		isxhvs: {
-			baypas: 0,
-			Gv: 55,
-			Gv2: null,
-			t: 5,
-			p: 50,
-			dui: 0,
-			dut: null,
-			tipL: 'kl',
-			tipIM: '6',
-			txvL: 15,
-			txvZ: 5,
-			filh: 0
-		},
-		sbKPhvs: {
-			tipSB: 0,
-			lvru: 30,
-			lsbo: 15
-		},
-		rescalchvs: {
+		rescalc_hvs: {
 			gdr: { Gv: '', V: '', du_im: 0 }
 		}
 	},
+	actions: {
+		CHANGE_RASH_HVS(context, R) {
+			context.commit('RASH_HVS', R);
+		},
+		RESULT_HVS(context, ek) {
+			context.commit('RESCALC_HVS', ek);
+		},
+		HVS_NULL(context) {
+			context.commit('HVSNULL');
+		}
+	},
 
-	getters: {},
+	mutations: {
+		RESCALC_HVS(state, payload) {
+			if (payload.result.gdr) {
+				state.rescalc_hvs.gdr = payload.result.gdr;
+			}
+		},
 
-	actions: {},
-
-	mutations: {}
+		RASH_HVS(state, payload) {
+			state.rescalc_hvs.gdr = payload.result.gdr;
+		},
+		HVSNULL(state) {
+			state.rescalc_hvs.gdr = { Gv: '', V: '', du_im: 0 };
+		}
+	}
 };

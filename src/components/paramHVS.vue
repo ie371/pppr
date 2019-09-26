@@ -139,17 +139,31 @@
       <div class="form-group">
         <div class="form-row">
           <div class="col">
+            <label class="col-form-label">Расход часовой, м³/ч</label>
+            <input
+              type="number"
+              step="0.1"
+              class="form-control form-control-sm"
+              placeholder="qt (qm)"
+              v-model.number="isx.qt"
+              value="15"
+              v-on:input="proj('qt')"
+              v-b-popover.hover.bottomright="'Среднечасовой расход  воды'"
+            />
+          </div>
+
+          <div class="col">
             <label class="col-form-label">Расход суточный, м³/сут</label>
             <input
               type="number"
               class="form-control form-control-sm"
               placeholder="Qсут"
-              step="0.0000001"
-              v-model.number="isx.qmax"
-              v-on:input="proj('qmax')"
+              step="0.001"
+              v-model.number="isx.Qsut"
+              v-on:input="proj('Qsut')"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="8"
-              v-b-popover.hover.bottomright.html="popup.qm"
+              maxlength="7"
+              v-b-popover.hover.bottomright="'Расчетный суточный    расход   воды '"
             />
           </div>
           <div class="col">
@@ -158,44 +172,18 @@
               type="number"
               class="form-control form-control-sm"
               placeholder="T"
-              step="0.1"
-              v-model.number="isx.T"
-              v-on:input="proj('T')"
-              v-b-popover.hover.bottomright.html="popup.kc"
+              min="0"
+              max="24"
+              v-model.number="isx.Tper"
+              v-on:input="proj('Tper')"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="4"
-            />
-          </div>
-          <div class="col">
-            <label class="col-form-label">Расход часовой, м³/ч</label>
-            <input
-              type="number"
-              step="0.1"
-              class="form-control form-control-sm"
-              placeholder="qt"
-              v-model.number="isx.qt"
-              value="15"
-              v-on:input="proj('')"
-              v-b-popover.hover.bottomright="'Температура хол. воды (лето - 15 °С)'"
+              maxlength="2"
+              v-b-popover.hover.bottomright="'Период водопотребления воды (сутки, смена), ч'"
             />
           </div>
         </div>
 
         <div class="form-row">
-          <!-- <div class="col">
-            <label class="col-form-label">Расход часовой, м³/ч</label>
-            <input
-              type="number"
-              step="0.1"
-              class="form-control form-control-sm"
-              placeholder="qt"
-              v-model.number="isx.qt"
-              value="15"
-              v-on:input="proj('')"
-              v-b-popover.hover.bottomright="'Температура хол. воды (лето - 15 °С)'"
-            />
-          </div>-->
-
           <div class="col text-center">
             <label class="col-form-label">qhr</label>
             <input
@@ -206,22 +194,7 @@
               v-model.number="isx.qhr"
               value="5"
               v-on:input="proj('')"
-              v-b-popover.hover.bottomright="'Температура хол. воды (зима - 5 °С)'"
-            />
-          </div>
-
-          <div class="col text-center">
-            <label class="col-form-label">qm</label>
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="qm"
-              step="0.01"
-              v-model.number="isx.knp"
-              v-on:input="proj('')"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="4"
-              v-b-popover.hover.bottomright="'коэффициент, учитывающий уменьшение расхода тепла в трубопроводах ГВС в летний период'"
+              v-b-popover.hover.bottomright="'Максимальньный часовой расход воды'"
             />
           </div>
 
@@ -233,10 +206,10 @@
               placeholder="Kmax"
               step="0.01"
               v-model.number="isx.Kmax"
-              v-on:input="proj('')"
+              v-on:input="proj()"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               maxlength="4"
-              v-b-popover.hover.bottomright="'коэффициент, учитывающий потери тепла в трубопроводах '"
+              v-b-popover.hover.bottomright="'Коэффициент максимальной часовой неравномерности'"
             />
           </div>
           <div class="col text-center">
@@ -247,10 +220,10 @@
               placeholder="Kmin"
               step="0.01"
               v-model.number="isx.Kmin"
-              v-on:input="proj('')"
+              v-on:input="proj()"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               maxlength="4"
-              v-b-popover.hover.bottomright="'коэффициент запаса на разрегулировку стояков ГВС'"
+              v-b-popover.hover.bottomright="'Коэффициент минимальной часовой неравномерности'"
             />
           </div>
         </div>
@@ -264,7 +237,6 @@
               :class="{ 'red-error': ml.h }"
               @change="proj()"
               id="mlh"
-              :disabled="stup"
             >
               <option value="kl">Классическая</option>
               <option value="ml">Модифицированная</option>
@@ -277,29 +249,49 @@
               class="form-control form-control-sm"
               id="fig"
               v-model.number="isx.filh"
-              :disabled="fh||stup"
+              :disabled="fh"
               :class="{'red-error' : grz.h }"
-              @change="proj('qmax')"
+              @change="proj()"
             >
               <option value="0">без фильтра</option>
               <option value="1">сетчатый фильтр</option>
               <option value="2">грязевик</option>
             </select>
           </div>
-          <div class="col-md-3 text-center">
+        </div>
+
+        <div class="form-row">
+          <div class="col-md-4 text-center">
+            <label class="col-form-label md-3">Датчик давления</label>
+            <b-form-checkbox switch v-model.number="isx.sens_d" value="1" unchecked-value="0"></b-form-checkbox>
+          </div>
+          <div class="col-md-4 text-center">
+            <label class="col-form-label md-3">Датчик температуры</label>
+            <b-form-checkbox switch v-model.number="isx.sens_t" value="1" unchecked-value="0"></b-form-checkbox>
+          </div>
+
+          <div class="col-md-4 text-center">
             <label class="col-form-label md-3">Байпас</label>
-            <b-form-checkbox
-              switch
-              size="sm"
-              v-model.number="isx.baypass"
-              value="1"
-              unchecked-value="0"
-            ></b-form-checkbox>
+            <b-form-checkbox switch v-model.number="isx.baypass" value="1" unchecked-value="0"></b-form-checkbox>
           </div>
         </div>
       </div>
 
       <div class="form-group">
+        <div class="form-row mb-2">
+          <div class="col-md-3">
+            <label class="col-form-label">Температура, °C</label>
+          </div>
+          <div class="col-md-3">
+            <input
+              type="number"
+              class="form-control form-control-sm"
+              placeholder="50"
+              v-model.number="isx.t1"
+              v-on:input="proj('')"
+            />
+          </div>
+        </div>
         <div class="form-row mb-2">
           <div class="col-md-3">
             <label class="col-form-label">Давление, мвст</label>
@@ -309,9 +301,8 @@
               type="number"
               class="form-control form-control-sm"
               placeholder="50"
-              v-model.number="isx.p3"
+              v-model.number="isx.p1"
               v-on:input="proj('')"
-              :disabled="stup"
             />
           </div>
         </div>
@@ -341,9 +332,16 @@
             <label class="col-form-label">Скорость, м/с</label>
           </div>
           <div class="col-md-3">
-            <input type="number" class="form-control form-control-sm" id="V3" readonly />
+            <input
+              type="number"
+              class="form-control form-control-sm"
+              id="V"
+              :class="{'red-error' : !speed }"
+              v-model.number="rescalc.gdr.V"
+              readonly
+            />
           </div>
-          <b-popover :disabled="speed.v2" :show="!speed.v2" triggers="hover" target="V3">{{popup.s}}</b-popover>
+          <b-popover :disabled="speed" :show="!speed" triggers="hover" target="V">{{popup.s}}</b-popover>
         </div>
 
         <div class="form-row mb-2">
@@ -351,15 +349,20 @@
             <label class="col-form-label">ИМ ХВС</label>
           </div>
           <div class="col-md-3">
-            <select class="form-control form-control-sm" v-model.number="isx.tipIMh" id="im3">
+            <select
+              class="form-control form-control-sm"
+              :class="{'red-error' : check6.red }"
+              v-model.number="isx.tipIMh"
+              id="im"
+            >
               <option value="6">И6</option>
               <option value="5">К5</option>
             </select>
             <b-popover
-              :disabled="!check6.y3"
-              :show="check6.y1"
+              :disabled="!check6.pop"
+              :show="check6.pop"
               triggers="hover"
-              target="im3"
+              target="im"
             >{{popup.d}}</b-popover>
           </div>
         </div>
@@ -385,45 +388,23 @@
     <div class="col-md-3 px-3 border-left border-warning">
       <div class="text-center">
         <h5>
-          <span class="badge">Принципиальная схема</span>
+          <span class="badge"></span>
         </h5>
       </div>
-
-      <!-- <div class="form-group">
-        <b-row>
-          <div class="col-md-12">
-            <img
-              id="sximageog"
-              v-bind:src="imgsx.sx"
-              width="100%"
-              @click="showModal"
-              style="cursor: pointer;"
-            />
-            <b-modal ref="myModalRef" hide-footer title="Принципиальная схема узла учета" size="lg">
-              <div class="d-block text-center">
-                <img id="sximageog" v-bind:src="imgsx.sx" width="100%" />
-              </div>
-              <b-btn class="mt-3" variant="outline-danger" block @click="hideModal">Закрыть</b-btn>
-            </b-modal>
-          </div>
-        </b-row>
-      </div>-->
 
       <div class="d-flex justify-content-center">
         <div class="col-md-9">
           <b-btn
             type="submit"
             class="btn btn-sm btn-block mb-3"
-            formaction="./pdf/project/pr.php"
-            :disabled="imgsx.bf7 ===1 ? true : false"
+            formaction="./pdf/project/pr_hvs.php"
+            :disabled="disbutton"
           >
             Создать проект
-            <b-badge variant="light">{{imgsx.zz}}</b-badge>
+            <b-badge variant="light">{{'ХВС'}}</b-badge>
           </b-btn>
 
-          <!-- <b-btn class="btn btn-sm btn-block mb-3" @click="test">test JSON</b-btn> -->
-
-          <input type="hidden" name="A" v-model="php" />
+          <input type="hidden" name="H" v-model="phpH" />
         </div>
       </div>
     </div>
@@ -432,9 +413,8 @@
 
 <script>
 import { mapState } from "vuex";
-import Axios from "axios";
-import clc_pr from "@/utils/calc_pr.js";
-import clc_kp from "@/utils/calc_kp.js";
+import clc_hvs from "@/utils/calc_hvs.js";
+// import clc_kp from "@/utils/calc_kp.js";
 import Multiselect from "vue-multiselect";
 import DU from "@/utils/du";
 import Plats_r from "@/utils/plats_R";
@@ -459,21 +439,21 @@ export default {
       ],
       isx: {
         pr_hvs: 0,
+        sens_d: 1,
+        sens_t: 0,
         baypass: 0,
         Qsut: null,
-        T: 24,
+        Tper: 24,
         qt: null,
         qhr: null,
         Kmax: null,
-        Kmin: null,
+        Kmin: 0.1,
         t1: 5,
         p1: 50,
         di: 0,
         dut: null,
         tipLh: "kl",
         tipIMh: 6,
-        txvL: 15,
-        txvZ: 5,
         filh: 0,
         IL: 0,
         imagePlane: ""
@@ -486,10 +466,6 @@ export default {
       },
       infh: "Параметры ХВС",
       fh: false,
-      im4: true,
-      show: false,
-      stup: false,
-      stup4: false,
       otklFormatSPL: true,
       otklFormatPrSx: true,
       file: null
@@ -497,9 +473,9 @@ export default {
   },
   computed: {
     ...mapState({
-      rescalc: state => state.calcModule.rescalc
+      rescalc: state => state.hvs.rescalc_hvs
     }),
-    php() {
+    phpH() {
       let plll = { plt: this.plats };
       let ppp = JSON.stringify(
         Object.assign({}, this.isx, this.rescalc, this.sb, plll)
@@ -513,6 +489,9 @@ export default {
     },
     ml() {
       let h = false;
+      this.isx.tipLh == "ml"
+        ? ((this.fh = true), (this.isx.filh = 0))
+        : (this.fh = false);
       if (this.isx.tipLh == "ml" && this.isx.di) {
         if (this.isx.di > 80 || this.isx.di < 32) {
           h = true;
@@ -533,20 +512,8 @@ export default {
       };
     },
     speed() {
-      let are = {};
-      let sp = [
-        this.rescalc.gdr1.V,
-        this.rescalc.gdr9.V,
-        this.rescalc.gdr3.V,
-        this.rescalc.gdr4.V
-      ];
-      sp.forEach(function(el, i) {
-        if (el > 1.5) {
-          are["v" + i] = false;
-        } else {
-          are["v" + i] = true;
-        }
-      });
+      let are;
+      this.rescalc.gdr.V > 1.5 ? (are = false) : (are = true);
       return are;
     },
     popup() {
@@ -580,329 +547,72 @@ export default {
     },
     check6() {
       let du = [25, 32, 40, 50, 65, 80];
-      let d1 = +this.isx.di;
-      let A1 = du.indexOf(d1);
-      let y1 = "";
-      if (+this.isx.tipIMh == 6) {
-        A1 >= 0 || !d1 ? (y1 = false) : (y1 = true);
-      } else {
-        y1 = false;
+      let d1 = this.isx.di;
+      let red = false;
+      let pop = false;
+      if (this.isx.tipIMh == 6 && d1 > 0) {
+        let A1 = du.indexOf(d1);
+        A1 >= 0 ? ((red = false), (pop = false)) : ((red = true), (pop = true));
       }
 
-      return {
-        y1
-      };
+      return { red, pop };
     },
-    imgsx() {
-      let z = "10";
-      let z1 = "";
-      let zz = "";
-      let bf7 = 1;
-      let bf8 = 0;
-      let v1 = 0;
-      let v2 = 0;
-      let v3 = 0;
-      let tipu = this.tipProject;
-
-      switch (tipu) {
-        case "h":
-          if (this.check6.y1 || this.ml.h) {
-            v1 = 1;
-          } else {
-            v1 = 0;
-          }
-          if (this.isx.dut < 33 && this.isx.filh == "2") {
-            v2 = 1;
-          } else {
-            v2 = 0;
-          }
-          bf8 = v1 + v2;
-          if (bf8 > 0) {
-            bf7 = 1;
-          } else {
-            bf7 = 0;
-          }
-          break;
-        default:
-          break;
-      }
-      let sx = "./img/" + z + ".svg";
-      return {
-        sx,
-        zz,
-        bf7
-      };
-    },
-    tipProject() {
-      let tipu = this.isx.tipuu;
-      if (this.isx.qco > 0 && this.isx.qmax > 0) {
-        tipu = "og";
-      } else if (this.isx.qco > 0) {
-        tipu = "o";
-      } else if (this.isx.qmax > 0) {
-        tipu = "g";
-      } else {
-        tipu = "";
-      }
-      return tipu;
+    disbutton() {
+      let a;
+      let b;
+      let c;
+      let d;
+      let g;
+      this.isx.qt > 0 ? (a = 0) : (a = 1);
+      this.check6.red ? (b = 1) : (b = 0);
+      this.ml.h ? (c = 1) : (c = 0);
+      d = a + b + c;
+      d > 0 ? (g = true) : (g = false);
+      return g;
     }
   },
-  watch: {},
   methods: {
     proj(m, u) {
-      let tip_rascheta = "";
-      this.isx.tipuu = this.tipProject;
       switch (m) {
-        case "qco":
-          if (this.isx.qco > 0) {
-            this.isx.pr_ot = 1;
-            if (this.isx.qco > 100) {
-              this.isx.qco = this.isx.qco / 1000;
-            }
-          }
-          if (this.isx.tipLo == "ml") {
-            this.fo = true;
-            this.isx.filo = 0;
-          } else {
-            this.fo = false;
-          }
-          tip_rascheta = "ot";
+        case "qt":
+        case "Tper":
+          this.isx.qt > 0
+            ? ((this.isx.Qsut = (this.isx.qt * this.isx.Tper).toFixed(3)),
+              (this.isx.pr_hvs = 1))
+            : ((this.isx.Qsut = ""), (this.isx.pr_hvs = 0));
           break;
-        case "qmax":
-        case "Kchn":
-          if (this.isx.qmax > 100) {
-            this.isx.qmax = this.isx.qmax / 1000;
-          }
+        case "Qsut":
+          this.isx.Qsut > 0 && this.isx.Tper > 0
+            ? ((this.isx.qt = (this.isx.Qsut / this.isx.Tper).toFixed(3)),
+              (this.isx.pr_hvs = 1))
+            : ((this.isx.qt = ""), (this.isx.pr_hvs = 0));
+          break;
+        case "qhr":
+          break;
 
-          if (this.isx.qmax > 0) {
-            this.isx.qgvssr = (this.isx.qmax / this.isx.Kchn).toFixed(6);
-          } else {
-            this.isx.qgvssr = "";
-            this.isx.tipLg4 = this.isx.tipLg3;
-          }
-          this.isx.pr_gvs = 1;
-          this.isx.sx_gvs = 0;
-          this.isx.sx_gvs_dep > 0 ? (this.stup = true) : (this.stup = false);
-
-          this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
-            ? (tip_rascheta = "ot_gvs")
-            : (tip_rascheta = "gvs");
-          if (this.isx.tipLg3 == "ml") {
-            this.fg = true;
-            this.isx.filg = 0;
-          } else {
-            this.fg = false;
-          }
-
-          break;
-        case "qgvssr":
-          if (this.isx.qgvssr > 100) {
-            this.isx.qgvssr = this.isx.qgvssr / 1000;
-          }
-          if (this.isx.qgvssr > 0) {
-            this.isx.qmax = (this.isx.qgvssr * this.isx.Kchn).toFixed(6);
-          } else {
-            this.isx.qmax = "";
-            this.isx.tipLg4 = this.isx.tipLg3;
-          }
-          this.isx.pr_gvs = 1;
-          this.isx.sx_gvs = 0;
-          this.isx.sx_gvs_dep > 0 ? (this.stup = true) : (this.stup = false);
-          this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
-            ? (tip_rascheta = "ot_gvs")
-            : (tip_rascheta = "gvs");
-          if (this.isx.tipLg3 == "ml") {
-            this.fg = true;
-            this.isx.filg = 0;
-          } else {
-            this.fg = false;
-          }
-
-          break;
-        case "itp0":
-          this.stup = false;
-          this.isx.t3 = 60;
-          this.isx.t4 = 50;
-          this.isx.sx_gvs_dep = 0;
-          tip_rascheta = "ot_gvs";
-          break;
-        case "itp1":
-          this.stup = true;
-          this.isx.t3 = 70;
-          this.isx.t4 = 40;
-          tip_rascheta = "ot_gvs";
-          break;
-        case "itp2":
-          this.stup = true;
-          this.isx.t3 = 70;
-          this.isx.t4 = 40;
-          tip_rascheta = "ot_gvs";
-          break;
-        case "wgvs0":
-          this.stup = false;
-          this.isx.sx_gvs = 0;
-          if (this.isx.sx_otkr < 1) {
-            this.isx.fuCo = 0;
-          }
-          tip_rascheta = "ot_gvs";
-          break;
-        case "wgvs1":
-          this.stup = false;
-          this.isx.sx_gvs = 0;
-          tip_rascheta = "ot_gvs";
-          break;
-        case "wgvs2":
-          this.stup = true;
-          this.isx.sx_gvs = 0;
-          tip_rascheta = "ot_gvs";
-          break;
-        case "wgvs3":
-          this.stup = true;
-          this.$store.dispatch("TUPIC");
-          this.isx.dut4 = null;
-          tip_rascheta = "ot_gvs";
-          break;
-        case "sx_ot0":
-          this.$store.dispatch("actPodp", 0);
-          this.isx.sx_ot = 0;
-          this.isx.filp = 0;
-          tip_rascheta = "ot";
-          break;
-        case "sx_ot1":
-          tip_rascheta = "ot";
-          break;
         default:
           break;
       }
-      if (u) {
-        this.isx.tipIMg4 = this.isx.tipIMg3;
-      }
-
-      if (this.disablOtkr.diso) {
-        this.isx.sx_otkr = 0;
-      }
-
-      // let result = clc_pr(this.isx, 1.5, m, 0, tip_rascheta);
-
-      if (result.gdr1) {
-        this.isx.di1 = result.gdr1.du_im;
-        this.isx.dut1 = result.gdr1.du_tr;
-        this.isx.di2 = result.gdr1.du_im;
-        this.isx.dut2 = result.gdr2.du_tr;
-        this.isx.di9 = result.gdr9.du_im;
-        this.isx.dut9 = result.gdr9.du_tr;
-      }
-      if (result.gdr3) {
-        this.isx.di3 = result.gdr3.du_im;
-        this.isx.dut3 = result.gdr3.du_tr;
-        this.isx.di4 = result.gdr4.du_im;
-        this.isx.dut4 = result.gdr4.du_tr;
-        this.isx.tipLg4 = this.ml4_kl4;
-        if (result.gdr4.du_im < 25 && this.isx.tipIMg3 == 6) {
-          this.isx.tipIMg4 = 5;
-        } else {
-          this.isx.tipIMg4 = this.isx.tipIMg3;
-        }
+      let result = clc_hvs(this.isx, 1.5, "");
+      if (result.gdr) {
+        this.isx.di = result.gdr.du_im;
+        this.isx.dut = result.gdr.du_tr;
       }
       this.$store.dispatch({
-        type: "RESULT",
+        type: "RESULT_HVS",
         result: result
       });
-      this.im4 = false;
-    },
-    rash(d) {
-      let R = 0;
-      switch (d) {
-        case "t1":
-          R = this.rescalc.gdr1.Gv;
-          this.isx.qco = null;
-          this.isx.pr_ot = 0;
-
-          if (R > 0) {
-            //вычисляем Ду прибора
-            let result = clc_kp(R, 1.5, d, "", "", "");
-            this.isx.pr_ot = 0;
-            this.isx.di1 = result.gdr1.du_im;
-            this.isx.di2 = result.gdr2.du_im;
-            this.isx.di9 = result.gdr9.du_im;
-            this.$store.dispatch({
-              type: "CHANGE_RASH",
-              result: result,
-              d: d
-            });
-            //проверяю Ду трубы
-            let ch1 = this.dipTR(this.isx.di1, this.isx.dut1);
-            if (ch1) {
-              this.isx.dut1 = this.isx.di1;
-              this.isx.dut2 = this.isx.di1;
-            }
-          } else {
-            this.isx.di1 = 0;
-            this.isx.di2 = 0;
-            this.isx.di9 = 0;
-            this.isx.dut1 = null;
-            this.isx.dut2 = null;
-            this.isx.dut9 = null;
-            this.$store.dispatch("OT_NULL");
-          }
-          break;
-        case "t3":
-          R = this.rescalc.gdr3.Gv;
-          this.im4 = false;
-          this.isx.pr_gvs = 0;
-          this.isx.qmax = null;
-          this.isx.qgvssr = null;
-
-          //пересчитываем отопление если открытая схема
-          if (this.isx.sx_otkr) {
-            this.isx.sx_otkr = 0;
-            let reslt = clc_pr(this.isx, 1.5, "t1", R, "ot");
-
-            this.isx.di3 = reslt.gdr3.du_im;
-            this.isx.di4 = reslt.gdr4.du_im;
-            this.isx.dut3 = reslt.gdr3.du_tr;
-            this.isx.dut4 = reslt.gdr4.du_tr;
-            this.$store.dispatch({
-              type: "RESULT",
-              result: reslt
-            });
-            this.im4 = false;
-          }
-          this.isx.sx_gvs = 0;
-
-          if (R > 0) {
-            //вычисляем Ду прибора
-            let result = clc_kp(R, 1.5, d, "", "", "");
-            this.isx.di3 = result.gdr3.du_im;
-            this.isx.di4 = result.gdr4.du_im;
-            this.isx.pr_gvs = 0;
-            this.$store.dispatch({
-              type: "CHANGE_RASH",
-              result: result,
-              d: d
-            });
-
-            //проверяю Ду трубы
-            let ch3 = this.dipTR(this.isx.di3, this.isx.dut3);
-            if (ch3) {
-              this.isx.dut3 = this.isx.di3;
-              this.isx.dut4 = this.isx.di4;
-            }
-          } else {
-            this.isx.di3 = 0;
-            this.isx.di4 = 0;
-            this.isx.dut3 = null;
-            this.isx.dut4 = null;
-            this.$store.dispatch("GVS_NULL");
-          }
-          break;
-      }
-      this.isx.tipuu = this.tipProject;
     },
     change_du() {
       this.diptr.duu1[1]
         ? (this.isx.dut = this.diptr.duu1[1].value)
         : (this.isx.dut = this.diptr.duu1[0].value);
+
+      let result = clc_hvs(this.isx, 1.5, "peres");
+      this.$store.dispatch({
+        type: "RESULT_HVS",
+        result: result
+      });
     },
     checkdiapTR(du_im, du_tr) {
       let du = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300];
@@ -930,12 +640,6 @@ export default {
     },
     customLabel(option) {
       return ` ${option.plt}`;
-    },
-    showModal() {
-      this.$refs.myModalRef.show();
-    },
-    hideModal() {
-      this.$refs.myModalRef.hide();
     }
   }
 };

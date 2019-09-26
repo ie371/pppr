@@ -1,4 +1,4 @@
-function podbor(Gm, t, p, tipL, sk) {
+function podbor(Gm, t, p, sk) {
 	var THRESHOLD = sk;
 	var du = [];
 	var d = [];
@@ -30,24 +30,6 @@ function podbor(Gm, t, p, tipL, sk) {
 		d.push(eel);
 		v.push(vs2.toFixed(2));
 	}
-	return [ v[0], d[0], d[1] ];
-}
-function podborPodp(Gm, t, p, sk) {
-	var THRESHOLD = sk;
-	var d = [];
-	var v = [];
-
-	var Gv = +(Gm / ro(t, p) * 1000).toFixed(3);
-
-	var du = [ 15, 25, 32, 40, 50, 65, 80, 100, 150, 200, 300 ];
-	du.forEach(function(el) {
-		var a1 = Math.pow(el * 0.001, 2) / 4;
-		var vs = Gv * 1 / (3.14 * a1) / 3600;
-		if (vs.toFixed(2) <= +THRESHOLD) {
-			d.push(el);
-			v.push(vs.toFixed(2));
-		}
-	});
 	return [ v[0], d[0], d[1] ];
 }
 function alfaArF() {
@@ -198,7 +180,7 @@ function KvsarF(du_im, du_tr, Gv, Vtr, filtr, ok, tipL) {
 		poter_grz
 	};
 }
-function gidr(t, du_im, du_tr, Gm, p, tipL, Gg, tg, pg, otpen, filtr, ok, tipIM) {
+function gidr(t, du_im, du_tr, Gv, p, tipL, filtr, ok, tipIM) {
 	let ki = '_' + du_tr + du_im;
 	let L = 0;
 	let alf = 0;
@@ -219,27 +201,12 @@ function gidr(t, du_im, du_tr, Gm, p, tipL, Gg, tg, pg, otpen, filtr, ok, tipIM)
 			}
 		}
 	}
-	var sherh = 0.5;
+	var sherh = 1;
 	var Ltr = 0.4;
 	var lambda = 0.032;
 	var PL = ro(t, p);
-	var Gv;
-	var Gmo;
-	if (otpen === 0) {
-		Gv = Gm * 1000 / PL;
-	} else if (otpen === 1) {
-		var PLo = ro(t, p);
-		var Gvo = Gm * 1000 / PLo;
-		var PLg = ro(tg, pg);
-		var Gvg = Gg * 1000 / PLg;
-		Gv = Gvo + Gvg;
-	} else if (otpen === 2) {
-		Gmo = Gm + Gg;
-		Gv = Gmo * 1000 / PL;
-	} else if (otpen === 3) {
-		Gmo = Gm + Gg;
-		Gv = Gmo * 1000 / PL;
-	}
+	var Gm = Gv * PL / 1000;
+
 	var atr = Math.pow(du_tr * 0.001, 2) / 4;
 	var Vtr = (Gv * 1 / (3.14 * atr) / 3600).toFixed(2);
 	let Kvs = KvsarF(du_im, du_tr, Gv, Vtr, filtr, ok, tipL);
@@ -284,6 +251,7 @@ function gidr(t, du_im, du_tr, Gm, p, tipL, Gg, tg, pg, otpen, filtr, ok, tipIM)
 		Puu: Puu,
 		L: L,
 		alf: alf,
+		Gm,
 		t: t,
 		p: p,
 		sherh: sherh,
@@ -311,46 +279,7 @@ function gidr(t, du_im, du_tr, Gm, p, tipL, Gg, tg, pg, otpen, filtr, ok, tipIM)
 	};
 	return Gidr;
 }
-function rash(q, t1, t2) {
-	var r = +(q * 1000 / (t1 - t2)).toFixed(3);
-	return r;
-}
-function rashgvs_cirk(Qgvsmax, t3, t4, Kchn, txvL, txvZ, koef, t1, Ktp, Knp, beta) {
-	let tt3 = '';
-	t1 ? (tt3 = t1) : (tt3 = t3);
-	let Qsr = +(Qgvsmax / Kchn).toFixed(6);
-	let Ggvsmax = +(koef * Qgvsmax * 1000 / (t3 - txvZ)).toFixed(3);
-	let Ggvssr = +(koef * Qsr * 1000 / (t3 - txvZ)).toFixed(3);
-	let Qgvscirkz = +(Ktp * Qsr / (1 + Ktp)).toFixed(6);
-	let Ggvscirkz = +(Qgvscirkz * 1000 / (tt3 - t4)).toFixed(3);
-	let Qgvsmaxl = +(Qgvsmax * Knp).toFixed(6);
-	let Ggvsmaxl = +(koef * Qgvsmaxl * 1000 / (t3 - txvL)).toFixed(3);
-	let Qgvssrl = +(Qgvsmaxl / Kchn).toFixed(6);
-	let Ggvssrl = +(koef * Qgvssrl * 1000 / (t3 - txvL)).toFixed(3);
-	let Qgvscirkl = +(Ktp * Qgvssrl / (1 + Ktp)).toFixed(6);
-	let Ggvscirkl = +(beta * Qgvscirkl * 1000 / (t3 - t4)).toFixed(3);
-	let Ggvscirklmax = +(Ggvscirkl * 1.5).toFixed(3);
-	let Ggvscirklmin = +(Ggvscirkl * 0.4).toFixed(3);
-	let Gm3 = +Ggvsmax.toFixed(3);
-	let Gm4 = +Ggvscirkz.toFixed(3);
-	let arr = {
-		Gm3: Gm3,
-		Gm4: Gm4,
-		Ggvsmax: Ggvsmax,
-		Ggvssr: Ggvssr,
-		Qgvscirkz: Qgvscirkz,
-		Ggvscirkz: Ggvscirkz,
-		Qgvsmaxl: Qgvsmaxl,
-		Ggvsmaxl: Ggvsmaxl,
-		Qgvssrl: Qgvssrl,
-		Ggvssrl: Ggvssrl,
-		Qgvscirkl: Qgvscirkl,
-		Ggvscirkl: Ggvscirkl,
-		Ggvscirklmax: Ggvscirklmax,
-		Ggvscirklmin: Ggvscirklmin
-	};
-	return arr;
-}
+
 function ro(t, p) {
 	let ror = (Math.pow(t * 0.01, 5) * (-0.033875 * p + 12.742) +
 		Math.pow(t * 0.01, 4) * (0.096667 * p - 44.488) +
@@ -361,195 +290,30 @@ function ro(t, p) {
 		999.792).toFixed();
 	return ror;
 }
-function pr2(isx, sk, peres, tip_rascheta) {
-	let koef = 1;
-	let {
-		sx_ot,
-		sx_otkr,
-		sx_gvs,
-		sx_gvs_dep,
-		qco,
-		qmax,
-		Kchn,
-		knp,
-		ktp,
-		beta,
-		t1,
-		t2,
-		t3,
-		t4,
-		p1,
-		p2,
-		p3,
-		p4,
-		di1,
-		di9,
-		di3,
-		di4,
-		dut1,
-		dut9,
-		dut3,
-		dut4,
-		tipLo,
-		tipLg3,
-		tipLg4,
-		tipIMo,
-		tipIMg3,
-		tipIMg4,
-		txvL,
-		txvZ,
-		filo,
-		filg
-	} = isx;
+function pr2(isx, sk, peres) {
+	let { qt, t1, p1, di, dut, tipLh, tipIMh, filh } = isx;
 	p1 = p1 / 10;
-	p2 = p2 / 10;
-	p3 = p3 / 10;
-	p4 = p4 / 10;
-
-	if (tip_rascheta != 'gvs') {
-		if (qco > 0) {
-			var G = rash(qco, t1, t2);
-			var Gm1 = G;
-			var GGG = Gm1;
-			var Gm2 = G;
-			var PL1 = ro(t1, p1);
-			var Gv1 = +(Gm1 * 1000 / PL1).toFixed(3);
-			var PL2 = ro(t2, p2);
-			var Gv2 = +(Gm2 * 1000 / PL2).toFixed(3);
-			var otpen = 0;
-
-			if (sx_otkr > 0) {
-				var gg2 = '';
-				var Gg = rashgvs_cirk(qmax, t3, t4, Kchn, txvL, txvZ, koef, '', ktp, knp, beta);
-				var gg1 = Gg.Gm3;
-				sx_gvs > 0 ? (gg2 = 0) : (gg2 = Gg.Gm4);
-
-				var Gm1sum = (gg1 + Gm1).toFixed(3);
-				GGG = Gm1sum;
-				var Gm2sum = (gg2 + Gm2).toFixed(3);
-				otpen = 1;
-			}
-
-			if (sx_gvs_dep > 0) {
-				sx_gvs_dep === 2 ? (koef = 0.55) : (koef = 1);
-				Gg = rashgvs_cirk(qmax, t3, 55, Kchn, t4, t4, koef, t1, ktp, knp, beta);
-				gg1 = Gg.Gm3;
-				gg2 = Gg.Gm3;
-				if (!t4) {
-					gg2 = 0;
-				}
-				Gm1sum = (gg1 + Gm1).toFixed(3);
-				GGG = Gm1sum;
-				Gm2sum = (gg2 + Gm2).toFixed(3);
-				otpen = 2;
-				var PL3 = ro(t3, p3);
-				var PL4 = ro(t4, p4);
-				var objgvs = {
-					gdr3: { Gv: '', V: '', du_im: 0, PL: PL3 },
-					gdr4: { Gv: '', V: '', du_im: 0, PL: PL4 },
-					Ggvs: Gg
-				};
-			}
-
-			if (sx_otkr > 1) {
-				PL3 = ro(t3, p3);
-				var Gv3 = (Gg.Gm3 / PL3 * 1000).toFixed(3);
-
-				if (sx_otkr < 3) {
-					PL4 = ro(t4, p4);
-					var Gv4 = (Gg.Gm4 / PL4 * 1000).toFixed(3);
-				} else {
-					PL4 = '';
-					Gv4 = '';
-				}
-
-				objgvs = {
-					gdr3: { Gv: Gv3, V: '', du_im: 0, PL: PL3 },
-					gdr4: { Gv: Gv4, V: '', du_im: 0, PL: PL4 },
-					Ggvs: Gg
-				};
-			}
-
-			if (peres != 'peres') {
-				var n1 = podbor(GGG, t1, p1, tipLo, sk);
-				di1 = n1[1];
-				dut1 = n1[2];
-			}
-			var gdr1 = gidr(t1, di1, dut1, Gm1, p1, tipLo, gg1, t3, p3, otpen, filo, 0, tipIMo);
-			var gdr2 = gidr(t2, di1, dut1, Gm2, p2, tipLo, gg2, t4, p4, otpen, filo, 0, tipIMo);
-
-			if (sx_ot > 0) {
-				var Gm9 = (qco * 3.6).toFixed(4);
-
-				if (peres != 'peres') {
-					var n9 = podborPodp(Gm9, t2, p2, sk);
-					di9 = n9[1];
-					dut9 = n9[2];
-				}
-				var gdr9 = gidr(t2, di9, dut9, Gm9, p2, 'kl', null, null, null, 0, 0, 0, 5);
-			} else {
-				gdr9 = { Gv: '', V: '', du_im: 0 };
-			}
-
-			var OT = { Gm1, Gm2, Gv1, Gv2, Gm1sum, Gm2sum, Gm9 };
-			var objot = {
-				OT: OT,
-				gdr1: gdr1,
-				gdr2: gdr2,
-				gdr9: gdr9
-			};
-		} else {
-			objot = {
-				OT: {},
-				gdr1: { Gv: '', V: '', du_im: isx.di1, du_tr: isx.dut1 },
-				gdr2: { Gv: '', V: '', du_im: isx.di2, du_tr: isx.dut2 },
-				gdr9: { Gv: '', V: '', du_im: isx.di9, du_tr: isx.dut9 },
-				not_ot: {}
-			};
+	if (qt > 0) {
+		if (peres != 'peres') {
+			var n1 = podbor(qt, t1, p1, sk);
+			di = n1[1];
+			dut = n1[2];
 		}
+		var gdr1 = gidr(t1, di, dut, qt, p1, tipLh, filh, 0, tipIMh);
+
+		var objhvs = {
+			gdr: gdr1
+		};
+	} else {
+		objhvs = {
+			gdr: { Gv: '', V: '', du_im: isx.di1, du_tr: isx.dut1 }
+		};
 	}
-
-	if (tip_rascheta != 'ot') {
-		if (sx_gvs_dep === 0 && sx_otkr < 2) {
-			if (isx.qmax > 0) {
-				// console.log('считаем проект ГВС - qmax = 99990');
-				var Ggvs = rashgvs_cirk(qmax, t3, t4, Kchn, txvL, txvZ, koef, '', ktp, knp, beta);
-				var Gm3 = Ggvs.Gm3;
-				var Gm4 = Ggvs.Gm4;
-
-				if (peres != 'peres') {
-					n1 = podbor(Gm3, t3, p3, tipLg3, sk);
-					di3 = n1[1];
-					dut3 = n1[2];
-				}
-				var gdr3 = gidr(t3, di3, dut3, Gm3, p3, tipLg3, null, null, null, 0, filg, 0, tipIMg3);
-
-				if (sx_gvs == 0) {
-					if (peres != 'peres') {
-						var n2 = podbor(Gm4, t4, p4, tipLg4, sk);
-						di4 = n2[1];
-						dut4 = n2[2];
-					}
-					var gdr4 = gidr(t4, di4, dut4, Gm4, p4, tipLg4, null, null, null, 0, filg, 1, tipIMg4);
-				} else {
-					gdr4 = { du_im: 0 };
-				}
-				objgvs = {
-					gdr3: gdr3,
-					gdr4: gdr4,
-					Ggvs: Ggvs
-				};
-			}
-		}
-	}
-
-	// console.log('objgvs ', objgvs)
-	var resu = Object.assign({}, objot, objgvs);
-	return resu;
+	return objhvs;
 }
 
-function calc(isx, sk, peres, tip_rascheta) {
-	var result = pr2(isx, sk, peres, tip_rascheta);
+function calc(isx, sk, peres) {
+	var result = pr2(isx, sk, peres);
 	return result;
 }
 

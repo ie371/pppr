@@ -1581,7 +1581,7 @@ export default {
         this.isx.sx_otkr = 0;
       }
       // console.log("tip_rascheta==", tip_rascheta);
-      let result = clc_pr(this.isx, 1.5, m, 0, tip_rascheta);
+      let result = clc_pr(this.isx, 1.5, "", tip_rascheta);
 
       if (result.gdr1) {
         this.isx.di1 = result.gdr1.du_im;
@@ -1652,7 +1652,7 @@ export default {
           //пересчитываем отопление если открытая схема
           if (this.isx.sx_otkr) {
             this.isx.sx_otkr = 0;
-            let reslt = clc_pr(this.isx, 1.5, "t1", R, "ot");
+            let reslt = clc_pr(this.isx, 1.5, "t1", "ot");
 
             this.isx.di3 = reslt.gdr3.du_im;
             this.isx.di4 = reslt.gdr4.du_im;
@@ -1703,7 +1703,7 @@ export default {
               : (this.isx.dut1 = this.diptr.duu1[0].value);
             this.isx.dut2 = this.isx.di1;
             if (this.isx.pr_ot === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "ot");
+              result = clc_pr(this.isx, 1.5, "peres", "ot");
               this.im4 = false;
             } else {
               R = this.rescalc.gdr1.Gv;
@@ -1735,7 +1735,7 @@ export default {
               : (this.isx.dut3 = this.diptr.duu3[0].value);
 
             if (this.isx.pr_gvs === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "gvs");
+              result = clc_pr(this.isx, 1.5, "peres", "gvs");
             } else {
               R = this.rescalc.gdr3.Gv;
               if (R > 0) {
@@ -1759,7 +1759,7 @@ export default {
             this.$store.dispatch("GVS_NULL");
             this.im4 = true;
             if (this.isx.sx_otkr) {
-              result = clc_pr(this.isx, 1.5, "t1", R, "ot");
+              result = clc_pr(this.isx, 1.5, "t1", "ot");
               this.$store.dispatch({
                 type: "RESULT",
                 result: result
@@ -1776,7 +1776,7 @@ export default {
 
             this.isx.sx_gvs = 0;
             if (this.isx.pr_gvs === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "gvs");
+              result = clc_pr(this.isx, 1.5, "peres", "gvs");
               this.im4 = false;
             } else {
               R = this.rescalc.gdr4.Gv;
@@ -1796,7 +1796,7 @@ export default {
             this.isx.dut4 = null;
             this.$store.dispatch("TUPIC");
             if (this.isx.pr_gvs === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "gvs");
+              result = clc_pr(this.isx, 1.5, "peres", "gvs");
               this.im4 = false;
             }
             this.$store.dispatch({
@@ -1813,7 +1813,7 @@ export default {
               : (this.isx.dut9 = this.diptr.duu9[0].value);
 
             if (this.isx.pr_ot === 1) {
-              result = clc_pr(this.isx, 1.5, "peres", "", "ot");
+              result = clc_pr(this.isx, 1.5, "peres", "ot");
               this.im4 = false;
             } else {
               R = this.rescalc.gdr9.Gv;
