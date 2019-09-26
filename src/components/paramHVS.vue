@@ -142,12 +142,15 @@
             <label class="col-form-label">Расход часовой, м³/ч</label>
             <input
               type="number"
-              step="0.1"
+              step="0.001"
+              min="0"
+              max="2500"
               class="form-control form-control-sm"
               placeholder="qt (qm)"
               v-model.number="isx.qt"
-              value="15"
               v-on:input="proj('qt')"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              maxlength="8"
               v-b-popover.hover.bottomright="'Среднечасовой расход  воды'"
             />
           </div>
