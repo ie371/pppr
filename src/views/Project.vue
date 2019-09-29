@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      currentTab: 3
+      currentTab: 2
     };
   }
 };

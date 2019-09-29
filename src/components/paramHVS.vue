@@ -82,19 +82,19 @@
               <label class="col-form-label">Принципиальная схема</label>
               <input
                 type="file"
-                id="fileImagePrSx"
-                name="princ_sx_uploads"
+                id="fileImagePrSx_hvs"
+                name="princ_sx_uploads_hvs"
                 accept="image/jpeg, image/png"
                 style="font-size:0.8em;"
-                @change="ImageSPL"
+                @change="ImageSPL_hvs"
               />
             </div>
             <div class="col">
               <label class="col-form-label">Формат листа:</label>
               <select
                 class="form-control form-control-sm"
-                name="formatPRSX"
-                :disabled="otklFormatPrSx"
+                name="formatPRSX_hvs"
+                :disabled="otklFormatPrSx_hvs"
               >
                 <option value="A3">А3</option>
                 <option value="A2">А2</option>
@@ -106,19 +106,19 @@
               <label class="col-form-label">Ситуационный план</label>
               <input
                 type="file"
-                id="fileImageSPL"
-                name="sitplan_uploads"
+                id="fileImageSPL_hvs"
+                name="sitplan_uploads_hvs"
                 accept="image/jpeg, image/png"
                 style="font-size:0.8em;"
-                @change="ImageSPL"
+                @change="ImageSPL_hvs"
               />
             </div>
             <div class="col">
               <label class="col-form-label">Формат листа:</label>
               <select
                 class="form-control form-control-sm"
-                name="formatSitPl"
-                :disabled="otklFormatSPL"
+                name="formatSitPl_hvs"
+                :disabled="otklFormatSPL_hvs"
               >
                 <option value="A3">А3</option>
                 <option value="A2">А2</option>
@@ -458,8 +458,7 @@ export default {
         tipLh: "kl",
         tipIMh: 6,
         filh: 0,
-        IL: 0,
-        imagePlane: ""
+        IL: 0
       },
       sb: {
         tipSB: 0,
@@ -469,8 +468,8 @@ export default {
       },
       infh: "Параметры ХВС",
       fh: false,
-      otklFormatSPL: true,
-      otklFormatPrSx: true,
+      otklFormatSPL_hvs: true,
+      otklFormatPrSx_hvs: true,
       file: null
     };
   },
@@ -627,18 +626,18 @@ export default {
         return false;
       }
     },
-    ImageSPL() {
-      let fileSPL = document.getElementById("fileImageSPL").files.length;
-      let filePrSx = document.getElementById("fileImagePrSx").files.length;
+    ImageSPL_hvs() {
+      let fileSPL = document.getElementById("fileImageSPL_hvs").files.length;
+      let filePrSx = document.getElementById("fileImagePrSx_hvs").files.length;
       if (fileSPL === 0) {
-        this.otklFormatSPL = true;
+        this.otklFormatSPL_hvs = true;
       } else {
-        this.otklFormatSPL = false;
+        this.otklFormatSPL_hvs = false;
       }
       if (filePrSx === 0) {
-        this.otklFormatPrSx = true;
+        this.otklFormatPrSx_hvs = true;
       } else {
-        this.otklFormatPrSx = false;
+        this.otklFormatPrSx_hvs = false;
       }
     },
     customLabel(option) {

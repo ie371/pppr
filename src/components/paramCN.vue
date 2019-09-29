@@ -1580,7 +1580,7 @@ export default {
       if (this.disablOtkr.diso) {
         this.isx.sx_otkr = 0;
       }
-      // console.log("tip_rascheta==", tip_rascheta);
+
       let result = clc_pr(this.isx, 1.5, "", tip_rascheta);
 
       if (result.gdr1) {
@@ -1698,10 +1698,15 @@ export default {
         case "t1":
           if (this.isx.di1 > 0) {
             this.isx.di2 = this.isx.di1;
-            this.diptr.duu1[1]
-              ? (this.isx.dut1 = this.diptr.duu1[1].value)
-              : (this.isx.dut1 = this.diptr.duu1[0].value);
-            this.isx.dut2 = this.isx.di1;
+            // проверка отличия 3-х ду
+            let ch = this.checkdiapTR(this.isx.di1, this.isx.dut1);
+            if (ch) {
+              this.diptr.duu1[1]
+                ? (this.isx.dut1 = this.diptr.duu1[1].value)
+                : (this.isx.dut1 = this.diptr.duu1[0].value);
+              this.isx.dut2 = this.isx.di1;
+            }
+
             if (this.isx.pr_ot === 1) {
               result = clc_pr(this.isx, 1.5, "peres", "ot");
               this.im4 = false;
@@ -1730,9 +1735,12 @@ export default {
           break;
         case "t3":
           if (this.isx.di3 > 0) {
-            this.diptr.duu3[1]
-              ? (this.isx.dut3 = this.diptr.duu3[1].value)
-              : (this.isx.dut3 = this.diptr.duu3[0].value);
+            let ch = this.checkdiapTR(this.isx.di3, this.isx.dut3);
+            if (ch) {
+              this.diptr.duu3[1]
+                ? (this.isx.dut3 = this.diptr.duu3[1].value)
+                : (this.isx.dut3 = this.diptr.duu3[0].value);
+            }
 
             if (this.isx.pr_gvs === 1) {
               result = clc_pr(this.isx, 1.5, "peres", "gvs");
@@ -1770,10 +1778,12 @@ export default {
           break;
         case "t4":
           if (this.isx.di4 > 0) {
-            this.diptr.duu4[1]
-              ? (this.isx.dut4 = this.diptr.duu4[1].value)
-              : (this.isx.dut4 = this.diptr.duu4[0].value);
-
+            let ch = this.checkdiapTR(this.isx.di4, this.isx.dut4);
+            if (ch) {
+              this.diptr.duu4[1]
+                ? (this.isx.dut4 = this.diptr.duu4[1].value)
+                : (this.isx.dut4 = this.diptr.duu4[0].value);
+            }
             this.isx.sx_gvs = 0;
             if (this.isx.pr_gvs === 1) {
               result = clc_pr(this.isx, 1.5, "peres", "gvs");
@@ -1808,10 +1818,12 @@ export default {
           break;
         case "t9":
           if (this.isx.di9 > 0) {
-            this.diptr.duu9[1]
-              ? (this.isx.dut9 = this.diptr.duu9[1].value)
-              : (this.isx.dut9 = this.diptr.duu9[0].value);
-
+            let ch = this.checkdiapTR(this.isx.di9, this.isx.dut9);
+            if (ch) {
+              this.diptr.duu9[1]
+                ? (this.isx.dut9 = this.diptr.duu9[1].value)
+                : (this.isx.dut9 = this.diptr.duu9[0].value);
+            }
             if (this.isx.pr_ot === 1) {
               result = clc_pr(this.isx, 1.5, "peres", "ot");
               this.im4 = false;
@@ -1832,6 +1844,16 @@ export default {
           break;
       }
       this.isx.tipuu = this.tipProject;
+    },
+    checkdiapTR(du_im, du_tr) {
+      let du = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300];
+      let k1 = du.indexOf(+du_im);
+      let k11 = du.indexOf(+du_tr);
+      if (!du_tr || k1 > k11 || k11 - k1 > 3) {
+        return true;
+      } else {
+        return false;
+      }
     },
     ImageSPL() {
       let fileSPL = document.getElementById("fileImageSPL").files.length;
