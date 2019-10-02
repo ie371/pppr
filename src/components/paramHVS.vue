@@ -146,7 +146,7 @@
               min="0"
               max="2500"
               class="form-control form-control-sm"
-              placeholder="qt (qm)"
+              placeholder="qt"
               v-model.number="isx.qt"
               v-on:input="proj('qt')"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
@@ -186,7 +186,7 @@
           </div>
         </div>
 
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="col text-center">
             <label class="col-form-label">qhr</label>
             <input
@@ -229,7 +229,7 @@
               v-b-popover.hover.bottomright="'Коэффициент минимальной часовой неравномерности'"
             />
           </div>
-        </div>
+        </div>-->
 
         <div class="form-row">
           <div class="col">
@@ -665,6 +665,10 @@ export default {
   font-weight: bold;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
+}
+.form-control::placeholder {
+  color: #868686 !important;
+  opacity: 0.5 !important;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
