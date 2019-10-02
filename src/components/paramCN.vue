@@ -204,7 +204,12 @@
 
           <div class="col">
             <label class="col-form-label">Формула учета</label>
-            <select class="form-control form-control-sm" v-model="isx.fuCo" :disabled="fu_Co">
+            <select
+              class="form-control form-control-sm"
+              v-model="isx.fuCo"
+              @change="dis_txv_pr()"
+              :disabled="fu_Co"
+            >
               <option value="0">закрытая (М1 = М2)</option>
               <option value="1">открытая (М1 - М2)</option>
             </select>
@@ -947,6 +952,28 @@
             </select>
           </div>
         </div>
+        <div v-if="+isx.fuCo||+isx.sx_otkr>0">
+          <div class="form-row mb-1">
+            <div class="col-6">
+              <label class="col-form-label">Температура ХВ для откр.схемы</label>
+            </div>
+            <div class="col">
+              <label class="col-form-label md-3">Программ</label>
+              <b-form-checkbox
+                switch
+                size="sm"
+                v-model.number="isx.progr_txv"
+                :disabled="fg"
+                value="1"
+                unchecked-value="0"
+              ></b-form-checkbox>
+            </div>
+            <div class="col" v-if="+isx.progr_txv">
+              <label class="col-form-label">темп. ХВ, °C</label>
+              <input type="number" class="form-control form-control-sm" v-model.number="isx.txv_pr" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1071,6 +1098,8 @@ export default {
         ok: 0,
         txvL: 15,
         txvZ: 5,
+        progr_txv: 0,
+        txv_pr: 10,
         filo: 0,
         filg: 0,
         filp: 0,
@@ -1552,6 +1581,7 @@ export default {
         case "wgvs0":
           this.stup = false;
           this.isx.sx_gvs = 0;
+          this.isx.progr_txv = 0;
           if (this.isx.sx_otkr < 1) {
             this.isx.fuCo = 0;
           }
@@ -1921,6 +1951,11 @@ export default {
           });
       } else {
         this.isx.indexnas = "";
+      }
+    },
+    dis_txv_pr() {
+      if (this.isx.fuCo == 0) {
+        this.isx.progr_txv = 0;
       }
     },
     test() {
