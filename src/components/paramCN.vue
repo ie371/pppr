@@ -1068,7 +1068,7 @@ export default {
         tipIMo: 6,
         tipIMg3: 6,
         tipIMg4: 6,
-        ok: 1,
+        ok: 0,
         txvL: 15,
         txvZ: 5,
         filo: 0,

@@ -165,7 +165,6 @@ function KvsarF(du_im, du_tr, Gv, Vtr, filtr, ok, tipL) {
 		_250: { kr: 5100, ok: 2010, grz: 10, flt: 1260 },
 		_300: { kr: 9100, ok: 2459, grz: 10, flt: 1735 }
 	};
-
 	if (tipL === 'kl') {
 		Kvs_kr = Kvsar[tr].kr;
 		poter_kr = Gv / Kvs_kr;
@@ -396,11 +395,13 @@ function pr2(isx, sk, peres, tip_rascheta) {
 		tipIMo,
 		tipIMg3,
 		tipIMg4,
+		ok,
 		txvL,
 		txvZ,
 		filo,
 		filg
 	} = isx;
+
 	p1 = p1 / 10;
 	p2 = p2 / 10;
 	p3 = p3 / 10;
@@ -499,13 +500,6 @@ function pr2(isx, sk, peres, tip_rascheta) {
 				gdr9: gdr9
 			};
 		} else {
-			// objot = {
-			// 	OT: {},
-			// 	gdr1: { Gv: '', V: '', du_im: isx.di1, du_tr: isx.dut1 },
-			// 	gdr2: { Gv: '', V: '', du_im: isx.di2, du_tr: isx.dut2 },
-			// 	gdr9: { Gv: '', V: '', du_im: isx.di9, du_tr: isx.dut9 },
-			// 	not_ot: {}
-			// };
 			objot = {
 				OT: {},
 				gdr1: { Gv: '', V: '', du_im: 0 },
