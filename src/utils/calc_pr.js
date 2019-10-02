@@ -395,7 +395,6 @@ function pr2(isx, sk, peres, tip_rascheta) {
 		tipIMo,
 		tipIMg3,
 		tipIMg4,
-		ok,
 		txvL,
 		txvZ,
 		filo,
