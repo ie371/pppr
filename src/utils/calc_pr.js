@@ -499,11 +499,18 @@ function pr2(isx, sk, peres, tip_rascheta) {
 				gdr9: gdr9
 			};
 		} else {
+			// objot = {
+			// 	OT: {},
+			// 	gdr1: { Gv: '', V: '', du_im: isx.di1, du_tr: isx.dut1 },
+			// 	gdr2: { Gv: '', V: '', du_im: isx.di2, du_tr: isx.dut2 },
+			// 	gdr9: { Gv: '', V: '', du_im: isx.di9, du_tr: isx.dut9 },
+			// 	not_ot: {}
+			// };
 			objot = {
 				OT: {},
-				gdr1: { Gv: '', V: '', du_im: isx.di1, du_tr: isx.dut1 },
-				gdr2: { Gv: '', V: '', du_im: isx.di2, du_tr: isx.dut2 },
-				gdr9: { Gv: '', V: '', du_im: isx.di9, du_tr: isx.dut9 },
+				gdr1: { Gv: '', V: '', du_im: 0 },
+				gdr2: { Gv: '', V: '', du_im: 0 },
+				gdr9: { Gv: '', V: '', du_im: 0 },
 				not_ot: {}
 			};
 		}
@@ -538,6 +545,11 @@ function pr2(isx, sk, peres, tip_rascheta) {
 					gdr3: gdr3,
 					gdr4: gdr4,
 					Ggvs: Ggvs
+				};
+			} else {
+				objgvs = {
+					gdr3: { Gv: '', V: '', du_im: 0 },
+					gdr4: { Gv: '', V: '', du_im: 0 }
 				};
 			}
 		}

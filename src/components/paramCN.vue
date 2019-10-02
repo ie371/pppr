@@ -897,7 +897,7 @@
             <select
               class="form-control form-control-sm"
               v-model.number="isx.tipIMg4"
-              :class="{'red-error' : check6.y4 }"
+              :class="{ 'yellow-error': yellow_t4, 'red-error': check6.y4 }"
               id="im4"
               :disabled="stup"
             >
@@ -1441,6 +1441,15 @@ export default {
         s = this.isx.tipLg3;
       }
       return s;
+    },
+    yellow_t4() {
+      let yel;
+      if (this.isx.tipIMg4 != this.isx.tipIMg3) {
+        this.isx.sx_gvs_dep > 0 || this.isx.sx_otkr > 1
+          ? (yel = false)
+          : (yel = true);
+      }
+      return yel;
     }
   },
   watch: {},
@@ -1477,12 +1486,14 @@ export default {
           } else {
             this.isx.qgvssr = "";
             this.isx.tipLg4 = this.isx.tipLg3;
+            this.isx.tipIMg4 = this.isx.tipIMg3;
           }
           this.isx.qmax > 0 ? (this.isx.pr_gvs = 1) : (this.isx.pr_gvs = 0);
-
           this.isx.sx_gvs = 0;
 
-          this.isx.sx_gvs_dep > 0 ? (this.stup = true) : (this.stup = false);
+          this.isx.sx_gvs_dep > 0 || this.isx.sx_otkr > 1
+            ? (this.stup = true)
+            : (this.stup = false);
 
           this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
             ? (tip_rascheta = "ot_gvs")
@@ -1505,6 +1516,7 @@ export default {
           } else {
             this.isx.qmax = "";
             this.isx.tipLg4 = this.isx.tipLg3;
+            this.isx.tipIMg4 = this.isx.tipIMg3;
           }
           this.isx.qgvssr > 0 ? (this.isx.pr_gvs = 1) : (this.isx.pr_gvs = 0);
           this.isx.sx_gvs_dep > 0 ? (this.stup = true) : (this.stup = false);
@@ -1576,13 +1588,10 @@ export default {
       if (u) {
         this.isx.tipIMg4 = this.isx.tipIMg3;
       }
-
       if (this.disablOtkr.diso) {
         this.isx.sx_otkr = 0;
       }
-
       let result = clc_pr(this.isx, 1.5, "", tip_rascheta);
-
       if (result.gdr1) {
         this.isx.di1 = result.gdr1.du_im;
         this.isx.dut1 = result.gdr1.du_tr;
@@ -1597,7 +1606,11 @@ export default {
         this.isx.di4 = result.gdr4.du_im;
         this.isx.dut4 = result.gdr4.du_tr;
         this.isx.tipLg4 = this.ml4_kl4;
-        if (result.gdr4.du_im < 25 && this.isx.tipIMg3 == 6) {
+        if (
+          result.gdr4.du_im < 25 &&
+          this.isx.tipIMg3 == 6 &&
+          result.gdr4.du_im > 0
+        ) {
           this.isx.tipIMg4 = 5;
         } else {
           this.isx.tipIMg4 = this.isx.tipIMg3;
@@ -1911,16 +1924,16 @@ export default {
       }
     },
     test() {
-      window.open("./pdf/project/test.php");
-
       Axios.post("./pdf/project/test.php", {
-        sReg: this.isx
+        dats: this.isx
       })
-        .then(response => {})
+        // .then(response => {
 
+        // })
         .catch(function(error) {
           console.log(error);
         });
+      window.open("./pdf/project/test.php");
     }
   }
 };
