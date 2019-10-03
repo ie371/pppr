@@ -245,6 +245,16 @@
               <option value="2">грязевик</option>
             </select>
           </div>
+          <div class="col-md-3 text-center" v-if="isx.sx_otkr>0">
+            <label class="col-form-label md-3">реверс на Т2</label>
+            <b-form-checkbox
+              switch
+              size="sm"
+              v-model.number="isx.revers"
+              value="1"
+              unchecked-value="0"
+            ></b-form-checkbox>
+          </div>
         </div>
 
         <div class="form-row">
@@ -1095,6 +1105,7 @@ export default {
         tipIMo: 6,
         tipIMg3: 6,
         tipIMg4: 6,
+        revers: 0,
         ok: 0,
         txvL: 15,
         txvZ: 5,
@@ -1516,6 +1527,7 @@ export default {
             this.isx.qgvssr = "";
             this.isx.tipLg4 = this.isx.tipLg3;
             this.isx.tipIMg4 = this.isx.tipIMg3;
+            this.isx.revers = 0;
           }
           this.isx.qmax > 0 ? (this.isx.pr_gvs = 1) : (this.isx.pr_gvs = 0);
           this.isx.sx_gvs = 0;
@@ -1546,6 +1558,7 @@ export default {
             this.isx.qmax = "";
             this.isx.tipLg4 = this.isx.tipLg3;
             this.isx.tipIMg4 = this.isx.tipIMg3;
+            this.isx.revers = 0;
           }
           this.isx.qgvssr > 0 ? (this.isx.pr_gvs = 1) : (this.isx.pr_gvs = 0);
           this.isx.sx_gvs_dep > 0 ? (this.stup = true) : (this.stup = false);
@@ -1604,7 +1617,6 @@ export default {
           tip_rascheta = "ot_gvs";
           break;
         case "sx_ot0":
-          this.$store.dispatch("actPodp", 0);
           this.isx.sx_ot = 0;
           this.isx.filp = 0;
           tip_rascheta = "ot";
