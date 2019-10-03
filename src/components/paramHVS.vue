@@ -417,7 +417,6 @@
 <script>
 import { mapState } from "vuex";
 import clc_hvs from "@/utils/calc_hvs.js";
-// import clc_kp from "@/utils/calc_kp.js";
 import Multiselect from "vue-multiselect";
 import DU from "@/utils/du";
 import Plats_r from "@/utils/plats_R";
@@ -507,8 +506,7 @@ export default {
       let h = false;
       this.isx.dut < 33 && this.isx.di > 0 && this.isx.filh == 2
         ? (h = true)
-        : (h = false);
-
+        : h;
       return {
         h: h
       };
@@ -520,22 +518,17 @@ export default {
     },
     popup() {
       return {
-        qm: "Qмакс = Qср * Kчн",
-        qs: "Qср = Qмакс / Kчн",
-        kc: "коэффициент часовой неравномерности <br> Kчн = Qмакс / Qср",
-        r:
-          "Данный параметр необходим для подбора датчиков температуры.<br> При Ду ИМ менее 50, датчики устанавливаются в расширение Ду65.",
         s: "Скорость потока в ИМ больше 1,5 м/с,",
         d: "диап. Ду ИМ И6: 25 - 80",
         m: "диап. Ду ИМ для модифиц. линий: 32 - 80"
       };
     },
     diptr() {
-      let du = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300];
-      let duu1 = [];
-      let d1 = +this.isx.di;
-      let A1 = du.indexOf(d1);
-      let duk1 = du.slice(A1, A1 + 4);
+      let du = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300],
+        duu1 = [],
+        d1 = +this.isx.di,
+        A1 = du.indexOf(d1),
+        duk1 = du.slice(A1, A1 + 4);
       duk1.forEach(function(el) {
         let h = {
           text: el,
@@ -548,23 +541,18 @@ export default {
       };
     },
     check6() {
-      let du = [25, 32, 40, 50, 65, 80];
-      let d1 = this.isx.di;
-      let red = false;
-      let pop = false;
+      let du = [25, 32, 40, 50, 65, 80],
+        d1 = this.isx.di,
+        red = false,
+        pop = false;
       if (this.isx.tipIMh == 6 && d1 > 0) {
         let A1 = du.indexOf(d1);
         A1 >= 0 ? ((red = false), (pop = false)) : ((red = true), (pop = true));
       }
-
       return { red, pop };
     },
     disbutton() {
-      let a;
-      let b;
-      let c;
-      let d;
-      let g;
+      let a, b, c, d, g;
       this.isx.qt > 0 ? (a = 0) : (a = 1);
       this.check6.red ? (b = 1) : (b = 0);
       this.ml.h ? (c = 1) : (c = 0);
@@ -609,7 +597,6 @@ export default {
       this.diptr.duu1[1]
         ? (this.isx.dut = this.diptr.duu1[1].value)
         : (this.isx.dut = this.diptr.duu1[0].value);
-
       let result = clc_hvs(this.isx, 1.5, "peres");
       this.$store.dispatch({
         type: "RESULT_HVS",
@@ -617,9 +604,9 @@ export default {
       });
     },
     checkdiapTR(du_im, du_tr) {
-      let du = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300];
-      let k1 = du.indexOf(+du_im);
-      let k11 = du.indexOf(+du_tr);
+      let du = [15, 20, 25, 32, 40, 50, 65, 80, 100, 125, 150, 200, 250, 300],
+        k1 = du.indexOf(+du_im),
+        k11 = du.indexOf(+du_tr);
       if (!du_tr || k1 > k11 || k11 - k1 > 3) {
         return true;
       } else {
@@ -627,18 +614,14 @@ export default {
       }
     },
     ImageSPL_hvs() {
-      let fileSPL = document.getElementById("fileImageSPL_hvs").files.length;
-      let filePrSx = document.getElementById("fileImagePrSx_hvs").files.length;
-      if (fileSPL === 0) {
-        this.otklFormatSPL_hvs = true;
-      } else {
-        this.otklFormatSPL_hvs = false;
-      }
-      if (filePrSx === 0) {
-        this.otklFormatPrSx_hvs = true;
-      } else {
-        this.otklFormatPrSx_hvs = false;
-      }
+      let fileSPL = document.getElementById("fileImageSPL_hvs").files.length,
+        filePrSx = document.getElementById("fileImagePrSx_hvs").files.length;
+      fileSPL === 0
+        ? (this.otklFormatSPL_hvs = true)
+        : (this.otklFormatSPL_hvs = false);
+      filePrSx === 0
+        ? (this.otklFormatPrSx_hvs = true)
+        : (this.otklFormatPrSx_hvs = false);
     },
     customLabel(option) {
       return ` ${option.plt}`;

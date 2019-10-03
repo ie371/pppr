@@ -120,16 +120,16 @@ function alfaAr_modF() {
 	};
 }
 function KvsarF(du_im, du_tr, Gv, Vtr, filtr, ok, tipL) {
-	let zau = '_' + du_im;
-	let tr = '_' + du_tr;
-	let Kvs_kr = '-';
-	let poter_kr = '-';
-	let Kvs_ok = '-';
-	let poter_ok = 0;
-	let Kvs_fil = '-';
-	let poter_fil = 0;
-	let Kvs_grz = '-';
-	let poter_grz = 0;
+	let zau = '_' + du_im,
+		tr = '_' + du_tr,
+		Kvs_kr = '-',
+		poter_kr = '-',
+		Kvs_ok = '-',
+		poter_ok = 0,
+		Kvs_fil = '-',
+		poter_fil = 0,
+		Kvs_grz = '-',
+		poter_grz = 0;
 
 	const Kvsar = {
 		_15: { kr: 11, ok: 4.24, grz: 10, flt: 5.3 },
@@ -181,11 +181,11 @@ function KvsarF(du_im, du_tr, Gv, Vtr, filtr, ok, tipL) {
 	};
 }
 function gidr(t, du_im, du_tr, Gv, p, tipL, filtr, ok, tipIM) {
-	let ki = '_' + du_tr + du_im;
-	let L = 0;
-	let alf = 0;
-	let alfaAr = alfaArF();
-	let alfaAr_mod = alfaAr_modF();
+	let ki = '_' + du_tr + du_im,
+		L = 0,
+		alf = 0,
+		alfaAr = alfaArF(),
+		alfaAr_mod = alfaAr_modF();
 
 	if (tipL === 'kl') {
 		alf = alfaAr[ki].alf;
