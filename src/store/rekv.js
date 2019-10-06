@@ -1,39 +1,36 @@
 export default {
 	state: {
-		rekv: {
-			nazvPR: '',
+		rekvizits: {
+			name_prj: '',
 			cod: '',
-			nazvPrO: '',
+			name_ooo: '',
 			GIP: '',
-			razrab: '',
+			razr: '',
 			prov: '',
 			tcontr: '',
 			ncontr: '',
 			adress: '',
-			tipObj: '',
-			zakazc: '',
-			abon: '',
-			istT: '',
-			resK: ''
-		},
-
-		sk: {
-			skor: '1.5'
+			tip_obj: '',
+			zakazchik: '',
+			abonent: '',
+			istochnik: '',
+			resurscomp: '',
+			checkTiul: 1
 		}
 	},
 
 	getters: {
-		getRekv: (state) => state.rekv,
-		getSk: (state) => state.sk
+		// getRekv: (state) => state.rekv,
+		// getSk: (state) => state.sk
 	},
 	actions: {
-		load_rekv(context, p) {
-			context.commit('muRekv', p);
+		LOAD_REKV(context, p) {
+			context.commit('MU_REKV', p);
 		}
 	},
 	mutations: {
-		muRekv(state, payload) {
-			state.rekv = payload;
+		MU_REKV(state, payload) {
+			state.rekvizits = payload;
 		}
 	}
 };

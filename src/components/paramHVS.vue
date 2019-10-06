@@ -83,6 +83,7 @@
               <input
                 type="file"
                 id="fileImagePrSx_hvs"
+                ref="file"
                 name="princ_sx_uploads_hvs"
                 accept="image/jpeg, image/png"
                 style="font-size:0.8em;"
@@ -107,6 +108,7 @@
               <input
                 type="file"
                 id="fileImageSPL_hvs"
+                ref="file"
                 name="sitplan_uploads_hvs"
                 accept="image/jpeg, image/png"
                 style="font-size:0.8em;"
@@ -406,8 +408,19 @@
             Создать проект
             <b-badge variant="light">{{'ХВС'}}</b-badge>
           </b-btn>
+          <b-btn
+            class="btn btn-sm btn-block mb-3"
+            @click="savePDF(rekv.cod)"
+            :disabled="disbutton"
+          >save on disk</b-btn>
+          <b-btn
+            class="btn btn-sm btn-block mb-3"
+            @click="openPDF"
+            :disabled="disbutton"
+          >open new tab</b-btn>
 
           <input type="hidden" name="H" v-model="phpH" />
+          <input type="hidden" name="R" v-model="php_rekv" />
         </div>
       </div>
     </div>
@@ -416,6 +429,7 @@
 
 <script>
 import { mapState } from "vuex";
+import Axios from "axios";
 import clc_hvs from "@/utils/calc_hvs.js";
 import Multiselect from "vue-multiselect";
 import DU from "@/utils/du";
@@ -474,7 +488,8 @@ export default {
   },
   computed: {
     ...mapState({
-      rescalc: state => state.hvs.rescalc_hvs
+      rescalc: state => state.hvs.rescalc_hvs,
+      rekv: state => state.rekvz.rekvizits
     }),
     phpH() {
       let plll = { plt: this.plats };
@@ -482,6 +497,10 @@ export default {
         Object.assign({}, this.isx, this.rescalc, this.sb, plll)
       );
       return ppp;
+    },
+    php_rekv() {
+      let rr = JSON.stringify(this.rekv);
+      return rr;
     },
     sb_to() {
       let a = 0;
@@ -625,6 +644,58 @@ export default {
     },
     customLabel(option) {
       return ` ${option.plt}`;
+    },
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
+    },
+    savePDF(nPDF) {
+      !nPDF ? (nPDF = "file") : nPDF;
+      let formData = new FormData(form);
+      formData.append("H", this.phpH);
+      formData.append("R", this.php_rekv);
+      formData.append("newfile", this.file);
+      Axios.post("./pdf/project/pr_hvs.php", formData, {
+        responseType: "blob",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }).then(response => {
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: "application/pdf" })
+        );
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${nPDF}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+      });
+    },
+
+    openPDF() {
+      let formData = new FormData(form);
+      formData.append("H", this.phpH);
+      formData.append("R", this.php_rekv);
+      formData.append("newfile", this.file);
+      Axios.post("./pdf/project/pr_hvs.php", formData, {
+        responseType: "blob",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }).then(response => {
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: "application/pdf" })
+        );
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("target", "_blank");
+        link.click();
+        window.open(url);
+        setTimeout(function() {
+          window.URL.revokeObjectURL(url);
+          100;
+        });
+      });
     }
   }
 };

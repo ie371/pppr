@@ -116,10 +116,12 @@
               <label class="col-form-label">Принципиальная схема</label>
               <input
                 type="file"
+                ref="file"
                 id="fileImagePrSx"
                 name="princ_sx_uploads"
                 accept="image/jpeg, image/png"
                 style="font-size:0.8em;"
+                v-on:change="handleFileUpload()"
                 @change="ImageSPL"
               />
             </div>
@@ -140,10 +142,12 @@
               <label class="col-form-label">Ситуационный план</label>
               <input
                 type="file"
+                ref="file"
                 id="fileImageSPL"
                 name="sitplan_uploads"
                 accept="image/jpeg, image/png"
                 style="font-size:0.8em;"
+                v-on:change="handleFileUpload()"
                 @change="ImageSPL"
               />
             </div>
@@ -1021,15 +1025,23 @@
             type="submit"
             class="btn btn-sm btn-block mb-3"
             formaction="./pdf/project/pr.php"
-            :disabled="disable_dutton.bf7 ===1 ? true : false"
+            :disabled="disable_button.bf7 ===1 ? true : false"
           >
             Создать проект
             <b-badge variant="light">{{img.zz}}</b-badge>
           </b-btn>
-
-          <!-- <b-btn class="btn btn-sm btn-block mb-3" @click="test">test JSON</b-btn> -->
-
+          <!-- <b-btn
+            class="btn btn-sm btn-block mb-3"
+            @click="savePDF(rekv.cod)"
+            :disabled="disable_button.bf7 ===1 ? true : false"
+          >Save PDF</b-btn>
+          <b-btn
+            class="btn btn-sm btn-block mb-3"
+            @click="openPDF"
+            :disabled="disable_button.bf7 ===1 ? true : false"
+          >open new tab</b-btn>-->
           <input type="hidden" name="A" v-model="php" />
+          <input type="hidden" name="R" v-model="php_rekv" />
         </div>
       </div>
     </div>
@@ -1133,12 +1145,14 @@ export default {
       stup: false,
       otklFormatSPL: true,
       otklFormatPrSx: true,
-      file: null
+      file: "",
+      stat: "false"
     };
   },
   computed: {
     ...mapState({
-      rescalc: state => state.calcModule.rescalc
+      rescalc: state => state.calcModule.rescalc,
+      rekv: state => state.rekvz.rekvizits
     }),
     php() {
       let plll = { plt: this.plats };
@@ -1146,6 +1160,10 @@ export default {
         Object.assign({}, this.isx, this.rescalc, this.sb, plll)
       );
       return ppp;
+    },
+    php_rekv() {
+      let rr = JSON.stringify(this.rekv);
+      return rr;
     },
     img() {
       let tipu = this.tipProject,
@@ -1381,7 +1399,7 @@ export default {
         y4
       };
     },
-    disable_dutton() {
+    disable_button() {
       let bf7 = 1,
         bf8 = 1,
         v1 = 1,
@@ -1489,7 +1507,6 @@ export default {
           } else {
             this.fo = false;
           }
-          // tip_rascheta = "ot";
           break;
         case "qmax":
         case "Kchn":
@@ -1900,17 +1917,61 @@ export default {
         this.isx.progr_txv = 0;
       }
     },
-    test() {
-      Axios.post("./pdf/project/test.php", {
-        dats: this.isx
-      })
-        // .then(response => {
+    send_form() {
+      let formData = new FormData(form);
+      form.action = "./pdf/project/pr.php";
+      form.method = "POST";
+      form.submit();
+    },
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0];
+    },
+    savePDF(nPDF) {
+      !nPDF ? (nPDF = "file") : nPDF;
+      let formData = new FormData(form);
+      formData.append("A", this.php);
+      formData.append("R", this.php_rekv);
+      formData.append("newfile", this.file);
+      Axios.post("./pdf/project/pr.php", formData, {
+        responseType: "blob",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }).then(response => {
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: "application/pdf" })
+        );
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${nPDF}.pdf`);
+        link.click();
+      });
+    },
 
-        // })
-        .catch(function(error) {
-          console.log(error);
+    openPDF() {
+      let formData = new FormData(form);
+      formData.append("A", this.php);
+      formData.append("R", this.php_rekv);
+      formData.append("newfile", this.file);
+      Axios.post("./pdf/project/pr.php", formData, {
+        responseType: "blob",
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }).then(response => {
+        const url = window.URL.createObjectURL(
+          new Blob([response.data], { type: "application/pdf" })
+        );
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("target", "_blank");
+        link.click();
+        window.open(url);
+        setTimeout(function() {
+          window.URL.revokeObjectURL(url);
+          100;
         });
-      window.open("./pdf/project/test.php");
+      });
     }
   }
 };

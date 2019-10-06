@@ -14,14 +14,15 @@
           type="text"
           class="form-control form-control-sm"
           placeholder="Узел коммерческого учёта тепловой энергии, теплоносителя"
+          id="name_prj"
+          name="name_prj"
           list="name_prj_list"
-          v-model="rekv.name_prj"
+          v-model="isx.name_prj"
         />
         <datalist id="name_prj_list">
           <option>Узел коммерческого учёта тепловой энергии, теплоносителя</option>
           <option>Узел технологического учёта тепловой энергии, теплоносителя</option>
           <option>Индивидуальный узел учета тепловой энергии, теплоносителя</option>
-          <option>Узел коммерческого учёта холодного водоснабжения</option>
         </datalist>
 
         <label class="col-form-label">Шифр</label>
@@ -29,16 +30,22 @@
           type="text"
           class="form-control form-control-sm"
           placeholder="шифр"
-          v-model="rekv.cod"
+          name="cod"
+          v-model="isx.cod"
         />
 
         <label class="col-form-label">Название проектной организации</label>
-        <input type="text" class="form-control form-control-sm" v-model="rekv.name_ooo" />
+        <input
+          type="text"
+          class="form-control form-control-sm"
+          name="name_ooo"
+          v-model="isx.name_ooo"
+        />
 
         <div class="form-row">
           <div class="col">
             <label class="col-form-label">ГИП</label>
-            <input type="text" class="form-control form-control-sm" v-model="rekv.GIP" />
+            <input type="text" class="form-control form-control-sm" name="GIP" v-model="isx.GIP" />
           </div>
           <div class="col">
             <label class="col-form-label">Подпись</label>
@@ -54,7 +61,7 @@
         <div class="form-row">
           <div class="col">
             <label class="col-form-label">Разработал</label>
-            <input type="text" class="form-control form-control-sm" v-model="rekv.razr" />
+            <input type="text" class="form-control form-control-sm" name="razr" v-model="isx.razr" />
           </div>
           <div class="col">
             <label class="col-form-label">Подпись</label>
@@ -71,7 +78,7 @@
         <div class="form-row">
           <div class="col">
             <label class="col-form-label">Проверил</label>
-            <input type="text" class="form-control form-control-sm" v-model="rekv.prov" />
+            <input type="text" class="form-control form-control-sm" name="prov" v-model="isx.prov" />
           </div>
           <div class="col">
             <label class="col-form-label">Подпись</label>
@@ -88,7 +95,12 @@
         <div class="form-row">
           <div class="col">
             <label class="col-form-label">Технический контролер</label>
-            <input type="text" class="form-control form-control-sm" v-model="rekv.tcontr" />
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              name="tcontr"
+              v-model="isx.tcontr"
+            />
           </div>
           <div class="col">
             <label class="col-form-label">Подпись</label>
@@ -105,7 +117,12 @@
         <div class="form-row">
           <div class="col">
             <label class="col-form-label">Нормоконтролер</label>
-            <input type="text" class="form-control form-control-sm" v-model="rekv.ncontr" />
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              name="ncontr"
+              v-model="isx.ncontr"
+            />
           </div>
           <div class="col">
             <label class="col-form-label">Подпись</label>
@@ -121,6 +138,7 @@
       </div>
 
       <div class="col-md-5 labl">
+        <!-- <h6><span class="badge">Реквизиты объекта</span></h6> -->
         <div class="text-center">
           <h5>
             <span class="badge">Реквизиты объекта</span>
@@ -131,8 +149,9 @@
         <input
           type="text"
           class="form-control form-control-sm"
+          name="adress"
           placeholder="140180, Московская область, г. Жуковский, ул. Энергетическая, д. 15"
-          v-model="rekv.adress"
+          v-model="isx.adress"
         />
 
         <label class="col-form-label">Тип объекта</label>
@@ -140,8 +159,9 @@
           type="text"
           class="form-control form-control-sm"
           placeholder="Многоквартирный жилой дом"
+          name="tip_obj"
           list="tip_obj_list"
-          v-model="rekv.tip_obj"
+          v-model="isx.tipObj"
         />
         <datalist id="tip_obj_list">
           <option>Многоквартирный жилой дом</option>
@@ -155,7 +175,8 @@
           type="text"
           class="form-control form-control-sm"
           placeholder="Заказчик"
-          v-model="rekv.zakazchik"
+          name="zakazchik"
+          v-model="isx.zakazc"
         />
 
         <label class="col-form-label">Абонент</label>
@@ -163,7 +184,8 @@
           type="text"
           class="form-control form-control-sm"
           placeholder="Абонент"
-          v-model="rekv.abonent"
+          name="abonent"
+          v-model="isx.abon"
         />
 
         <label class="col-form-label">Источник теплоснабжения</label>
@@ -171,7 +193,8 @@
           type="text"
           class="form-control form-control-sm"
           placeholder="Источник теплоснабжения"
-          v-model="rekv.istochnik"
+          name="istochnik"
+          v-model="isx.istT"
         />
 
         <label class="col-form-label">Ресурсоснабжающая компания</label>
@@ -179,15 +202,17 @@
           type="text"
           class="form-control form-control-sm"
           placeholder="Ресурсоснабжающая компания"
-          v-model="rekv.resurscomp"
+          name="resurscomp"
+          v-model="isx.resK"
         />
 
         <hr />
         <div class="form-group">
           <b-form-checkbox
-            v-model.number="rekv.checkTiul"
-            value="1"
-            unchecked-value="0"
+            v-model="status"
+            value="accepted"
+            unchecked-value="not_accepted"
+            name="checkTiul"
           >Печатать титульный лист</b-form-checkbox>
         </div>
       </div>
@@ -205,28 +230,27 @@
 
 
 <script>
-import { mapState } from "vuex";
 export default {
   data() {
     return {
-      // checkTiul: "accepted"
+      status: "accepted"
     };
   },
 
   computed: {
-    ...mapState({
-      rekv: state => state.rekvz.rekvizits
-    })
+    isx() {
+      return this.$store.getters.getRekv;
+    }
   },
   methods: {
     ls_save() {
-      let ppp = JSON.stringify(this.rekv);
+      let ppp = JSON.stringify(this.isx);
       localStorage.rekv = ppp;
     },
     ls_load() {
       if (localStorage.getItem("rekv")) {
-        const rekvi = JSON.parse(localStorage.getItem("rekv"));
-        this.$store.dispatch("LOAD_REKV", rekvi);
+        const rekv = JSON.parse(localStorage.getItem("rekv"));
+        this.$store.dispatch("load_rekv", rekv);
       }
     },
     ls_remove() {

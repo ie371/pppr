@@ -1,7 +1,9 @@
 <template>
   <form
+    id="form"
     method="post"
     target="_blank"
+    formaction="./pdf/project/pr.php"
     enctype="multipart/form-data"
     onkeypress="if(event.keyCode == 13) return false;"
   >
