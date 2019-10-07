@@ -1030,16 +1030,19 @@
             Создать проект
             <b-badge variant="light">{{img.zz}}</b-badge>
           </b-btn>
-          <!-- <b-btn
+
+          <b-button
             class="btn btn-sm btn-block mb-3"
             @click="savePDF(rekv.cod)"
             :disabled="disable_button.bf7 ===1 ? true : false"
-          >Save PDF</b-btn>
+            label="aaa"
+          >save PDF</b-button>
+
           <b-btn
             class="btn btn-sm btn-block mb-3"
             @click="openPDF"
             :disabled="disable_button.bf7 ===1 ? true : false"
-          >open new tab</b-btn>-->
+          >open new tab</b-btn>
           <input type="hidden" name="A" v-model="php" />
           <input type="hidden" name="R" v-model="php_rekv" />
         </div>
@@ -1146,7 +1149,7 @@ export default {
       otklFormatSPL: true,
       otklFormatPrSx: true,
       file: "",
-      stat: "false"
+      status: "load"
     };
   },
   computed: {
@@ -1944,7 +1947,10 @@ export default {
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", `${nPDF}.pdf`);
+        document.body.appendChild(link);
         link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
       });
     },
 
@@ -1965,8 +1971,9 @@ export default {
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("target", "_blank");
-        link.click();
-        window.open(url);
+        // link.click();
+        window.open(link);
+        link.remove();
         setTimeout(function() {
           window.URL.revokeObjectURL(url);
           100;

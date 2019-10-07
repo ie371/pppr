@@ -408,16 +408,16 @@
             Создать проект
             <b-badge variant="light">{{'ХВС'}}</b-badge>
           </b-btn>
-          <b-btn
+          <!-- <b-btn
             class="btn btn-sm btn-block mb-3"
             @click="savePDF(rekv.cod)"
             :disabled="disbutton"
-          >save on disk</b-btn>
-          <b-btn
+          >save on disk</b-btn>-->
+          <!-- <b-btn
             class="btn btn-sm btn-block mb-3"
             @click="openPDF"
             :disabled="disbutton"
-          >open new tab</b-btn>
+          >open new tab</b-btn>-->
 
           <input type="hidden" name="H" v-model="phpH" />
           <input type="hidden" name="R" v-model="php_rekv" />
