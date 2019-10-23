@@ -144,7 +144,7 @@
             <label class="col-form-label">Расход часовой, м³/ч</label>
             <input
               type="number"
-              step="0.001"
+              step="0.000001"
               min="0"
               max="2500"
               class="form-control form-control-sm"
@@ -266,18 +266,22 @@
         </div>
 
         <div class="form-row">
-          <div class="col-md-4 text-center">
+          <div class="col-md-3 text-center">
             <label class="col-form-label md-3">Датчик давления</label>
             <b-form-checkbox switch v-model.number="isx.sens_d" value="1" unchecked-value="0"></b-form-checkbox>
           </div>
-          <div class="col-md-4 text-center">
+          <div class="col-md-3 text-center">
             <label class="col-form-label md-3">Датчик температуры</label>
             <b-form-checkbox switch v-model.number="isx.sens_t" value="1" unchecked-value="0"></b-form-checkbox>
           </div>
 
-          <div class="col-md-4 text-center">
+          <div class="col-md-3 text-center">
             <label class="col-form-label md-3">Байпас</label>
             <b-form-checkbox switch v-model.number="isx.baypass" value="1" unchecked-value="0"></b-form-checkbox>
+          </div>
+          <div class="col-md-3 text-center">
+            <label class="col-form-label md-3">Теплоизоляция</label>
+            <b-form-checkbox switch v-model.number="isx.teploiz_hvs" value="1" unchecked-value="0"></b-form-checkbox>
           </div>
         </div>
       </div>
@@ -471,7 +475,8 @@ export default {
         tipLh: "kl",
         tipIMh: 6,
         filh: 0,
-        IL: 0
+        IL: 0,
+        teploiz_hvs: 1
       },
       sb: {
         tipSB: 0,

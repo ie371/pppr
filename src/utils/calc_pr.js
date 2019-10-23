@@ -406,7 +406,7 @@ function pr2(isx, sk, peres, tip_rascheta) {
 	p3 = p3 / 10;
 	p4 = p4 / 10;
 
-	if (tip_rascheta != 'gvs') {
+	if (tip_rascheta != 'g') {
 		if (qco > 0) {
 			var G = rash(qco, t1, t2);
 			var Gm1 = G;
@@ -509,7 +509,7 @@ function pr2(isx, sk, peres, tip_rascheta) {
 		}
 	}
 
-	if (tip_rascheta != 'ot') {
+	if (tip_rascheta != 'o') {
 		if (sx_gvs_dep === 0 && sx_otkr < 2) {
 			if (isx.qmax > 0) {
 				var Ggvs = rashgvs_cirk(qmax, t3, t4, Kchn, txvL, txvZ, koef, '', ktp, knp, beta);

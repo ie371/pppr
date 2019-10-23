@@ -46,7 +46,7 @@
               type="file"
               name="gip_uploads_sign"
               accept="image/jpeg, image/png"
-              style="font-size:0.8em;"
+              style="font-size:0.7em;"
             />
           </div>
         </div>
@@ -63,7 +63,7 @@
               ref="file"
               name="razr_uploads_sign"
               accept="image/jpeg, image/png"
-              style="font-size:0.8em;"
+              style="font-size:0.7em;"
             />
           </div>
         </div>
@@ -80,7 +80,7 @@
               ref="file"
               name="prov_uploads_signs"
               accept="image/jpeg, image/png"
-              style="font-size:0.8em;"
+              style="font-size:0.7em;"
             />
           </div>
         </div>
@@ -97,7 +97,7 @@
               ref="file"
               name="tcontr_uploads_sign"
               accept="image/jpeg, image/png"
-              style="font-size:0.8em;"
+              style="font-size:0.7em;"
             />
           </div>
         </div>
@@ -114,7 +114,7 @@
               ref="file"
               name="ncontr_uploads_sign"
               accept="image/jpeg, image/png"
-              style="font-size:0.8em;"
+              style="font-size:0.7em;"
             />
           </div>
         </div>
@@ -259,8 +259,8 @@ export default {
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
- -webkit-appearance: none;
-  margin: 0; 
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 input[type="number"] {

@@ -2,34 +2,49 @@
   <div class="form-row labl mt-2">
     <!-- // ************************************************** -->
     <div class="col-md-3">
-      <div class="text-center">
+      <div class="text-center mb-3">
         <h5>
           <span class="badge">Общие параметры</span>
         </h5>
       </div>
 
       <div class="form-group">
-        <!-- <div class='form-row'> -->
-
         <div class="col">
-          <b-form-checkbox switch size="sm" v-model.number="isx.IL" value="1" unchecked-value="0">
+          <div class="form-row">
+            <div class="col">
+              <b-form-checkbox
+                switch
+                size="sm"
+                v-model.number="isx.IL"
+                value="1"
+                unchecked-value="0"
+              >
+                <h6>
+                  <span class="badge">Изм. линии</span>
+                </h6>
+              </b-form-checkbox>
+            </div>
+            <div class="col">
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                placeholder="доп строки в прочее"
+                v-model="isx.dop_str"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
             <h6>
-              <span class="badge">Измерительные линии</span>
+              <span class="badge">Системный блок</span>
             </h6>
-          </b-form-checkbox>
-        </div>
-
-        <div class="col">
-          <h6>
-            <span class="badge">Системный блок</span>
-          </h6>
-          <select class="form-control form-control-sm" v-model.number="sb.tipSB">
-            <option value="0">СБ-04 с блоком бесперебойного питания</option>
-            <option value="1">СБ-04 с сетевым питанием</option>
-          </select>
+            <select class="form-control form-control-sm" v-model.number="sb.tipSB">
+              <option value="0">СБ-04 с блоком бесперебойного питания</option>
+              <option value="1">СБ-04 с сетевым питанием</option>
+            </select>
+          </div>
         </div>
       </div>
-
       <div class="form-group">
         <div class="col">
           <h6>
@@ -64,6 +79,43 @@
             <div class="col">
               <label class="col-form-label">СБ => ИМ ГВС</label>
               <input type="text" class="form-control form-control-sm" v-model="sb.lsbg" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col">
+          <div class="form-row">
+            <div class="col">
+              <h6>
+                <span class="badge">Теплоизоляция</span>
+              </h6>
+            </div>
+            <div class="col badge">ТС</div>
+            <div class="col badge">ГВС</div>
+          </div>
+          <div class="form-row">
+            <div class="col"></div>
+            <div class="col">
+              <select
+                class="form-control form-control-sm"
+                v-model.number="isx.teploiz_ot"
+                :class="{'red-error' : teploiz.o }"
+              >
+                <option value="0">Energoflex</option>
+                <option value="1">K-flex</option>
+              </select>
+            </div>
+            <div class="col">
+              <select
+                class="form-control form-control-sm"
+                v-model.number="isx.teploiz_gvs"
+                :class="{'red-error' : teploiz.g }"
+              >
+                <option value="0">Energoflex</option>
+                <option value="1">K-flex</option>
+              </select>
             </div>
           </div>
         </div>
@@ -120,7 +172,7 @@
                 id="fileImagePrSx"
                 name="princ_sx_uploads"
                 accept="image/jpeg, image/png"
-                style="font-size:0.8em;"
+                style="font-size:0.7em;"
                 v-on:change="handleFileUpload()"
                 @change="ImageSPL"
               />
@@ -146,7 +198,7 @@
                 id="fileImageSPL"
                 name="sitplan_uploads"
                 accept="image/jpeg, image/png"
-                style="font-size:0.8em;"
+                style="font-size:0.7em;"
                 v-on:change="handleFileUpload()"
                 @change="ImageSPL"
               />
@@ -286,7 +338,13 @@
       <div class="form-group">
         <div class="form-row mb-1">
           <div class="col">
-            <label class="col-form-label"></label>
+            <!-- <label class="col-form-label"></label> -->
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="T до срезки"
+              v-model="isx.t_srez"
+            />
           </div>
           <div class="col text-maroon text-s">Подача Т1</div>
           <div class="col text-blue text-s">Обратка Т2</div>
@@ -549,6 +607,31 @@
             </div>
           </div>
         </div>
+
+        <div class="form-row mb-2">
+          <div class="col">
+            <label class="col-form-label text-maroon">Ду тр-дов на вводе</label>
+          </div>
+
+          <div class="col">
+            <select class="form-control form-control-sm" v-model="isx.dut1_vv">
+              <option
+                v-for="(option, index) in DU"
+                v-bind:value="option.value"
+                :key="index"
+              >{{ option.text }}</option>
+            </select>
+          </div>
+          <div class="col">
+            <select class="form-control form-control-sm" v-model="isx.dut2_vv">
+              <option
+                v-for="(option, index) in DU"
+                v-bind:value="option.value"
+                :key="index"
+              >{{ option.text }}</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -785,7 +868,6 @@
               placeholder="50"
               v-model.number="isx.p3"
               v-on:input="proj()"
-              :disabled="stup"
             />
           </div>
           <div class="col">
@@ -795,7 +877,6 @@
               placeholder="40"
               v-model.number="isx.p4"
               v-on:input="proj()"
-              :disabled="stup"
             />
           </div>
         </div>
@@ -988,6 +1069,31 @@
             </div>
           </div>
         </div>
+
+        <div class="form-row mb-2">
+          <div class="col">
+            <label class="col-form-label text-maroon">Ду тр-дов на вводе</label>
+          </div>
+
+          <div class="col">
+            <select class="form-control form-control-sm" v-model="isx.dut3_vv">
+              <option
+                v-for="(option, index) in DU"
+                v-bind:value="option.value"
+                :key="index"
+              >{{ option.text }}</option>
+            </select>
+          </div>
+          <div class="col">
+            <select class="form-control form-control-sm" v-model="isx.dut4_vv">
+              <option
+                v-for="(option, index) in DU"
+                v-bind:value="option.value"
+                :key="index"
+              >{{ option.text }}</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1030,7 +1136,7 @@
             Создать проект
             <b-badge variant="light">{{img.zz}}</b-badge>
           </b-btn>
-
+          <!-- 
           <b-button
             class="btn btn-sm btn-block mb-3"
             @click="savePDF(rekv.cod)"
@@ -1042,7 +1148,7 @@
             class="btn btn-sm btn-block mb-3"
             @click="openPDF"
             :disabled="disable_button.bf7 ===1 ? true : false"
-          >open new tab</b-btn>
+          >open new tab</b-btn>-->
           <input type="hidden" name="A" v-model="php" />
           <input type="hidden" name="R" v-model="php_rekv" />
         </div>
@@ -1122,6 +1228,8 @@ export default {
         tipIMg4: 6,
         revers: 0,
         ok: 0,
+        teploiz_ot: 0,
+        teploiz_gvs: 0,
         txvL: 15,
         txvZ: 5,
         progr_txv: 0,
@@ -1133,7 +1241,13 @@ export default {
         selReg: 0,
         mess: [],
         indexnas: "",
-        imagePlane: ""
+        imagePlane: "",
+        dut1_vv: 0,
+        dut2_vv: 0,
+        dut3_vv: 0,
+        dut4_vv: 0,
+        t_srez: "",
+        dop_str: ""
       },
       sb: {
         tipSB: 0,
@@ -1419,9 +1533,9 @@ export default {
           (this.isx.dut4 < 33 && this.isx.di4 > 0 && this.isx.filg == 2)
             ? (v2 = 1)
             : (v2 = 0);
-          this.isx.di4 > 0 && this.isx.tipIMg3 !== this.isx.tipIMg4
-            ? (v3 = 1)
-            : (v3 = 0);
+          // this.isx.di4 > 0 && this.isx.tipIMg3 !== this.isx.tipIMg4
+          //   ? (v3 = 1)
+          //   : (v3 = 0);
           break;
         case "og":
           this.ml.y ? (v1 = 0) : v1;
@@ -1487,6 +1601,18 @@ export default {
           : (yel = true);
       }
       return yel;
+    },
+    teploiz() {
+      let o;
+      let g;
+      if (this.isx.teploiz_ot == 0) {
+        this.isx.t1 > 95 ? (o = true) : (o = false);
+      }
+
+      if (this.isx.teploiz_gvs == 0) {
+        this.isx.t3 > 95 ? (g = true) : (g = false);
+      }
+      return { o, g };
     }
   },
   watch: {},
@@ -1494,10 +1620,13 @@ export default {
     proj(m, u) {
       let tip_rascheta = "";
       this.isx.tipuu = this.tipProject;
+      this.isx.t1 > 95
+        ? (this.isx.teploiz_ot = 1)
+        : (this.isx.teploiz_ot = this.isx.teploiz_ot);
       switch (m) {
         case "qco":
           this.isx.qco > 0
-            ? ((this.isx.pr_ot = 1), (tip_rascheta = "ot"))
+            ? ((this.isx.pr_ot = 1), (tip_rascheta = "o"))
             : (this.isx.pr_ot = 0);
 
           if (this.isx.qco > 100) {
@@ -1526,19 +1655,22 @@ export default {
               (this.isx.revers = 0),
               (this.isx.fuCo = 0),
               (this.isx.sx_gvs_dep = 0));
+          // (this.isx.t3 = 60),
+          // (this.isx.t4 = 50)
 
-          this.isx.qmax > 0 ? (this.isx.pr_gvs = 1) : (this.isx.pr_gvs = 0);
           this.isx.sx_gvs_dep > 0 || this.isx.sx_otkr > 1
             ? (this.stup = true)
             : (this.stup = false);
 
-          this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
-            ? (tip_rascheta = "ot_gvs")
-            : (tip_rascheta = "gvs");
-
           this.isx.tipLg3 == "ml"
             ? ((this.fg = true), (this.isx.filg = 0))
             : (this.fg = false);
+          this.isx.qmax > 0
+            ? ((this.isx.pr_gvs = 1),
+              this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
+                ? (tip_rascheta = "og")
+                : (tip_rascheta = "g"))
+            : ((this.isx.pr_gvs = 0), (tip_rascheta = this.tipProject));
 
           break;
         case "qgvssr":
@@ -1561,28 +1693,29 @@ export default {
             ? (this.stup = true)
             : (this.stup = false);
 
-          this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
-            ? (tip_rascheta = "ot_gvs")
-            : (tip_rascheta = "gvs");
-
           this.isx.tipLg3 == "ml"
             ? ((this.fg = true), (this.isx.filg = 0))
             : (this.fg = false);
-
+          this.isx.qgvssr > 0
+            ? ((this.isx.pr_gvs = 1),
+              this.isx.sx_otkr > 0 || this.isx.sx_gvs_dep > 0
+                ? (tip_rascheta = "og")
+                : (tip_rascheta = "g"))
+            : ((this.isx.pr_gvs = 0), (tip_rascheta = this.tipProject));
           break;
         case "itp0":
           this.stup = false;
           this.isx.t3 = 60;
           this.isx.t4 = 50;
           this.isx.sx_gvs_dep = 0;
-          tip_rascheta = "ot_gvs";
+          tip_rascheta = "og";
           break;
         case "itp1":
         case "itp2":
           this.stup = true;
           this.isx.t3 = 70;
           this.isx.t4 = 40;
-          tip_rascheta = "ot_gvs";
+          tip_rascheta = "og";
           this.isx.fuCo = 0;
           break;
         case "wgvs0":
@@ -1592,31 +1725,36 @@ export default {
           if (this.isx.sx_otkr < 1) {
             this.isx.fuCo = 0;
           }
-          tip_rascheta = "ot_gvs";
+          tip_rascheta = "og";
           break;
         case "wgvs1":
           this.stup = false;
           this.isx.sx_gvs = 0;
-          tip_rascheta = "ot_gvs";
+          tip_rascheta = "og";
           break;
         case "wgvs2":
           this.stup = true;
           this.isx.sx_gvs = 0;
-          tip_rascheta = "ot_gvs";
+          this.isx.p3 = this.isx.p1;
+          this.isx.p4 = this.isx.p2;
+          tip_rascheta = "og";
           break;
         case "wgvs3":
           this.stup = true;
+          this.isx.sx_gvs = 1;
+          this.isx.p3 = this.isx.p1;
+          this.isx.p4 = this.isx.p2;
           this.$store.dispatch("TUPIC");
           this.isx.dut4 = null;
-          tip_rascheta = "ot_gvs";
+          tip_rascheta = "og";
           break;
         case "sx_ot0":
           this.isx.sx_ot = 0;
           this.isx.filp = 0;
-          tip_rascheta = "ot";
+          tip_rascheta = "o";
           break;
         case "sx_ot1":
-          tip_rascheta = "ot";
+          tip_rascheta = "o";
           break;
         default:
           break;
@@ -1920,12 +2058,6 @@ export default {
         this.isx.progr_txv = 0;
       }
     },
-    send_form() {
-      let formData = new FormData(form);
-      form.action = "./pdf/project/pr.php";
-      form.method = "POST";
-      form.submit();
-    },
     handleFileUpload() {
       this.file = this.$refs.file.files[0];
     },
@@ -2000,6 +2132,7 @@ export default {
   height: 25px;
   font-size: 0.8em;
   font-weight: bold;
+  /* padding-top: 0.15em; */
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
 }
