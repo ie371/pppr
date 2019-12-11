@@ -300,6 +300,12 @@
               v-on:input="proj('')"
             />
           </div>
+          <div class="col-md-3">
+            <input type="number" class="form-control form-control-sm" v-model.number="isx.ftp_dop" />
+          </div>
+          <div class="col-md-3">
+            <label class="col-form-label">доп. FTP</label>
+          </div>
         </div>
         <div class="form-row mb-2">
           <div class="col-md-3">
@@ -313,6 +319,12 @@
               v-model.number="isx.p1"
               v-on:input="proj('')"
             />
+          </div>
+          <div class="col-md-3">
+            <input type="number" class="form-control form-control-sm" v-model.number="isx.met_ruk" />
+          </div>
+          <div class="col-md-3">
+            <label class="col-form-label">м/рукав для доп. FTP</label>
           </div>
         </div>
 
@@ -476,7 +488,9 @@ export default {
         tipIMh: 6,
         filh: 0,
         IL: 0,
-        teploiz_hvs: 1
+        teploiz_hvs: 1,
+        ftp_dop: 0,
+        met_ruk: 0
       },
       sb: {
         tipSB: 0,

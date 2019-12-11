@@ -105,6 +105,7 @@
               >
                 <option value="0">Energoflex</option>
                 <option value="1">K-flex</option>
+                <option value="2">Цилиндры кашированные, 40мм</option>
               </select>
             </div>
             <div class="col">
@@ -115,6 +116,7 @@
               >
                 <option value="0">Energoflex</option>
                 <option value="1">K-flex</option>
+                <option value="2">Цилиндры кашированные, 40мм</option>
               </select>
             </div>
           </div>
@@ -538,12 +540,23 @@
             </select>
           </div>
           <div class="col">
-            <input
+            <!-- <input
               type="number"
               class="form-control form-control-sm"
               v-model="this.select_T2.dtr"
               disabled
-            />
+            />-->
+            <select
+              class="form-control form-control-sm"
+              v-model="isx.dut2"
+              v-on:change="change_du('t2')"
+            >
+              <option
+                v-for="(option, index) in diptr.duu1"
+                v-bind:value="option.value"
+                :key="index"
+              >{{ option.value }}</option>
+            </select>
           </div>
         </div>
         <div class="form-row mb-2" v-if="+isx.sx_ot">
@@ -608,7 +621,7 @@
           </div>
         </div>
 
-        <div class="form-row mb-2">
+        <!-- <div class="form-row mb-2">
           <div class="col">
             <label class="col-form-label text-maroon">Ду тр-дов на вводе</label>
           </div>
@@ -631,7 +644,7 @@
               >{{ option.text }}</option>
             </select>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
 
@@ -1070,7 +1083,7 @@
           </div>
         </div>
 
-        <div class="form-row mb-2">
+        <!-- <div class="form-row mb-2">
           <div class="col">
             <label class="col-form-label text-maroon">Ду тр-дов на вводе</label>
           </div>
@@ -1093,7 +1106,7 @@
               >{{ option.text }}</option>
             </select>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
 
@@ -1149,6 +1162,55 @@
             @click="openPDF"
             :disabled="disable_button.bf7 ===1 ? true : false"
           >open new tab</b-btn>-->
+
+          <div>
+            <div class="form-row">
+              <div class="col">
+                <label class="col-form-label">Доп. трубы</label>
+              </div>
+              <div class="col">
+                <b-form-checkbox
+                  switch
+                  size="sm"
+                  v-model.number="dop.tpl_dop"
+                  value="1"
+                  unchecked-value="0"
+                >
+                  <span style="font-size:0.75em">с теплоизол.</span>
+                </b-form-checkbox>
+              </div>
+            </div>
+
+            <b-form-input
+              class="form-control form-control-sm"
+              v-model="dop.truba_dop"
+              placeholder="4-50, 3-80-z"
+            ></b-form-input>
+            <label class="col-form-label">Доп. переходы</label>
+            <b-form-input
+              class="form-control form-control-sm"
+              v-model="dop.perehod_dop"
+              placeholder="2-40-32, 3-65-40-z"
+            ></b-form-input>
+            <label class="col-form-label">Доп. отводы</label>
+            <b-form-input
+              class="form-control form-control-sm"
+              v-model="dop.otvod_dop"
+              placeholder="6-32, 6-50-z"
+            ></b-form-input>
+            <label class="col-form-label"></label>
+            <b-form-checkbox
+              id="checkbox-1"
+              v-model.number="dop.kozuh"
+              value="1"
+              unchecked-value="0"
+            >
+              <h6>
+                <span class="badge">Кожух</span>
+              </h6>
+            </b-form-checkbox>
+          </div>
+
           <input type="hidden" name="A" v-model="php" />
           <input type="hidden" name="R" v-model="php_rekv" />
         </div>
@@ -1173,6 +1235,7 @@ export default {
 
   data() {
     return {
+      text: "",
       DU,
       Plats_r,
       Regions,
@@ -1186,6 +1249,13 @@ export default {
           lib: "usba"
         }
       ],
+      dop: {
+        truba_dop: "",
+        tpl_dop: "",
+        perehod_dop: "",
+        otvod_dop: "",
+        kozuh: 0
+      },
       isx: {
         pr_ot: 0,
         pr_gvs: 0,
@@ -1242,10 +1312,10 @@ export default {
         mess: [],
         indexnas: "",
         imagePlane: "",
-        dut1_vv: 0,
-        dut2_vv: 0,
-        dut3_vv: 0,
-        dut4_vv: 0,
+        // dut1_vv: 0,
+        // dut2_vv: 0,
+        // dut3_vv: 0,
+        // dut4_vv: 0,
         t_srez: "",
         dop_str: ""
       },
@@ -1272,9 +1342,10 @@ export default {
       rekv: state => state.rekvz.rekvizits
     }),
     php() {
+      let dop = this.dop;
       let plll = { plt: this.plats };
       let ppp = JSON.stringify(
-        Object.assign({}, this.isx, this.rescalc, this.sb, plll)
+        Object.assign({}, this.isx, this.rescalc, this.sb, plll, dop)
       );
       return ppp;
     },
@@ -1868,9 +1939,9 @@ export default {
               this.diptr.duu1[1]
                 ? (this.isx.dut1 = this.diptr.duu1[1].value)
                 : (this.isx.dut1 = this.diptr.duu1[0].value);
-              this.isx.dut2 = this.isx.di1;
+              // this.isx.dut2 = this.isx.dut1;
             }
-
+            this.isx.dut2 = this.isx.dut1;
             if (this.isx.pr_ot === 1) {
               result = clc_pr(this.isx, 1.5, "peres", "ot");
             } else {
@@ -1879,7 +1950,7 @@ export default {
                 result = clc_kp(R, 1.5, d, "peres", this.isx.di1, "");
               }
             }
-            this.isx.dut2 = result.gdr2.du_tr;
+            // this.isx.dut2 = result.gdr2.du_tr;
             this.$store.dispatch({
               type: "RESULT",
               result: result
@@ -1895,6 +1966,50 @@ export default {
             this.isx.dut9 = null;
             this.$store.dispatch("OT_NULL");
           }
+          break;
+        case "t2":
+          // console.log("ggggggggggg");
+          // console.log(this.isx);
+          result = clc_pr(this.isx, 1.5, "peres", "ot");
+          this.$store.dispatch({
+            type: "RESULT",
+            result: result
+          });
+          // if (this.isx.di1 > 0) {
+          //   this.isx.di2 = this.isx.di1;
+          //   // проверка отличия 3-х ду
+          //   let ch = this.checkdiapTR(this.isx.di1, this.isx.dut1);
+          //   if (ch) {
+          //     this.diptr.duu1[1]
+          //       ? (this.isx.dut1 = this.diptr.duu1[1].value)
+          //       : (this.isx.dut1 = this.diptr.duu1[0].value);
+          //     this.isx.dut2 = this.isx.di1;
+          //   }
+
+          //   if (this.isx.pr_ot === 1) {
+          //     result = clc_pr(this.isx, 1.5, "peres", "ot");
+          //   } else {
+          //     R = this.rescalc.gdr1.Gv;
+          //     if (R > 0) {
+          //       result = clc_kp(R, 1.5, d, "peres", this.isx.di1, "");
+          //     }
+          //   }
+          //   this.isx.dut2 = result.gdr2.du_tr;
+          //   this.$store.dispatch({
+          //     type: "RESULT",
+          //     result: result
+          //   });
+          // } else {
+          //   this.isx.pr_ot = 0;
+          //   this.isx.qco = null;
+          //   this.isx.di1 = 0;
+          //   this.isx.di2 = 0;
+          //   this.isx.di9 = 0;
+          //   this.isx.dut1 = null;
+          //   this.isx.dut2 = null;
+          //   this.isx.dut9 = null;
+          //   this.$store.dispatch("OT_NULL");
+          // }
           break;
         case "t3":
           if (this.isx.di3 > 0) {

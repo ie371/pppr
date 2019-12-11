@@ -18,6 +18,10 @@ const options = [
 	{
 		plt: 'УПП',
 		lib: 'lpt'
+	},
+	{
+		plt: 'ДТА',
+		lib: 'dta'
 	}
 ];
 

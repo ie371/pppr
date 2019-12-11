@@ -203,6 +203,7 @@ function gidr(t, du_im, du_tr, Gm, p, tipL, Gg, tg, pg, otpen, filtr, ok, tipIM)
 		alf = 0,
 		alfaAr = alfaArF(),
 		alfaAr_mod = alfaAr_modF();
+	// console.log(ki);
 
 	if (tipL === 'kl') {
 		alf = alfaAr[ki].alf;
@@ -382,10 +383,12 @@ function pr2(isx, sk, peres, tip_rascheta) {
 		p3,
 		p4,
 		di1,
+		di2,
 		di9,
 		di3,
 		di4,
 		dut1,
+		dut2,
 		dut9,
 		dut3,
 		dut4,
@@ -473,10 +476,12 @@ function pr2(isx, sk, peres, tip_rascheta) {
 			if (peres != 'peres') {
 				var n1 = podbor(GGG, t1, p1, tipLo, sk);
 				di1 = n1[1];
+				di2 = n1[1];
 				dut1 = n1[2];
+				dut2 = n1[2];
 			}
 			var gdr1 = gidr(t1, di1, dut1, Gm1, p1, tipLo, gg1, t3, p3, otpen, filo, 0, tipIMo);
-			var gdr2 = gidr(t2, di1, dut1, Gm2, p2, tipLo, gg2, t4, p4, otpen, filo, 0, tipIMo);
+			var gdr2 = gidr(t2, di2, dut2, Gm2, p2, tipLo, gg2, t4, p4, otpen, filo, 0, tipIMo);
 
 			if (sx_ot > 0) {
 				var Gm9 = (qco * 3.6).toFixed(4);
