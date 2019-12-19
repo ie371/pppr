@@ -64,9 +64,26 @@
 
       <div class="form-group">
         <div class="col">
-          <h6>
-            <span class="badge">Длина кабельных проводок</span>
-          </h6>
+          <div class="form-row">
+            <div class="col">
+              <h6>
+                <span class="badge">Длина кабельных проводок</span>
+              </h6>
+            </div>
+            <div class="col">
+              <b-form-checkbox
+                switch
+                size="sm"
+                v-model.number="isx.met_ruk"
+                value="1"
+                unchecked-value="0"
+              >
+                <h6>
+                  <span class="badge">Мет. рукав</span>
+                </h6>
+              </b-form-checkbox>
+            </div>
+          </div>
           <div class="form-row">
             <div class="col">
               <label class="col-form-label">ВРУ => СБ</label>
@@ -559,6 +576,29 @@
             </select>
           </div>
         </div>
+
+        <div class="form-row mb-2">
+          <div class="col">
+            <label class="col-form-label">Отметки</label>
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="min 0,4"
+              v-model="isx.otmetka_T1"
+            />
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="min 0,4"
+              v-model="isx.otmetka_T2"
+            />
+          </div>
+        </div>
+
         <div class="form-row mb-2" v-if="+isx.sx_ot">
           <div class="form-row mb-1">
             <label class="col-form-label">Подпитка:</label>
@@ -617,6 +657,16 @@
                   :key="index"
                 >{{ option.text }}</option>
               </select>
+            </div>
+
+            <div class="col">
+              <label class="col-form-label">Отметка</label>
+              <input
+                type="text"
+                placeholder="min 0,4"
+                class="form-control form-control-sm"
+                v-model="isx.otmetka_T9"
+              />
             </div>
           </div>
         </div>
@@ -711,7 +761,7 @@
               :class="{ 'yellow-error': ml.y, 'red-error': ml.g }"
               @change="proj('qmax')"
               id="mlg"
-              :disabled="stup"
+              :disabled="disable_gvs"
             >
               <option value="kl">Классическая</option>
               <option value="ml">Модифицированная</option>
@@ -724,7 +774,7 @@
               class="form-control form-control-sm"
               id="fig"
               v-model.number="isx.filg"
-              :disabled="fg||stup"
+              :disabled="fg||disable_gvs"
               :class="{'red-error' : grz.g }"
               @change="proj('qmax')"
             >
@@ -739,7 +789,7 @@
               switch
               size="sm"
               v-model.number="isx.ok"
-              :disabled="fg"
+              :disabled="fg||tupik_gvs"
               value="1"
               unchecked-value="0"
             ></b-form-checkbox>
@@ -907,7 +957,7 @@
               step="0.001"
               oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
               maxlength="5"
-              :disabled="stup"
+              :disabled="disable_gvs"
             />
           </div>
           <div class="col">
@@ -930,7 +980,7 @@
               class="form-control form-control-sm"
               v-model.number="isx.di3"
               v-on:change="change_du('t3')"
-              :disabled="stup"
+              :disabled="disable_gvs"
             >
               <option
                 v-for="(option, index) in DU"
@@ -944,7 +994,7 @@
               class="form-control form-control-sm"
               v-model.number="isx.di4"
               v-on:change="change_du('t4')"
-              :disabled="stup"
+              :disabled="disable_gvs"
             >
               <option
                 v-for="(option, index) in DU"
@@ -994,7 +1044,7 @@
               :class="{'red-error' : check6.y3 }"
               @change="proj('qmax',1)"
               id="im3"
-              :disabled="stup"
+              :disabled="disable_gvs"
             >
               <option value="6">И6</option>
               <option value="5">К5</option>
@@ -1012,7 +1062,7 @@
               v-model.number="isx.tipIMg4"
               :class="{ 'yellow-error': yellow_t4, 'red-error': check6.y4 }"
               id="im4"
-              :disabled="stup"
+              :disabled="tupik_gvs"
             >
               <option value="6">И6</option>
               <option value="5">К5</option>
@@ -1035,7 +1085,7 @@
               class="form-control form-control-sm"
               v-model.number="isx.dut3"
               v-on:change="change_du('t3')"
-              :disabled="stup"
+              :disabled="disable_gvs"
             >
               <option
                 v-for="(option,index) in diptr.duu3"
@@ -1050,7 +1100,7 @@
               class="form-control form-control-sm"
               v-model.number="isx.dut4"
               v-on:change="change_du('t4')"
-              :disabled="stup"
+              :disabled="tupik_gvs"
             >
               <option
                 v-for="(option,index) in diptr.duu4"
@@ -1060,6 +1110,31 @@
             </select>
           </div>
         </div>
+
+        <div class="form-row mb-2">
+          <div class="col">
+            <label class="col-form-label">Отметки</label>
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="min 0,4"
+              v-model="isx.otmetka_T3"
+              :disabled="disable_gvs"
+            />
+          </div>
+          <div class="col">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="min 0,4"
+              v-model="isx.otmetka_T4"
+              :disabled="tupik_gvs"
+            />
+          </div>
+        </div>
+
         <div v-if="+isx.fuCo||+isx.sx_otkr>0">
           <div class="form-row mb-1">
             <div class="col-6">
@@ -1082,31 +1157,6 @@
             </div>
           </div>
         </div>
-
-        <!-- <div class="form-row mb-2">
-          <div class="col">
-            <label class="col-form-label text-maroon">Ду тр-дов на вводе</label>
-          </div>
-
-          <div class="col">
-            <select class="form-control form-control-sm" v-model="isx.dut3_vv">
-              <option
-                v-for="(option, index) in DU"
-                v-bind:value="option.value"
-                :key="index"
-              >{{ option.text }}</option>
-            </select>
-          </div>
-          <div class="col">
-            <select class="form-control form-control-sm" v-model="isx.dut4_vv">
-              <option
-                v-for="(option, index) in DU"
-                v-bind:value="option.value"
-                :key="index"
-              >{{ option.text }}</option>
-            </select>
-          </div>
-        </div>-->
       </div>
     </div>
 
@@ -1317,7 +1367,13 @@ export default {
         // dut3_vv: 0,
         // dut4_vv: 0,
         t_srez: "",
-        dop_str: ""
+        dop_str: "",
+        met_ruk: 0,
+        otmetka_T1: "",
+        otmetka_T2: "",
+        otmetka_T3: "",
+        otmetka_T4: "",
+        otmetka_T9: ""
       },
       sb: {
         tipSB: 0,
@@ -1329,7 +1385,8 @@ export default {
       infg: "Параметры ГВС",
       fo: false,
       fg: false,
-      stup: false,
+      disable_gvs: false,
+      tupik_gvs: false,
       otklFormatSPL: true,
       otklFormatPrSx: true,
       file: "",
@@ -1729,9 +1786,9 @@ export default {
           // (this.isx.t3 = 60),
           // (this.isx.t4 = 50)
 
-          this.isx.sx_gvs_dep > 0 || this.isx.sx_otkr > 1
-            ? (this.stup = true)
-            : (this.stup = false);
+          // this.isx.sx_gvs_dep > 0 || this.isx.sx_otkr > 1
+          //   ? (this.stup = true)
+          //   : (this.stup = false);
 
           this.isx.tipLg3 == "ml"
             ? ((this.fg = true), (this.isx.filg = 0))
@@ -1760,9 +1817,9 @@ export default {
               (this.isx.sx_gvs_dep = 0));
 
           this.isx.qgvssr > 0 ? (this.isx.pr_gvs = 1) : (this.isx.pr_gvs = 0);
-          this.isx.sx_gvs_dep > 0 || this.isx.sx_otkr > 1
-            ? (this.stup = true)
-            : (this.stup = false);
+          // this.isx.sx_gvs_dep > 0 || this.isx.sx_otkr > 1
+          //   ? (this.stup = true)
+          //   : (this.stup = false);
 
           this.isx.tipLg3 == "ml"
             ? ((this.fg = true), (this.isx.filg = 0))
@@ -1775,7 +1832,9 @@ export default {
             : ((this.isx.pr_gvs = 0), (tip_rascheta = this.tipProject));
           break;
         case "itp0":
-          this.stup = false;
+          // this.stup = false;
+          this.disable_gvs = false;
+          this.tupik_gvs = false;
           this.isx.t3 = 60;
           this.isx.t4 = 50;
           this.isx.sx_gvs_dep = 0;
@@ -1783,14 +1842,19 @@ export default {
           break;
         case "itp1":
         case "itp2":
-          this.stup = true;
+          // this.stup = true;
+          this.disable_gvs = true;
+          this.tupik_gvs = true;
+          this.isx.ok = 0;
           this.isx.t3 = 70;
           this.isx.t4 = 40;
           tip_rascheta = "og";
           this.isx.fuCo = 0;
           break;
         case "wgvs0":
-          this.stup = false;
+          // this.stup = false;
+          this.disable_gvs = false;
+          this.tupik_gvs = false;
           this.isx.sx_gvs = 0;
           this.isx.progr_txv = 0;
           if (this.isx.sx_otkr < 1) {
@@ -1799,19 +1863,27 @@ export default {
           tip_rascheta = "og";
           break;
         case "wgvs1":
-          this.stup = false;
+          // this.stup = false;
+          this.disable_gvs = false;
+          this.tupik_gvs = false;
           this.isx.sx_gvs = 0;
           tip_rascheta = "og";
           break;
         case "wgvs2":
-          this.stup = true;
+          // this.stup = true;
+          this.disable_gvs = true;
+          this.tupik_gvs = true;
+          this.isx.ok = 0;
           this.isx.sx_gvs = 0;
           this.isx.p3 = this.isx.p1;
           this.isx.p4 = this.isx.p2;
           tip_rascheta = "og";
           break;
         case "wgvs3":
-          this.stup = true;
+          // this.stup = true;
+          this.disable_gvs = true;
+          this.tupik_gvs = true;
+          this.isx.ok = 0;
           this.isx.sx_gvs = 1;
           this.isx.p3 = this.isx.p1;
           this.isx.p4 = this.isx.p2;
@@ -1968,48 +2040,11 @@ export default {
           }
           break;
         case "t2":
-          // console.log("ggggggggggg");
-          // console.log(this.isx);
           result = clc_pr(this.isx, 1.5, "peres", "ot");
           this.$store.dispatch({
             type: "RESULT",
             result: result
           });
-          // if (this.isx.di1 > 0) {
-          //   this.isx.di2 = this.isx.di1;
-          //   // проверка отличия 3-х ду
-          //   let ch = this.checkdiapTR(this.isx.di1, this.isx.dut1);
-          //   if (ch) {
-          //     this.diptr.duu1[1]
-          //       ? (this.isx.dut1 = this.diptr.duu1[1].value)
-          //       : (this.isx.dut1 = this.diptr.duu1[0].value);
-          //     this.isx.dut2 = this.isx.di1;
-          //   }
-
-          //   if (this.isx.pr_ot === 1) {
-          //     result = clc_pr(this.isx, 1.5, "peres", "ot");
-          //   } else {
-          //     R = this.rescalc.gdr1.Gv;
-          //     if (R > 0) {
-          //       result = clc_kp(R, 1.5, d, "peres", this.isx.di1, "");
-          //     }
-          //   }
-          //   this.isx.dut2 = result.gdr2.du_tr;
-          //   this.$store.dispatch({
-          //     type: "RESULT",
-          //     result: result
-          //   });
-          // } else {
-          //   this.isx.pr_ot = 0;
-          //   this.isx.qco = null;
-          //   this.isx.di1 = 0;
-          //   this.isx.di2 = 0;
-          //   this.isx.di9 = 0;
-          //   this.isx.dut1 = null;
-          //   this.isx.dut2 = null;
-          //   this.isx.dut9 = null;
-          //   this.$store.dispatch("OT_NULL");
-          // }
           break;
         case "t3":
           if (this.isx.di3 > 0) {
@@ -2054,6 +2089,7 @@ export default {
           break;
         case "t4":
           if (this.isx.di4 > 0) {
+            this.tupik_gvs = false;
             let ch = this.checkdiapTR(this.isx.di4, this.isx.dut4);
             if (ch) {
               this.diptr.duu4[1]
@@ -2077,6 +2113,8 @@ export default {
             this.isx.tipLg4 = this.ml4_kl4;
           } else {
             // переключаем на тупик
+            this.tupik_gvs = true;
+            this.isx.ok = 0;
             this.isx.sx_gvs = 1;
             this.isx.dut4 = null;
             this.$store.dispatch("TUPIC");

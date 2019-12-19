@@ -56,9 +56,27 @@
 
       <div class="form-group">
         <div class="col">
-          <h6>
-            <span class="badge">Длина кабельных проводок</span>
-          </h6>
+          <div class="form-row">
+            <div class="col">
+              <h6>
+                <span class="badge">Длина кабельных проводок</span>
+              </h6>
+            </div>
+            <div class="col">
+              <b-form-checkbox
+                switch
+                size="sm"
+                v-model.number="isx.met_ruk"
+                value="1"
+                unchecked-value="0"
+              >
+                <h6>
+                  <span class="badge">Мет. рукав</span>
+                </h6>
+              </b-form-checkbox>
+            </div>
+          </div>
+
           <div class="form-row">
             <div class="col">
               <label class="col-form-label">ВРУ => СБ</label>
@@ -188,51 +206,6 @@
           </div>
         </div>
 
-        <!-- <div class="form-row">
-          <div class="col text-center">
-            <label class="col-form-label">qhr</label>
-            <input
-              type="number"
-              step="0.1"
-              class="form-control form-control-sm"
-              placeholder="qhr"
-              v-model.number="isx.qhr"
-              value="5"
-              v-on:input="proj('')"
-              v-b-popover.hover.bottomright="'Максимальньный часовой расход воды'"
-            />
-          </div>
-
-          <div class="col text-center">
-            <label class="col-form-label">Kmax</label>
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="Kmax"
-              step="0.01"
-              v-model.number="isx.Kmax"
-              v-on:input="proj()"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="4"
-              v-b-popover.hover.bottomright="'Коэффициент максимальной часовой неравномерности'"
-            />
-          </div>
-          <div class="col text-center">
-            <label class="col-form-label">Kmin</label>
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="Kmin"
-              step="0.01"
-              v-model.number="isx.Kmin"
-              v-on:input="proj()"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="4"
-              v-b-popover.hover.bottomright="'Коэффициент минимальной часовой неравномерности'"
-            />
-          </div>
-        </div>-->
-
         <div class="form-row">
           <div class="col">
             <label class="col-form-label">Тип изм. линии</label>
@@ -300,12 +273,12 @@
               v-on:input="proj('')"
             />
           </div>
-          <div class="col-md-3">
-            <input type="number" class="form-control form-control-sm" v-model.number="isx.ftp_dop" />
+          <!-- <div class="col-md-3">
+            <input type="text" class="form-control form-control-sm" />
           </div>
           <div class="col-md-3">
-            <label class="col-form-label">доп. FTP</label>
-          </div>
+            <label class="col-form-label">Отметка</label>
+          </div>-->
         </div>
         <div class="form-row mb-2">
           <div class="col-md-3">
@@ -320,12 +293,12 @@
               v-on:input="proj('')"
             />
           </div>
-          <div class="col-md-3">
-            <input type="number" class="form-control form-control-sm" v-model.number="isx.met_ruk" />
+          <!-- <div class="col-md-3">
+            <input type="number" class="form-control form-control-sm" />
           </div>
           <div class="col-md-3">
             <label class="col-form-label">м/рукав для доп. FTP</label>
-          </div>
+          </div>-->
         </div>
 
         <div class="form-row mb-2">
@@ -400,6 +373,21 @@
                 :key="index"
               >{{ option.value }}</option>
             </select>
+          </div>
+        </div>
+
+        <div class="form-row mb-2">
+          <div class="col-md-3">
+            <label class="col-form-label">Отметка</label>
+          </div>
+
+          <div class="col-md-3">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="min 0,4"
+              v-model="isx.otmetka_B1"
+            />
           </div>
         </div>
       </div>
@@ -489,8 +477,8 @@ export default {
         filh: 0,
         IL: 0,
         teploiz_hvs: 1,
-        ftp_dop: 0,
-        met_ruk: 0
+        met_ruk: 0,
+        otmetka_B1: ""
       },
       sb: {
         tipSB: 0,
