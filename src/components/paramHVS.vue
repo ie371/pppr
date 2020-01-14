@@ -225,7 +225,7 @@
             <label class="col-form-label">Фильтр</label>
             <select
               class="form-control form-control-sm"
-              id="fig"
+              id="fih"
               v-model.number="isx.filh"
               :disabled="fh"
               :class="{'red-error' : grz.h }"

@@ -279,12 +279,7 @@
 
           <div class="col">
             <label class="col-form-label">Формула учета</label>
-            <select
-              class="form-control form-control-sm"
-              v-model="isx.fuCo"
-              @change="dis_txv_pr()"
-              :disabled="fu_Co"
-            >
+            <select class="form-control form-control-sm" v-model="isx.fuCo" :disabled="dis_fu">
               <option value="0">закрытая (М1 = М2)</option>
               <option value="1">открытая (М1 - М2)</option>
             </select>
@@ -1341,9 +1336,11 @@ export default {
         dut3: null,
         dut4: null,
         tipLo: "kl",
+        tipLp: "kl",
         tipLg3: "kl",
         tipLg4: "kl",
         tipIMo: 6,
+        tipIMp: 5,
         tipIMg3: 6,
         tipIMg4: 6,
         revers: 0,
@@ -1362,10 +1359,6 @@ export default {
         mess: [],
         indexnas: "",
         imagePlane: "",
-        // dut1_vv: 0,
-        // dut2_vv: 0,
-        // dut3_vv: 0,
-        // dut4_vv: 0,
         t_srez: "",
         dop_str: "",
         met_ruk: 0,
@@ -1390,7 +1383,22 @@ export default {
       otklFormatSPL: true,
       otklFormatPrSx: true,
       file: "",
-      status: "load"
+      status: "load",
+      dis_fu: false,
+      disablOtkr: {
+        diso: true,
+        disg: true
+      },
+      ml: {
+        o: false,
+        g: false,
+        y: false
+      },
+      grz: {
+        o: false,
+        g: false
+      },
+      dis_txv_pr: 0
     };
   },
   computed: {
@@ -1452,80 +1460,13 @@ export default {
       let im = "И6",
         dim = this.isx.di1,
         dtr = this.isx.dut2;
-
-      if (this.isx.tipIMo == 5) {
-        im = "К5";
-      }
-      if (+this.isx.di1 === 0) {
-        dim = "нет";
-      }
-      if (+this.isx.dut2 === 0) {
-        dtr = "";
-      }
+      if (this.isx.tipIMo == 5) im = "К5";
+      if (+this.isx.di1 === 0) dim = "нет";
+      if (+this.isx.dut2 === 0) dtr = "";
       return {
         im: im,
         dim: dim,
         dtr: dtr
-      };
-    },
-    disablOtkr() {
-      let diso = true,
-        disg = true;
-      if (this.isx.qco > 0 && this.isx.qmax > 0) {
-        this.isx.sx_gvs_dep > 0
-          ? ((this.isx.sx_otkr = 0), (diso = true))
-          : (diso = false);
-        this.isx.sx_otkr < 2 ? (disg = false) : (disg = true);
-      }
-      return {
-        diso: diso,
-        disg: disg
-      };
-    },
-    ml() {
-      let o = false,
-        g = false,
-        y = false;
-      if (this.isx.tipLo == "ml" && this.isx.di1) {
-        if (this.isx.di1 > 80 || this.isx.di1 < 32) {
-          o = true;
-        }
-      }
-      if (this.isx.tipLg3 == "ml" && (this.isx.di3 > 0 || this.isx.di4 > 0)) {
-        if ((this.isx.di4 > 80 || this.isx.di4 < 32) && this.isx.di4 > 0) {
-          g = false;
-          y = true;
-        }
-        if (this.isx.tipLg3 == "ml") {
-          this.isx.ok = 0;
-        }
-        if ((this.isx.di3 > 80 || this.isx.di3 < 32) && this.isx.di3 > 0) {
-          g = true;
-          y = false;
-        }
-      }
-      return {
-        o: o,
-        g: g,
-        y: y
-      };
-    },
-    grz() {
-      let o = false,
-        g = false;
-      if (this.isx.dut1 < 33 && this.isx.di1 > 0 && this.isx.filo == 2) {
-        o = true;
-      }
-      if (
-        ((this.isx.dut3 < 33 && this.isx.di3 > 0) ||
-          (this.isx.dut4 < 33 && this.isx.di4 > 0)) &&
-        this.isx.filg == 2
-      ) {
-        g = true;
-      }
-      return {
-        o: o,
-        g: g
       };
     },
     speed() {
@@ -1613,11 +1554,9 @@ export default {
     check6() {
       let du = [25, 32, 40, 50, 65, 80],
         d1 = +this.isx.di1,
-        d9 = +this.isx.di9,
         d3 = +this.isx.di3,
         d4 = +this.isx.di4,
         A1 = du.indexOf(d1),
-        A9 = du.indexOf(d9),
         A3 = du.indexOf(d3),
         A4 = du.indexOf(d4),
         y1 = "",
@@ -1703,11 +1642,6 @@ export default {
       }
       return tipu;
     },
-    fu_Co() {
-      let fu;
-      this.isx.sx_otkr < 1 ? (fu = false) : ((this.isx.fuCo = 1), (fu = true));
-      return fu;
-    },
     ml4_kl4() {
       let s = "";
       if (this.isx.tipLg3 == "ml" && (this.isx.di3 > 0 || this.isx.di4 > 0)) {
@@ -1733,17 +1667,68 @@ export default {
     teploiz() {
       let o;
       let g;
-      if (this.isx.teploiz_ot == 0) {
-        this.isx.t1 > 95 ? (o = true) : (o = false);
-      }
-
-      if (this.isx.teploiz_gvs == 0) {
+      if (this.isx.teploiz_ot == 0) this.isx.t1 > 95 ? (o = true) : (o = false);
+      if (this.isx.teploiz_gvs == 0)
         this.isx.t3 > 95 ? (g = true) : (g = false);
-      }
       return { o, g };
     }
   },
-  watch: {},
+  watch: {
+    isx: {
+      handler() {
+        // откр/закр схемы
+        this.isx.sx_otkr < 1
+          ? (this.dis_fu = false)
+          : ((this.isx.fuCo = 1), (this.dis_fu = true));
+        if (this.isx.qco > 0 && this.isx.qmax > 0) {
+          this.isx.sx_gvs_dep > 0
+            ? ((this.isx.sx_otkr = 0), (this.disablOtkr.diso = true))
+            : (this.disablOtkr.diso = false);
+          this.isx.sx_otkr < 2
+            ? (this.disablOtkr.disg = false)
+            : (this.disablOtkr.disg = true);
+        }
+        // модиф.линии
+        if (this.isx.tipLo == "ml" && this.isx.di1) {
+          if (this.isx.di1 > 80 || this.isx.di1 < 32) this.ml.o = true;
+        } else {
+          this.ml.o = false;
+        }
+        if (this.isx.tipLg3 == "ml" && (this.isx.di3 > 0 || this.isx.di4 > 0)) {
+          if ((this.isx.di4 > 80 || this.isx.di4 < 32) && this.isx.di4 > 0) {
+            this.ml.g = false;
+            this.ml.y = true;
+          }
+          if (this.isx.tipLg3 == "ml") this.isx.ok = 0;
+          if ((this.isx.di3 > 80 || this.isx.di3 < 32) && this.isx.di3 > 0) {
+            this.ml.g = true;
+            this.ml.y = false;
+          }
+        } else {
+          this.ml.g = false;
+          this.ml.y = false;
+        }
+        // грязевики
+        if (this.isx.dut1 < 33 && this.isx.di1 > 0 && this.isx.filo == 2) {
+          this.grz.o = true;
+        } else {
+          this.grz.o = false;
+        }
+        if (
+          ((this.isx.dut3 < 33 && this.isx.di3 > 0) ||
+            (this.isx.dut4 < 33 && this.isx.di4 > 0)) &&
+          this.isx.filg == 2
+        ) {
+          this.grz.g = true;
+        } else {
+          this.grz.g = false;
+        }
+        // программ txv
+        if (this.isx.fuCo == 0) this.isx.progr_txv = 0;
+      },
+      deep: true
+    }
+  },
   methods: {
     proj(m, u) {
       let tip_rascheta = "";
@@ -1756,11 +1741,7 @@ export default {
           this.isx.qco > 0
             ? ((this.isx.pr_ot = 1), (tip_rascheta = "o"))
             : (this.isx.pr_ot = 0);
-
-          if (this.isx.qco > 100) {
-            this.isx.qco = this.isx.qco / 1000;
-          }
-
+          if (this.isx.qco > 100) this.isx.qco = this.isx.qco / 1000;
           if (this.isx.tipLo == "ml") {
             this.fo = true;
             this.isx.filo = 0;
@@ -1817,10 +1798,6 @@ export default {
               (this.isx.sx_gvs_dep = 0));
 
           this.isx.qgvssr > 0 ? (this.isx.pr_gvs = 1) : (this.isx.pr_gvs = 0);
-          // this.isx.sx_gvs_dep > 0 || this.isx.sx_otkr > 1
-          //   ? (this.stup = true)
-          //   : (this.stup = false);
-
           this.isx.tipLg3 == "ml"
             ? ((this.fg = true), (this.isx.filg = 0))
             : (this.fg = false);
@@ -1832,7 +1809,6 @@ export default {
             : ((this.isx.pr_gvs = 0), (tip_rascheta = this.tipProject));
           break;
         case "itp0":
-          // this.stup = false;
           this.disable_gvs = false;
           this.tupik_gvs = false;
           this.isx.t3 = 60;
@@ -1842,7 +1818,6 @@ export default {
           break;
         case "itp1":
         case "itp2":
-          // this.stup = true;
           this.disable_gvs = true;
           this.tupik_gvs = true;
           this.isx.ok = 0;
@@ -1852,25 +1827,20 @@ export default {
           this.isx.fuCo = 0;
           break;
         case "wgvs0":
-          // this.stup = false;
           this.disable_gvs = false;
           this.tupik_gvs = false;
           this.isx.sx_gvs = 0;
           this.isx.progr_txv = 0;
-          if (this.isx.sx_otkr < 1) {
-            this.isx.fuCo = 0;
-          }
+          if (this.isx.sx_otkr < 1) this.isx.fuCo = 0;
           tip_rascheta = "og";
           break;
         case "wgvs1":
-          // this.stup = false;
           this.disable_gvs = false;
           this.tupik_gvs = false;
           this.isx.sx_gvs = 0;
           tip_rascheta = "og";
           break;
         case "wgvs2":
-          // this.stup = true;
           this.disable_gvs = true;
           this.tupik_gvs = true;
           this.isx.ok = 0;
@@ -1880,7 +1850,6 @@ export default {
           tip_rascheta = "og";
           break;
         case "wgvs3":
-          // this.stup = true;
           this.disable_gvs = true;
           this.tupik_gvs = true;
           this.isx.ok = 0;
@@ -1902,12 +1871,8 @@ export default {
         default:
           break;
       }
-      if (u) {
-        this.isx.tipIMg4 = this.isx.tipIMg3;
-      }
-      if (this.disablOtkr.diso) {
-        this.isx.sx_otkr = 0;
-      }
+      if (u) this.isx.tipIMg4 = this.isx.tipIMg3;
+      if (this.disablOtkr.diso) this.isx.sx_otkr = 0;
       let result = clc_pr(this.isx, 1.5, "", tip_rascheta);
       if (result.gdr1) {
         this.isx.di1 = result.gdr1.du_im;
@@ -2204,11 +2169,6 @@ export default {
           });
       } else {
         this.isx.indexnas = "";
-      }
-    },
-    dis_txv_pr() {
-      if (this.isx.fuCo == 0) {
-        this.isx.progr_txv = 0;
       }
     },
     handleFileUpload() {
