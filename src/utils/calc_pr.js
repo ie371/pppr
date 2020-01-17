@@ -211,12 +211,7 @@ function gidr(t, du_im, du_tr, Gm, p, tipL, Gg, tg, pg, otpen, filtr, ok, tipIM)
 	} else if (tipL === 'ml') {
 		if (alfaAr_mod[ki]) {
 			alf = alfaAr_mod[ki].alf;
-
-			if (tipIM === '6') {
-				L = alfaAr_mod[ki].li6;
-			} else {
-				L = alfaAr_mod[ki].lk5;
-			}
+			tipIM === '6' ? (L = alfaAr_mod[ki].li6) : (L = alfaAr_mod[ki].lk5);
 		}
 	}
 	var sherh = 0.5;

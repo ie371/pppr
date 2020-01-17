@@ -1,434 +1,447 @@
 <template>
-  <div class="form-row labl mt-2">
-    <!-- // ************************************************** -->
-    <div class="col-md-3">
-      <div class="text-center">
-        <h5>
-          <span class="badge">Общие параметры</span>
-        </h5>
-      </div>
-
-      <div class="form-group">
-        <!-- <div class='form-row'> -->
-
-        <div class="col">
-          <b-form-checkbox switch size="sm" v-model.number="isx.IL" value="1" unchecked-value="0">
-            <h6>
-              <span class="badge">Измерительные линии</span>
-            </h6>
-          </b-form-checkbox>
+  <form
+    id="formHVS"
+    method="post"
+    target="_blank"
+    enctype="multipart/form-data"
+    onkeypress="if(event.keyCode == 13) return false;"
+  >
+    <div class="form-row labl mt-2">
+      <!-- // ************************************************** -->
+      <div class="col-md-3">
+        <div class="text-center">
+          <h5>
+            <span class="badge">Общие параметры</span>
+          </h5>
         </div>
 
-        <div class="form-row">
+        <div class="form-group">
+          <!-- <div class='form-row'> -->
+
           <div class="col">
-            <h6>
-              <span class="badge">Системный блок</span>
-            </h6>
-            <select class="form-control form-control-sm" v-model.number="sb.tipSB">
-              <option value="0">СБ-04 с блоком бесперебойного питания</option>
-              <option value="1">СБ-04 с сетевым питанием</option>
-              <option value="2">СБ-04 из проекта ТС</option>
-            </select>
+            <b-form-checkbox switch size="sm" v-model.number="isx.IL" value="1" unchecked-value="0">
+              <h6>
+                <span class="badge">Измерительные линии</span>
+              </h6>
+            </b-form-checkbox>
           </div>
-          <div class="col" v-if="sb_to">
-            <label class="col-form-label">шифр</label>
-            <input type="text" class="form-control form-control-sm" v-model="sb.shifr_to" />
-          </div>
-        </div>
-      </div>
 
-      <div class="form-group">
-        <div class="col">
-          <h6>
-            <span class="badge">Платы расширения</span>
-          </h6>
-          <multiselect
-            v-model="plats"
-            :options="Plats_r"
-            :multiple="true"
-            track-by="lib"
-            :custom-label="customLabel"
-            placeholder="Платы расширения"
-            :option-height="34"
-          ></multiselect>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col">
           <div class="form-row">
             <div class="col">
               <h6>
-                <span class="badge">Длина кабельных проводок</span>
+                <span class="badge">Системный блок</span>
               </h6>
+              <select class="form-control form-control-sm" v-model.number="sb.tipSB">
+                <option value="0">СБ-04 с блоком бесперебойного питания</option>
+                <option value="1">СБ-04 с сетевым питанием</option>
+                <option value="2">СБ-04 из проекта ТС</option>
+              </select>
+            </div>
+            <div class="col" v-if="sb_to">
+              <label class="col-form-label">шифр</label>
+              <input type="text" class="form-control form-control-sm" v-model="sb.shifr_to" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col">
+            <h6>
+              <span class="badge">Платы расширения</span>
+            </h6>
+            <multiselect
+              v-model="plats"
+              :options="Plats_r"
+              :multiple="true"
+              track-by="lib"
+              :custom-label="customLabel"
+              placeholder="Платы расширения"
+              :option-height="34"
+            ></multiselect>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col">
+            <div class="form-row">
+              <div class="col">
+                <h6>
+                  <span class="badge">Длина кабельных проводок</span>
+                </h6>
+              </div>
+              <div class="col">
+                <b-form-checkbox
+                  switch
+                  size="sm"
+                  v-model.number="isx.met_ruk"
+                  value="1"
+                  unchecked-value="0"
+                >
+                  <h6>
+                    <span class="badge">Мет. рукав</span>
+                  </h6>
+                </b-form-checkbox>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="col">
+                <label class="col-form-label">ВРУ => СБ</label>
+                <input type="text" class="form-control form-control-sm" v-model="sb.lvru" />
+              </div>
+              <div class="col">
+                <label class="col-form-label">СБ => ИМ ХВС</label>
+                <input type="text" class="form-control form-control-sm" v-model="sb.lsbh" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col">
+            <h6>
+              <span class="badge">Вставка внешних файлов</span>
+            </h6>
+            <div class="form-row">
+              <div class="col">
+                <label class="col-form-label">Принципиальная схема</label>
+                <input
+                  type="file"
+                  id="fileImagePrSx_hvs"
+                  ref="file"
+                  name="princ_sx_uploads_hvs"
+                  accept="image/jpeg, image/png"
+                  style="font-size:0.8em;"
+                  @change="ImageSPL_hvs"
+                />
+              </div>
+              <div class="col">
+                <label class="col-form-label">Формат листа:</label>
+                <select
+                  class="form-control form-control-sm"
+                  name="formatPRSX_hvs"
+                  :disabled="otklFormatPrSx_hvs"
+                >
+                  <option value="A3">А3</option>
+                  <option value="A2">А2</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col">
+                <label class="col-form-label">Ситуационный план</label>
+                <input
+                  type="file"
+                  id="fileImageSPL_hvs"
+                  ref="file"
+                  name="sitplan_uploads_hvs"
+                  accept="image/jpeg, image/png"
+                  style="font-size:0.8em;"
+                  @change="ImageSPL_hvs"
+                />
+              </div>
+              <div class="col">
+                <label class="col-form-label">Формат листа:</label>
+                <select
+                  class="form-control form-control-sm"
+                  name="formatSitPl_hvs"
+                  :disabled="otklFormatSPL_hvs"
+                >
+                  <option value="A3">А3</option>
+                  <option value="A2">А2</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 px-3 border-left border-warning">
+        <div class="text-center">
+          <h5>
+            <span class="badge">{{infh}}</span>
+          </h5>
+        </div>
+
+        <div class="form-group">
+          <div class="form-row">
+            <div class="col">
+              <label class="col-form-label">Расход часовой, м³/ч</label>
+              <input
+                type="number"
+                step="0.000001"
+                min="0"
+                max="2500"
+                class="form-control form-control-sm"
+                placeholder="qt"
+                v-model.number="isx.qt"
+                v-on:input="proj('qt')"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                maxlength="8"
+                v-b-popover.hover.bottomright="'Среднечасовой расход  воды'"
+              />
+            </div>
+
+            <div class="col">
+              <label class="col-form-label">Расход суточный, м³/сут</label>
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                placeholder="Qсут"
+                step="0.001"
+                v-model.number="isx.Qsut"
+                v-on:input="proj('Qsut')"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                maxlength="7"
+                v-b-popover.hover.bottomright="'Расчетный суточный    расход   воды '"
+              />
             </div>
             <div class="col">
+              <label class="col-form-label">Период, ч</label>
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                placeholder="T"
+                min="0"
+                max="24"
+                v-model.number="isx.Tper"
+                v-on:input="proj('Tper')"
+                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                maxlength="2"
+                v-b-popover.hover.bottomright="'Период водопотребления воды (сутки, смена), ч'"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col">
+              <label class="col-form-label">Тип изм. линии</label>
+              <select
+                class="form-control form-control-sm"
+                v-model="isx.tipLh"
+                :class="{ 'red-error': ml }"
+                @change="proj()"
+                id="mlh"
+              >
+                <option value="kl">Классическая</option>
+                <option value="ml">Модифицированная</option>
+              </select>
+              <b-popover :disabled="!ml" :show="ml" triggers="hover" target="mlh">{{popup.m}}</b-popover>
+            </div>
+            <div class="col">
+              <label class="col-form-label">Фильтр</label>
+              <select
+                class="form-control form-control-sm"
+                id="fih"
+                v-model.number="isx.filh"
+                :disabled="fh"
+                :class="{'red-error' : grz.h }"
+                @change="proj()"
+              >
+                <option value="0">без фильтра</option>
+                <option value="1">сетчатый фильтр</option>
+                <option value="2">грязевик</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="col-md-3 text-center">
+              <label class="col-form-label md-3">Датчик давления</label>
+              <b-form-checkbox switch v-model.number="isx.sens_d" value="1" unchecked-value="0"></b-form-checkbox>
+            </div>
+            <div class="col-md-3 text-center">
+              <label class="col-form-label md-3">Датчик температуры</label>
+              <b-form-checkbox switch v-model.number="isx.sens_t" value="1" unchecked-value="0"></b-form-checkbox>
+            </div>
+
+            <div class="col-md-3 text-center">
+              <label class="col-form-label md-3">Байпас</label>
+              <b-form-checkbox switch v-model.number="isx.baypass" value="1" unchecked-value="0"></b-form-checkbox>
+            </div>
+            <div class="col-md-3 text-center">
+              <label class="col-form-label md-3">Теплоизоляция</label>
               <b-form-checkbox
                 switch
-                size="sm"
-                v-model.number="isx.met_ruk"
+                v-model.number="isx.teploiz_hvs"
                 value="1"
                 unchecked-value="0"
-              >
-                <h6>
-                  <span class="badge">Мет. рукав</span>
-                </h6>
-              </b-form-checkbox>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="col">
-              <label class="col-form-label">ВРУ => СБ</label>
-              <input type="text" class="form-control form-control-sm" v-model="sb.lvru" />
-            </div>
-            <div class="col">
-              <label class="col-form-label">СБ => ИМ ХВС</label>
-              <input type="text" class="form-control form-control-sm" v-model="sb.lsbh" />
+              ></b-form-checkbox>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <div class="col">
-          <h6>
-            <span class="badge">Вставка внешних файлов</span>
-          </h6>
-          <div class="form-row">
-            <div class="col">
-              <label class="col-form-label">Принципиальная схема</label>
+        <div class="form-group">
+          <div class="form-row mb-2">
+            <div class="col-md-3">
+              <label class="col-form-label">Температура, °C</label>
+            </div>
+            <div class="col-md-3">
               <input
-                type="file"
-                id="fileImagePrSx_hvs"
-                ref="file"
-                name="princ_sx_uploads_hvs"
-                accept="image/jpeg, image/png"
-                style="font-size:0.8em;"
-                @change="ImageSPL_hvs"
+                type="number"
+                class="form-control form-control-sm"
+                placeholder="50"
+                v-model.number="isx.t1"
+                v-on:input="proj('')"
               />
             </div>
-            <div class="col">
-              <label class="col-form-label">Формат листа:</label>
-              <select
-                class="form-control form-control-sm"
-                name="formatPRSX_hvs"
-                :disabled="otklFormatPrSx_hvs"
-              >
-                <option value="A3">А3</option>
-                <option value="A2">А2</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="col">
-              <label class="col-form-label">Ситуационный план</label>
-              <input
-                type="file"
-                id="fileImageSPL_hvs"
-                ref="file"
-                name="sitplan_uploads_hvs"
-                accept="image/jpeg, image/png"
-                style="font-size:0.8em;"
-                @change="ImageSPL_hvs"
-              />
-            </div>
-            <div class="col">
-              <label class="col-form-label">Формат листа:</label>
-              <select
-                class="form-control form-control-sm"
-                name="formatSitPl_hvs"
-                :disabled="otklFormatSPL_hvs"
-              >
-                <option value="A3">А3</option>
-                <option value="A2">А2</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 px-3 border-left border-warning">
-      <div class="text-center">
-        <h5>
-          <span class="badge">{{infh}}</span>
-        </h5>
-      </div>
-
-      <div class="form-group">
-        <div class="form-row">
-          <div class="col">
-            <label class="col-form-label">Расход часовой, м³/ч</label>
-            <input
-              type="number"
-              step="0.000001"
-              min="0"
-              max="2500"
-              class="form-control form-control-sm"
-              placeholder="qt"
-              v-model.number="isx.qt"
-              v-on:input="proj('qt')"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="8"
-              v-b-popover.hover.bottomright="'Среднечасовой расход  воды'"
-            />
-          </div>
-
-          <div class="col">
-            <label class="col-form-label">Расход суточный, м³/сут</label>
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="Qсут"
-              step="0.001"
-              v-model.number="isx.Qsut"
-              v-on:input="proj('Qsut')"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="7"
-              v-b-popover.hover.bottomright="'Расчетный суточный    расход   воды '"
-            />
-          </div>
-          <div class="col">
-            <label class="col-form-label">Период, ч</label>
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="T"
-              min="0"
-              max="24"
-              v-model.number="isx.Tper"
-              v-on:input="proj('Tper')"
-              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-              maxlength="2"
-              v-b-popover.hover.bottomright="'Период водопотребления воды (сутки, смена), ч'"
-            />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="col">
-            <label class="col-form-label">Тип изм. линии</label>
-            <select
-              class="form-control form-control-sm"
-              v-model="isx.tipLh"
-              :class="{ 'red-error': ml.h }"
-              @change="proj()"
-              id="mlh"
-            >
-              <option value="kl">Классическая</option>
-              <option value="ml">Модифицированная</option>
-            </select>
-            <b-popover :disabled="!ml.h" :show="ml.h" triggers="hover" target="mlh">{{popup.m}}</b-popover>
-          </div>
-          <div class="col">
-            <label class="col-form-label">Фильтр</label>
-            <select
-              class="form-control form-control-sm"
-              id="fih"
-              v-model.number="isx.filh"
-              :disabled="fh"
-              :class="{'red-error' : grz.h }"
-              @change="proj()"
-            >
-              <option value="0">без фильтра</option>
-              <option value="1">сетчатый фильтр</option>
-              <option value="2">грязевик</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="col-md-3 text-center">
-            <label class="col-form-label md-3">Датчик давления</label>
-            <b-form-checkbox switch v-model.number="isx.sens_d" value="1" unchecked-value="0"></b-form-checkbox>
-          </div>
-          <div class="col-md-3 text-center">
-            <label class="col-form-label md-3">Датчик температуры</label>
-            <b-form-checkbox switch v-model.number="isx.sens_t" value="1" unchecked-value="0"></b-form-checkbox>
-          </div>
-
-          <div class="col-md-3 text-center">
-            <label class="col-form-label md-3">Байпас</label>
-            <b-form-checkbox switch v-model.number="isx.baypass" value="1" unchecked-value="0"></b-form-checkbox>
-          </div>
-          <div class="col-md-3 text-center">
-            <label class="col-form-label md-3">Теплоизоляция</label>
-            <b-form-checkbox switch v-model.number="isx.teploiz_hvs" value="1" unchecked-value="0"></b-form-checkbox>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="form-row mb-2">
-          <div class="col-md-3">
-            <label class="col-form-label">Температура, °C</label>
-          </div>
-          <div class="col-md-3">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="50"
-              v-model.number="isx.t1"
-              v-on:input="proj('')"
-            />
-          </div>
-          <!-- <div class="col-md-3">
+            <!-- <div class="col-md-3">
             <input type="text" class="form-control form-control-sm" />
           </div>
           <div class="col-md-3">
             <label class="col-form-label">Отметка</label>
-          </div>-->
-        </div>
-        <div class="form-row mb-2">
-          <div class="col-md-3">
-            <label class="col-form-label">Давление, мвст</label>
+            </div>-->
           </div>
-          <div class="col-md-3">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              placeholder="50"
-              v-model.number="isx.p1"
-              v-on:input="proj('')"
-            />
-          </div>
-          <!-- <div class="col-md-3">
+          <div class="form-row mb-2">
+            <div class="col-md-3">
+              <label class="col-form-label">Давление, мвст</label>
+            </div>
+            <div class="col-md-3">
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                placeholder="50"
+                v-model.number="isx.p1"
+                v-on:input="proj('')"
+              />
+            </div>
+            <!-- <div class="col-md-3">
             <input type="number" class="form-control form-control-sm" />
           </div>
           <div class="col-md-3">
             <label class="col-form-label">м/рукав для доп. FTP</label>
-          </div>-->
-        </div>
-
-        <div class="form-row mb-2">
-          <div class="col-md-3">
-            <label class="col-form-label">Ду прибора</label>
+            </div>-->
           </div>
 
-          <div class="col-md-3">
-            <select
-              class="form-control form-control-sm"
-              v-model.number="isx.di"
-              v-on:change="change_du()"
+          <div class="form-row mb-2">
+            <div class="col-md-3">
+              <label class="col-form-label">Ду прибора</label>
+            </div>
+
+            <div class="col-md-3">
+              <select
+                class="form-control form-control-sm"
+                v-model.number="isx.di"
+                v-on:change="change_du()"
+              >
+                <option
+                  v-for="(option, index) in DU"
+                  v-bind:value="option.value"
+                  :key="index"
+                >{{ option.text }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row mb-2">
+            <div class="col-md-3">
+              <label class="col-form-label">Скорость, м/с</label>
+            </div>
+            <div class="col-md-3">
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                id="V"
+                :class="{'red-error' : !speed }"
+                v-model.number="rescalc.gdr.V"
+                readonly
+              />
+            </div>
+            <b-popover :disabled="speed" :show="!speed" triggers="hover" target="V">{{popup.s}}</b-popover>
+          </div>
+
+          <div class="form-row mb-2">
+            <div class="col-md-3">
+              <label class="col-form-label">ИМ ХВС</label>
+            </div>
+            <div class="col-md-3">
+              <select
+                class="form-control form-control-sm"
+                :class="{'red-error' : check6.red }"
+                v-model.number="isx.tipIMh"
+                id="im"
+              >
+                <option value="6">И6</option>
+                <option value="5">К5</option>
+              </select>
+              <b-popover
+                :disabled="!check6.pop"
+                :show="check6.pop"
+                triggers="hover"
+                target="im"
+              >{{popup.d}}</b-popover>
+            </div>
+          </div>
+          <div class="form-row mb-2">
+            <div class="col-md-3">
+              <label class="col-form-label">Ду тр-да В1</label>
+            </div>
+
+            <div class="col-md-3">
+              <select class="form-control form-control-sm" v-model.number="isx.dut">
+                <option
+                  v-for="(option,index) in diptr.duu1"
+                  v-bind:value="option.value"
+                  :key="index"
+                >{{ option.value }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row mb-2">
+            <div class="col-md-3">
+              <label class="col-form-label">Отметка</label>
+            </div>
+
+            <div class="col-md-3">
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                placeholder="min 0,4"
+                v-model="isx.otmetka_B1"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- // ************************************************** -->
+      <div class="col-md-3 px-3 border-left border-warning">
+        <div class="text-center">
+          <h5>
+            <span class="badge"></span>
+          </h5>
+        </div>
+
+        <div class="d-flex justify-content-center">
+          <div class="col-md-9">
+            <b-btn
+              type="submit"
+              class="btn btn-sm btn-block mb-3"
+              formaction="./pdf/project/pr_hvs.php"
+              :disabled="disbutton"
             >
-              <option
-                v-for="(option, index) in DU"
-                v-bind:value="option.value"
-                :key="index"
-              >{{ option.text }}</option>
-            </select>
-          </div>
-        </div>
+              Создать проект
+              <b-badge variant="light">{{'ХВС'}}</b-badge>
+            </b-btn>
+            <!-- <b-btn
+              class="btn btn-sm btn-block mb-3"
+              @click="savePDF(rekv.cod)"
+              :disabled="disbutton"
+            >save on disk</b-btn>
+            <b-btn
+              class="btn btn-sm btn-block mb-3"
+              @click="openPDF"
+              :disabled="disbutton"
+            >open new tab</b-btn>-->
 
-        <div class="form-row mb-2">
-          <div class="col-md-3">
-            <label class="col-form-label">Скорость, м/с</label>
-          </div>
-          <div class="col-md-3">
-            <input
-              type="number"
-              class="form-control form-control-sm"
-              id="V"
-              :class="{'red-error' : !speed }"
-              v-model.number="rescalc.gdr.V"
-              readonly
-            />
-          </div>
-          <b-popover :disabled="speed" :show="!speed" triggers="hover" target="V">{{popup.s}}</b-popover>
-        </div>
-
-        <div class="form-row mb-2">
-          <div class="col-md-3">
-            <label class="col-form-label">ИМ ХВС</label>
-          </div>
-          <div class="col-md-3">
-            <select
-              class="form-control form-control-sm"
-              :class="{'red-error' : check6.red }"
-              v-model.number="isx.tipIMh"
-              id="im"
-            >
-              <option value="6">И6</option>
-              <option value="5">К5</option>
-            </select>
-            <b-popover
-              :disabled="!check6.pop"
-              :show="check6.pop"
-              triggers="hover"
-              target="im"
-            >{{popup.d}}</b-popover>
-          </div>
-        </div>
-        <div class="form-row mb-2">
-          <div class="col-md-3">
-            <label class="col-form-label">Ду тр-да В1</label>
-          </div>
-
-          <div class="col-md-3">
-            <select class="form-control form-control-sm" v-model.number="isx.dut">
-              <option
-                v-for="(option,index) in diptr.duu1"
-                v-bind:value="option.value"
-                :key="index"
-              >{{ option.value }}</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row mb-2">
-          <div class="col-md-3">
-            <label class="col-form-label">Отметка</label>
-          </div>
-
-          <div class="col-md-3">
-            <input
-              type="text"
-              class="form-control form-control-sm"
-              placeholder="min 0,4"
-              v-model="isx.otmetka_B1"
-            />
+            <input type="hidden" name="H" v-model="phpH" />
+            <input type="hidden" name="R" v-model="php_rekv" />
           </div>
         </div>
       </div>
     </div>
-
-    <!-- // ************************************************** -->
-    <div class="col-md-3 px-3 border-left border-warning">
-      <div class="text-center">
-        <h5>
-          <span class="badge"></span>
-        </h5>
-      </div>
-
-      <div class="d-flex justify-content-center">
-        <div class="col-md-9">
-          <b-btn
-            type="submit"
-            class="btn btn-sm btn-block mb-3"
-            formaction="./pdf/project/pr_hvs.php"
-            :disabled="disbutton"
-          >
-            Создать проект
-            <b-badge variant="light">{{'ХВС'}}</b-badge>
-          </b-btn>
-          <!-- <b-btn
-            class="btn btn-sm btn-block mb-3"
-            @click="savePDF(rekv.cod)"
-            :disabled="disbutton"
-          >save on disk</b-btn>-->
-          <!-- <b-btn
-            class="btn btn-sm btn-block mb-3"
-            @click="openPDF"
-            :disabled="disbutton"
-          >open new tab</b-btn>-->
-
-          <input type="hidden" name="H" v-model="phpH" />
-          <input type="hidden" name="R" v-model="php_rekv" />
-        </div>
-      </div>
-    </div>
-  </div>
+  </form>
 </template>
 
 <script>
@@ -490,7 +503,9 @@ export default {
       fh: false,
       otklFormatSPL_hvs: true,
       otklFormatPrSx_hvs: true,
-      file: null
+      file: null,
+      ml: false,
+      grz: false
     };
   },
   computed: {
@@ -513,29 +528,6 @@ export default {
       let a = 0;
       this.sb.tipSB == 2 ? (a = 1) : (a = 0);
       return a;
-    },
-    ml() {
-      let h = false;
-      this.isx.tipLh == "ml"
-        ? ((this.fh = true), (this.isx.filh = 0))
-        : (this.fh = false);
-      if (this.isx.tipLh == "ml" && this.isx.di) {
-        if (this.isx.di > 80 || this.isx.di < 32) {
-          h = true;
-        }
-      }
-      return {
-        h: h
-      };
-    },
-    grz() {
-      let h = false;
-      this.isx.dut < 33 && this.isx.di > 0 && this.isx.filh == 2
-        ? (h = true)
-        : h;
-      return {
-        h: h
-      };
     },
     speed() {
       let are;
@@ -581,14 +573,35 @@ export default {
       let a, b, c, d, g;
       this.isx.qt > 0 ? (a = 0) : (a = 1);
       this.check6.red ? (b = 1) : (b = 0);
-      this.ml.h ? (c = 1) : (c = 0);
+      this.ml ? (c = 1) : (c = 0);
       d = a + b + c;
       d > 0 ? (g = true) : (g = false);
       return g;
     }
   },
+  watch: {
+    isx: {
+      handler() {
+        // модиф.линии
+        this.isx.tipLh == "ml"
+          ? ((this.fh = true), (this.isx.filh = 0))
+          : (this.fh = false);
+        if (this.isx.tipLh == "ml" && this.isx.di) {
+          if (this.isx.di > 80 || this.isx.di < 32) {
+            this.ml = true;
+          }
+        }
+        // грязевики
+        this.isx.dut < 33 && this.isx.di > 0 && this.isx.filh == 2
+          ? (this.grz = true)
+          : this.grz;
+        if (this.isx.fuCo == 0) this.isx.progr_txv = 0;
+      },
+      deep: true
+    }
+  },
   methods: {
-    proj(m, u) {
+    proj(m) {
       switch (m) {
         case "qt":
         case "Tper":
@@ -657,7 +670,8 @@ export default {
     },
     savePDF(nPDF) {
       !nPDF ? (nPDF = "file") : nPDF;
-      let formData = new FormData(form);
+      // eslint-disable-next-line no-undef
+      let formData = new FormData(formHVS);
       formData.append("H", this.phpH);
       formData.append("R", this.php_rekv);
       formData.append("newfile", this.file);
@@ -679,7 +693,8 @@ export default {
     },
 
     openPDF() {
-      let formData = new FormData(form);
+      // eslint-disable-next-line no-undef
+      let formData = new FormData(formHVS);
       formData.append("H", this.phpH);
       formData.append("R", this.php_rekv);
       formData.append("newfile", this.file);
